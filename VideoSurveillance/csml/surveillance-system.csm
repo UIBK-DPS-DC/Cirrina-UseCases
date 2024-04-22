@@ -1,0 +1,125 @@
+{
+  version: '0.1',
+  name: 'Surveillance System',
+  stateMachines: [
+    {
+      name: 'camera',
+      localContext: {
+        variables: [
+          {
+            name: '$out',
+            value: '""'
+          }
+        ]
+      },
+      states: [
+        {
+          name: 'idle',
+          initial: true,
+          on: [
+            {
+              target: 'idle',
+              event: 'capture',
+              actions: [
+                {
+                  type: 'invoke',
+                  serviceType: 'camera.capture',
+                  isLocal: true,
+                  input: [
+                    {
+                      name: 'video_number',
+                      value: '0'
+                    },
+                    {
+                      name: 'start_time',
+                      value: '0'
+                    }
+                  ],
+                  output: {
+                    reference: '$out'
+                  },
+                  done: [
+                    {
+                      name: 'newImage',
+                      data: [
+                        {
+                          name: 'image',
+                          value: '$out'
+                        }
+                      ],
+                      channel: 'external'
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          after: [
+            {
+              type: 'timeout',
+              delay: '1000',
+              actions: [
+                {
+                  type: 'raise',
+                  event: {
+                    name: 'capture',
+                    channel: 'internal'
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      name: 'threatDetector',
+      localContext: {
+        variables: [
+          {
+            name: '$recent_image_capture',
+            value: '""'
+          }
+        ]
+      },
+      states: [
+        {
+          name: 'idle',
+          initial: true,
+          on: [
+            {
+              target: 'idle',
+              event: 'newImage',
+              actions: [
+                {
+                  type: 'assign',
+                  variable: {
+                    name: '$recent_image_capture',
+                    value: 'event_data.image'
+                  }
+                }
+              ]
+            },
+            {
+              target: 'idle',
+              event: 'processedImage',
+              actions: [
+                {
+                  type: 'invoke',
+                  serviceType: 'faceanalyzer.process',
+                  input: [
+                    {
+                      name: 'body',
+                      value: '$recent_image_capture'
+                    }
+                  ],
+                  isLocal: false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
