@@ -1,0 +1,212 @@
+@startuml
+state jobControlSystem {
+    state "starting" as 8c6c718d_0f1b_40a9_beeb_3a3806a69c97_starting
+    [*] --> 8c6c718d_0f1b_40a9_beeb_3a3806a69c97_starting
+    state "starting" as 8c6c718d_0f1b_40a9_beeb_3a3806a69c97_starting : entry / <color:#27AE60>Assign{jobDone = false}()</color>; 
+    
+    state "running" as 8c6c718d_0f1b_40a9_beeb_3a3806a69c97_running
+    
+    state "jobDone" as 8c6c718d_0f1b_40a9_beeb_3a3806a69c97_jobDone
+    8c6c718d_0f1b_40a9_beeb_3a3806a69c97_jobDone --> [*]
+    state "jobDone" as 8c6c718d_0f1b_40a9_beeb_3a3806a69c97_jobDone : entry / <color:#27AE60>Assign{jobDone = true}()</color>; <color:#9B59B6>Raise{eProcessMessage}()</color>; <color:#9B59B6>Raise{eJobDone}()</color>; 
+    
+    8c6c718d_0f1b_40a9_beeb_3a3806a69c97_starting --> 8c6c718d_0f1b_40a9_beeb_3a3806a69c97_running
+    8c6c718d_0f1b_40a9_beeb_3a3806a69c97_running -[dashed]-> 8c6c718d_0f1b_40a9_beeb_3a3806a69c97_running : **eProductComplete**\n/ <color:#27AE60>Assign{productsCompleted = productsCompleted + 1}()</color>; 
+    8c6c718d_0f1b_40a9_beeb_3a3806a69c97_running --> 8c6c718d_0f1b_40a9_beeb_3a3806a69c97_jobDone : \n[productsCompleted >= totalProducts]
+}
+state conveyorBeltSystem {
+    state "loading" as 7474ef00_2b04_46d1_848b_6608dcd22458_loading
+    [*] --> 7474ef00_2b04_46d1_848b_6608dcd22458_loading
+    
+    state "error" as 7474ef00_2b04_46d1_848b_6608dcd22458_error
+    state "error" as 7474ef00_2b04_46d1_848b_6608dcd22458_error : entry / <color:#9B59B6>Raise{eProcessMessage}()</color>; 
+    
+    state "transporting" as 7474ef00_2b04_46d1_848b_6608dcd22458_transporting
+    state "transporting" as 7474ef00_2b04_46d1_848b_6608dcd22458_transporting : entry / <color:#1F618D>Invoke{moveBelt}([])</color>; 
+    state "transporting" as 7474ef00_2b04_46d1_848b_6608dcd22458_transporting : exit / <color:#1F618D>Invoke{stopBelt}([])</color>; 
+    
+    state "unloading" as 7474ef00_2b04_46d1_848b_6608dcd22458_unloading
+    state "unloading" as 7474ef00_2b04_46d1_848b_6608dcd22458_unloading : entry / <color:#9B59B6>Raise{eArmPickup}()</color>; 
+    
+    state "jobDone" as 7474ef00_2b04_46d1_848b_6608dcd22458_jobDone
+    7474ef00_2b04_46d1_848b_6608dcd22458_jobDone --> [*]
+    
+    7474ef00_2b04_46d1_848b_6608dcd22458_loading --> 7474ef00_2b04_46d1_848b_6608dcd22458_error : **eObjectInvalid**
+    7474ef00_2b04_46d1_848b_6608dcd22458_loading --> 7474ef00_2b04_46d1_848b_6608dcd22458_transporting : **eObjectValid**
+    7474ef00_2b04_46d1_848b_6608dcd22458_loading --> 7474ef00_2b04_46d1_848b_6608dcd22458_jobDone : **eJobDone**
+    7474ef00_2b04_46d1_848b_6608dcd22458_loading --> 7474ef00_2b04_46d1_848b_6608dcd22458_jobDone : \n[jobDone]
+    7474ef00_2b04_46d1_848b_6608dcd22458_error --> 7474ef00_2b04_46d1_848b_6608dcd22458_transporting : **eObjectValid**
+    7474ef00_2b04_46d1_848b_6608dcd22458_error --> 7474ef00_2b04_46d1_848b_6608dcd22458_jobDone : **eJobDone**
+    7474ef00_2b04_46d1_848b_6608dcd22458_error --> 7474ef00_2b04_46d1_848b_6608dcd22458_jobDone : \n[jobDone]
+    7474ef00_2b04_46d1_848b_6608dcd22458_transporting --> 7474ef00_2b04_46d1_848b_6608dcd22458_unloading : **eStartUnload**\n/ <color:#27AE60>Assign{isUnloading = true}()</color>; 
+    7474ef00_2b04_46d1_848b_6608dcd22458_transporting --> 7474ef00_2b04_46d1_848b_6608dcd22458_jobDone : **eJobDone**
+    7474ef00_2b04_46d1_848b_6608dcd22458_transporting --> 7474ef00_2b04_46d1_848b_6608dcd22458_jobDone : \n[jobDone]
+    7474ef00_2b04_46d1_848b_6608dcd22458_unloading --> 7474ef00_2b04_46d1_848b_6608dcd22458_loading : **ePickedUp**\n/ <color:#27AE60>Assign{isUnloading = false}()</color>; 
+    7474ef00_2b04_46d1_848b_6608dcd22458_unloading --> 7474ef00_2b04_46d1_848b_6608dcd22458_jobDone : **eJobDone**\n/ <color:#27AE60>Assign{isUnloading = false}()</color>; 
+    7474ef00_2b04_46d1_848b_6608dcd22458_unloading -[dashed]-> 7474ef00_2b04_46d1_848b_6608dcd22458_unloading
+    7474ef00_2b04_46d1_848b_6608dcd22458_unloading --> 7474ef00_2b04_46d1_848b_6608dcd22458_jobDone : \n[jobDone]\n/ <color:#27AE60>Assign{isUnloading = false}()</color>; 
+state beltSensorSystem {
+    state "idle" as 04b3e9bb_867a_4c93_aa55_7dd41ef922fc_idle
+    [*] --> 04b3e9bb_867a_4c93_aa55_7dd41ef922fc_idle
+    
+    state "scanning" as 04b3e9bb_867a_4c93_aa55_7dd41ef922fc_scanning
+    state "scanning" as 04b3e9bb_867a_4c93_aa55_7dd41ef922fc_scanning : entry / <color:#1F618D>Invoke{takePhoto}([])</color>; <color:#1F618D>Invoke{uploadAndScanPhoto}([{photoPath = photoPath}])</color>; 
+    state "scanning" as 04b3e9bb_867a_4c93_aa55_7dd41ef922fc_scanning : exit / <color:#27AE60>Assign{isScanning = false}()</color>; 
+    
+    04b3e9bb_867a_4c93_aa55_7dd41ef922fc_idle --> 04b3e9bb_867a_4c93_aa55_7dd41ef922fc_scanning : **eStartScan**\n/ <color:#27AE60>Assign{isScanning = true}()</color>; 
+    04b3e9bb_867a_4c93_aa55_7dd41ef922fc_scanning --> 04b3e9bb_867a_4c93_aa55_7dd41ef922fc_idle : \n[validObject]\n/ <color:#9B59B6>Raise{eObjectValid}()</color>; 
+    04b3e9bb_867a_4c93_aa55_7dd41ef922fc_scanning --> 04b3e9bb_867a_4c93_aa55_7dd41ef922fc_idle : \n[!validObject]\n/ <color:#9B59B6>Raise{eObjectInvalid}()</color>; 
+}
+
+state photoelectricSensor {
+    state "idle" as 6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_idle
+    [*] --> 6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_idle
+    state "idle" as 6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_idle : entry / <color:#9B59B6>Raise{eBeamDetection}()</color>; 
+    
+    state "detecting" as 6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_detecting
+    
+    state "detected" as 6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_detected
+    
+    6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_idle --> 6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_detecting : **eBeamDetection**\n[!isUnloading]
+    6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_detecting --> 6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_detected : **eCheckBeamDetection**\n[isBeamInterrupted]
+    6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_detecting --> 6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_detected : \n[isBeamInterrupted]
+    6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_detected --> 6ed4ba7c_fc64_4fe0_8bdd_877cd5fe3bbe_idle : \n/ <color:#27AE60>Assign{isBeamInterrupted = false}()</color>; 
+}
+
+state photoelectricSensorStart {
+    state "idle" as edf845de_518b_47cc_ae8a_9723eb4adfab_idle
+    [*] --> edf845de_518b_47cc_ae8a_9723eb4adfab_idle
+    state "idle" as edf845de_518b_47cc_ae8a_9723eb4adfab_idle : entry / <color:#9B59B6>Raise{eBeamDetection}()</color>; 
+    
+    state "detecting" as edf845de_518b_47cc_ae8a_9723eb4adfab_detecting
+    state "detecting" as edf845de_518b_47cc_ae8a_9723eb4adfab_detecting : entry / <color:#1F618D>Invoke{beamDetectionStart}([])</color>; 
+    
+    state "detected" as edf845de_518b_47cc_ae8a_9723eb4adfab_detected
+    state "detected" as edf845de_518b_47cc_ae8a_9723eb4adfab_detected : entry / <color:#9B59B6>Raise{eStartScan}()</color>; 
+    
+    edf845de_518b_47cc_ae8a_9723eb4adfab_detecting --> edf845de_518b_47cc_ae8a_9723eb4adfab_detected : **eCheckBeamDetection**\n[isBeamInterrupted]
+    edf845de_518b_47cc_ae8a_9723eb4adfab_detecting --> edf845de_518b_47cc_ae8a_9723eb4adfab_detected : \n[isBeamInterrupted]
+    edf845de_518b_47cc_ae8a_9723eb4adfab_detected --> edf845de_518b_47cc_ae8a_9723eb4adfab_idle : \n/ <color:#27AE60>Assign{isBeamInterrupted = false}()</color>; 
+    edf845de_518b_47cc_ae8a_9723eb4adfab_idle --> edf845de_518b_47cc_ae8a_9723eb4adfab_detecting : **eBeamDetection**\n[!isScanning && !isUnloading]
+}
+
+state photoelectricSensorEnd {
+    state "detecting" as b8ebf485_eaed_4d4c_9e70_c0e6b043979c_detecting
+    state "detecting" as b8ebf485_eaed_4d4c_9e70_c0e6b043979c_detecting : entry / <color:#1F618D>Invoke{beamDetectionEnd}([])</color>; 
+    
+    state "detected" as b8ebf485_eaed_4d4c_9e70_c0e6b043979c_detected
+    state "detected" as b8ebf485_eaed_4d4c_9e70_c0e6b043979c_detected : entry / <color:#9B59B6>Raise{eStartUnload}()</color>; 
+    
+    state "idle" as b8ebf485_eaed_4d4c_9e70_c0e6b043979c_idle
+    [*] --> b8ebf485_eaed_4d4c_9e70_c0e6b043979c_idle
+    state "idle" as b8ebf485_eaed_4d4c_9e70_c0e6b043979c_idle : entry / <color:#9B59B6>Raise{eBeamDetection}()</color>; 
+    
+    b8ebf485_eaed_4d4c_9e70_c0e6b043979c_idle --> b8ebf485_eaed_4d4c_9e70_c0e6b043979c_detecting : **eBeamDetection**\n[!isUnloading]
+    b8ebf485_eaed_4d4c_9e70_c0e6b043979c_detecting --> b8ebf485_eaed_4d4c_9e70_c0e6b043979c_detected : **eCheckBeamDetection**\n[isBeamInterrupted]
+    b8ebf485_eaed_4d4c_9e70_c0e6b043979c_detecting --> b8ebf485_eaed_4d4c_9e70_c0e6b043979c_detected : \n[isBeamInterrupted]
+    b8ebf485_eaed_4d4c_9e70_c0e6b043979c_detected --> b8ebf485_eaed_4d4c_9e70_c0e6b043979c_idle : \n/ <color:#27AE60>Assign{isBeamInterrupted = false}()</color>; 
+}
+
+}
+state messageProcessor {
+    state "idle" as 5132f3e0_a975_4c2d_be48_7b175ac6af40_idle
+    [*] --> 5132f3e0_a975_4c2d_be48_7b175ac6af40_idle
+    
+    state "process" as 5132f3e0_a975_4c2d_be48_7b175ac6af40_process
+    
+    state "jobDone" as 5132f3e0_a975_4c2d_be48_7b175ac6af40_jobDone
+    5132f3e0_a975_4c2d_be48_7b175ac6af40_jobDone --> [*]
+    
+    5132f3e0_a975_4c2d_be48_7b175ac6af40_idle --> 5132f3e0_a975_4c2d_be48_7b175ac6af40_process : **eProcessMessage**\n/ <color:#27AE60>Assign{msg = event_data}()</color>; 
+    5132f3e0_a975_4c2d_be48_7b175ac6af40_idle --> 5132f3e0_a975_4c2d_be48_7b175ac6af40_jobDone : **eJobDone**
+    5132f3e0_a975_4c2d_be48_7b175ac6af40_idle --> 5132f3e0_a975_4c2d_be48_7b175ac6af40_jobDone : \n[jobDone]
+}
+state smsProcessor {
+    state "process" as c315893c_a8ff_4599_8109_9fc6389e2b4b_process
+    state "process" as c315893c_a8ff_4599_8109_9fc6389e2b4b_process : entry / <color:#1F618D>Invoke{sendSms}([{smsText = msg}])</color>; 
+    
+    state "idle" as c315893c_a8ff_4599_8109_9fc6389e2b4b_idle
+    [*] --> c315893c_a8ff_4599_8109_9fc6389e2b4b_idle
+    
+    state "jobDone" as c315893c_a8ff_4599_8109_9fc6389e2b4b_jobDone
+    c315893c_a8ff_4599_8109_9fc6389e2b4b_jobDone --> [*]
+    
+    c315893c_a8ff_4599_8109_9fc6389e2b4b_idle --> c315893c_a8ff_4599_8109_9fc6389e2b4b_process : **eProcessMessage**\n/ <color:#27AE60>Assign{msg = event_data}()</color>; 
+    c315893c_a8ff_4599_8109_9fc6389e2b4b_idle --> c315893c_a8ff_4599_8109_9fc6389e2b4b_jobDone : **eJobDone**
+    c315893c_a8ff_4599_8109_9fc6389e2b4b_idle --> c315893c_a8ff_4599_8109_9fc6389e2b4b_jobDone : \n[jobDone]
+    c315893c_a8ff_4599_8109_9fc6389e2b4b_process --> c315893c_a8ff_4599_8109_9fc6389e2b4b_idle
+}
+state eMailProcessor {
+    state "process" as 6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_process
+    state "process" as 6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_process : entry / <color:#1F618D>Invoke{sendMail}([{mailBody = msg}])</color>; 
+    
+    state "idle" as 6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_idle
+    [*] --> 6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_idle
+    
+    state "jobDone" as 6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_jobDone
+    6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_jobDone --> [*]
+    
+    6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_idle --> 6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_process : **eProcessMessage**\n/ <color:#27AE60>Assign{msg = event_data}()</color>; 
+    6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_idle --> 6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_jobDone : **eJobDone**
+    6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_idle --> 6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_jobDone : \n[jobDone]
+    6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_process --> 6f1cbe59_5bc6_4f0e_bd26_a472ee515d64_idle
+}
+state logProcessor {
+    state "process" as b05dc47d_e6cf_48ef_8204_a771822eab21_process
+    state "process" as b05dc47d_e6cf_48ef_8204_a771822eab21_process : entry / <color:#27AE60>Assign{log = log.add(msg); log}()</color>; 
+    
+    state "idle" as b05dc47d_e6cf_48ef_8204_a771822eab21_idle
+    [*] --> b05dc47d_e6cf_48ef_8204_a771822eab21_idle
+    
+    state "jobDone" as b05dc47d_e6cf_48ef_8204_a771822eab21_jobDone
+    b05dc47d_e6cf_48ef_8204_a771822eab21_jobDone --> [*]
+    
+    b05dc47d_e6cf_48ef_8204_a771822eab21_idle --> b05dc47d_e6cf_48ef_8204_a771822eab21_process : **eProcessMessage**\n/ <color:#27AE60>Assign{msg = event_data}()</color>; 
+    b05dc47d_e6cf_48ef_8204_a771822eab21_idle --> b05dc47d_e6cf_48ef_8204_a771822eab21_jobDone : **eJobDone**
+    b05dc47d_e6cf_48ef_8204_a771822eab21_idle --> b05dc47d_e6cf_48ef_8204_a771822eab21_jobDone : \n[jobDone]
+    b05dc47d_e6cf_48ef_8204_a771822eab21_process --> b05dc47d_e6cf_48ef_8204_a771822eab21_idle
+}
+state roboticArmSystem {
+    state "idle" as bbef44fb_093e_438f_9513_1e6cf8017cb3_idle
+    [*] --> bbef44fb_093e_438f_9513_1e6cf8017cb3_idle
+    
+    state "error" as bbef44fb_093e_438f_9513_1e6cf8017cb3_error
+    state "error" as bbef44fb_093e_438f_9513_1e6cf8017cb3_error : entry / <color:#9B59B6>Raise{eProcessMessage}()</color>; <color:#9B59B6>Raise{eRetry}()</color>; 
+    
+    state "pickup" as bbef44fb_093e_438f_9513_1e6cf8017cb3_pickup
+    state "pickup" as bbef44fb_093e_438f_9513_1e6cf8017cb3_pickup : entry / <color:#1F618D>Invoke{pickUp}([])</color>; <color:#1ABC9C>Match()</color>; 
+    
+    state "assemble" as bbef44fb_093e_438f_9513_1e6cf8017cb3_assemble
+    state "assemble" as bbef44fb_093e_438f_9513_1e6cf8017cb3_assemble : entry / <color:#1F618D>Invoke{assemble}([])</color>; <color:#1ABC9C>Match()</color>; 
+    
+    state "return" as bbef44fb_093e_438f_9513_1e6cf8017cb3_return
+    state "return" as bbef44fb_093e_438f_9513_1e6cf8017cb3_return : entry / <color:#1F618D>Invoke{returnToStart}([])</color>; 
+    
+    state "jobDone" as bbef44fb_093e_438f_9513_1e6cf8017cb3_jobDone
+    bbef44fb_093e_438f_9513_1e6cf8017cb3_jobDone --> [*]
+    
+    bbef44fb_093e_438f_9513_1e6cf8017cb3_idle --> bbef44fb_093e_438f_9513_1e6cf8017cb3_pickup : **eArmPickup**\n[!jobDone]
+    bbef44fb_093e_438f_9513_1e6cf8017cb3_idle --> bbef44fb_093e_438f_9513_1e6cf8017cb3_jobDone : **eJobDone**
+    bbef44fb_093e_438f_9513_1e6cf8017cb3_idle --> bbef44fb_093e_438f_9513_1e6cf8017cb3_pickup : \n[!pickUpSuccess]
+    bbef44fb_093e_438f_9513_1e6cf8017cb3_idle --> bbef44fb_093e_438f_9513_1e6cf8017cb3_jobDone : \n[jobDone]
+    bbef44fb_093e_438f_9513_1e6cf8017cb3_error --> bbef44fb_093e_438f_9513_1e6cf8017cb3_assemble : **eRetry**\n[pickUpSuccess]
+    bbef44fb_093e_438f_9513_1e6cf8017cb3_error --> bbef44fb_093e_438f_9513_1e6cf8017cb3_jobDone : **eJobDone**
+    bbef44fb_093e_438f_9513_1e6cf8017cb3_pickup --> bbef44fb_093e_438f_9513_1e6cf8017cb3_assemble : \n[pickUpSuccess]\n/ <color:#9B59B6>Raise{ePickedUp}()</color>; 
+    bbef44fb_093e_438f_9513_1e6cf8017cb3_assemble --> bbef44fb_093e_438f_9513_1e6cf8017cb3_return : \n[assembleSuccess]\n/ <color:#27AE60>Assign{partsAssembled = partsAssembled + 1}()</color>; <color:#9B59B6>Raise{eAssembleComplete}()</color>; 
+    bbef44fb_093e_438f_9513_1e6cf8017cb3_return --> bbef44fb_093e_438f_9513_1e6cf8017cb3_idle : \n[partsAssembled >= partsPerProduct]\n/ <color:#27AE60>Assign{partsAssembled = 0}()</color>; <color:#9B59B6>Raise{eProductComplete}()</color>; 
+}
+state monitoringSystem {
+    state "monitoring" as f1cd7be6_2c37_40cf_91e2_38e250beecea_monitoring
+    [*] --> f1cd7be6_2c37_40cf_91e2_38e250beecea_monitoring
+    
+    state "jobDone" as f1cd7be6_2c37_40cf_91e2_38e250beecea_jobDone
+    f1cd7be6_2c37_40cf_91e2_38e250beecea_jobDone --> [*]
+    state "jobDone" as f1cd7be6_2c37_40cf_91e2_38e250beecea_jobDone : entry / <color:#1F618D>aSendStatistics{sendStatistics}([{nScans = nScans}, {nAssemblies = nAssemblies}, {nProductsCompleted = productsCompleted}, {jobDone = jobDone}, {log = log}])</color>; 
+    
+    f1cd7be6_2c37_40cf_91e2_38e250beecea_monitoring -[dashed]-> f1cd7be6_2c37_40cf_91e2_38e250beecea_monitoring : **eStartScan**\n/ <color:#27AE60>Assign{nScans = nScans+1}()</color>; <color:#9B59B6>Raise{eSendStatistics}()</color>; 
+    f1cd7be6_2c37_40cf_91e2_38e250beecea_monitoring -[dashed]-> f1cd7be6_2c37_40cf_91e2_38e250beecea_monitoring : **eAssembleComplete**\n/ <color:#27AE60>Assign{nAssemblies = nAssemblies+1}()</color>; <color:#9B59B6>Raise{eSendStatistics}()</color>; 
+    f1cd7be6_2c37_40cf_91e2_38e250beecea_monitoring -[dashed]-> f1cd7be6_2c37_40cf_91e2_38e250beecea_monitoring : **eSendStatistics**\n/ <color:#1F618D>aSendStatistics{sendStatistics}([{nScans = nScans}, {nAssemblies = nAssemblies}, {nProductsCompleted = productsCompleted}, {jobDone = jobDone}, {log = log}])</color>; 
+    f1cd7be6_2c37_40cf_91e2_38e250beecea_monitoring --> f1cd7be6_2c37_40cf_91e2_38e250beecea_jobDone : **eJobDone**
+    f1cd7be6_2c37_40cf_91e2_38e250beecea_monitoring --> f1cd7be6_2c37_40cf_91e2_38e250beecea_jobDone : \n[jobDone]
+}
+@enduml
