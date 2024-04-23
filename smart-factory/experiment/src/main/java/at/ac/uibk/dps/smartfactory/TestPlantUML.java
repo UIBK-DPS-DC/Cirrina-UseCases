@@ -1,5 +1,6 @@
 package at.ac.uibk.dps.smartfactory;
 
+import at.ac.uibk.dps.cirrina.core.exception.CirrinaException;
 import at.ac.uibk.dps.cirrina.core.io.plantuml.CollaborativeStateMachineExporter;
 import at.ac.uibk.dps.cirrina.core.lang.classes.CollaborativeStateMachineClass;
 import at.ac.uibk.dps.cirrina.core.lang.parser.Parser;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
 
 public class TestPlantUML {
 
-  private static final Logger logger = Logger.getLogger("TestPlantUML");
+  private static final Logger logger = Logger.getLogger(TestPlantUML.class.getName());
 
   public static void main(String[] args) throws Exception {
     if (args.length == 0) {
@@ -34,7 +35,12 @@ public class TestPlantUML {
     logger.info(String.format("CSM built: %s (%d state machines)%n", csmObject, csmObject.vertexSet().size()));
 
     var out = new StringWriter();
-    CollaborativeStateMachineExporter.export(out, csmObject);
+    try {
+      CollaborativeStateMachineExporter.export(out, csmObject);
+    } catch (CirrinaException e) {
+      logger.severe(String.format("Failed to export collaborative state machine: %s", e.getMessage()));
+      System.exit(1);
+    }
 
     var file = new File("plantuml/" + args[0]+ ".puml");
     try (var writer = new FileWriter(file)) {

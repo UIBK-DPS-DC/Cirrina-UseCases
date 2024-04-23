@@ -4,14 +4,14 @@ plugins {
     id("org.graalvm.buildtools.native") version "0.10.1"
 }
 
-group = "ac.at.uibk.dps.smartfactory"
+group = "at.ac.uibk.dps.smartfactory"
 version = "1.0-SNAPSHOT"
 
 graalvmNative {
     binaries {
         named("main") {
             imageName.set("cirrina_smartfactory")
-            mainClass.set("ac.at.uibk.dps.smartfactory.TestParser")
+            mainClass.set("ac.at.uibk.dps.smartfactory.TestLocal")
             buildArgs.add("-O4")
         }
         named("test") {
@@ -72,16 +72,13 @@ dependencies {
 }
 
 tasks {
-    javadoc {
-        options {
-            (this as CoreJavadocOptions).addStringOption("Xdoclint:none", "-quiet")
-            overview = "src/main/javadoc/overview.html" // Relative to source root
-            addBooleanOption("-allow-script-in-comments", true)
-            header = "<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML\"></script>"
-        }
+    task("runTestLocal", type = JavaExec::class) {
+        mainClass = "at.ac.uibk.dps.smartfactory.TestLocal"
+        classpath = sourceSets["main"].runtimeClasspath
     }
-}
 
-tasks.test {
-    useJUnitPlatform()
+    task("runTestPlantUML", type = JavaExec::class) {
+        mainClass = "at.ac.uibk.dps.smartfactory.TestPlantUML"
+        classpath = sourceSets["main"].runtimeClasspath
+    }
 }

@@ -11,15 +11,13 @@ import at.ac.uibk.dps.cirrina.core.object.context.ContextBuilder;
 import at.ac.uibk.dps.cirrina.core.exception.RuntimeException;
 import at.ac.uibk.dps.cirrina.core.object.event.Event;
 import at.ac.uibk.dps.cirrina.core.object.event.EventHandler;
+import at.ac.uibk.dps.cirrina.runtime.command.action.InvokeActionCommand;
 import at.ac.uibk.dps.cirrina.runtime.instance.StateMachineInstance;
 import at.ac.uibk.dps.cirrina.runtime.scheduler.RoundRobinRuntimeScheduler;
 import at.ac.uibk.dps.cirrina.runtime.shared.SharedRuntime;
 
 import java.io.FileNotFoundException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.*;
 import java.util.stream.Collectors;
 
@@ -52,7 +50,7 @@ public class TestLocal {
             System.exit(1);
         }
 
-        logger.info(String.format("CSM parsed: %s (%d state machines)%n", csmClass.name, csmClass.stateMachines.size()));
+        logger.info(String.format("CSM parsed: %s (%d state machines)", csmClass.name, csmClass.stateMachines.size()));
 
         // Check state machine
         CollaborativeStateMachine csmObject = null;
@@ -63,7 +61,7 @@ public class TestLocal {
             System.exit(1);
         }
 
-        logger.info(String.format("CSM built: %s (%d state machines)%n", csmObject, csmObject.vertexSet().size()));
+        logger.info(String.format("CSM built: %s (%d state machines)", csmObject, csmObject.vertexSet().size()));
 
         // Get the NATS URL
         String natsServerURL = System.getenv("NATS_SERVER_URL");
@@ -75,7 +73,7 @@ public class TestLocal {
             try {
                 persistentContext.create("jobDone", false);
                 persistentContext.create("productsCompleted", 0);
-                persistentContext.create("log", new String[0]);
+                persistentContext.create("log", new ArrayList<>());
             }
             catch (RuntimeException e) {
                 logger.warning("Persistent context variables already exist or could not be created");
@@ -98,6 +96,8 @@ public class TestLocal {
                     System.exit(1);
                 }
             }
+
+            InvokeActionCommand.setLogger(logger);
 
             var thread = new Thread(sharedRuntime);
             thread.start();
