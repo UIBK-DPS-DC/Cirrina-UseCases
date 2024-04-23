@@ -10,14 +10,15 @@
 
 1. Create an environment variable `CIRRINA_HOME` and set its value to the path of the Cirrina root directory (the 
    cloned repository folder).
-2. Clone and build `cirrina-usecases`:
+2. Clone `cirrina-usecases` and build `cirrina-usecases/smart-factory/experiment`:
+````bash
+git clone https://git.uibk.ac.at/informatik/dps/dps-dc-software/cirrina-usecases.git
+cd cirrina-usecases/smart-factory/experiment
+./gradlew build
+````
 
-
-    git clone https://git.uibk.ac.at/informatik/dps/dps-dc-software/cirrina-usecases.git
-    cd smart-factory/experiment
-    ./gradlew build
 3. Run the `runTestLocal` goal:
-
-
-    ./gradlew runTestLocal --args="smart_factory_<default|develop|extended>.csm"
+````bash
+./gradlew runTestLocal --args="smart_factory_<default|develop|extended>.csm"
+````
     
