@@ -38,6 +38,19 @@
                                 "name": "jobDone",
                                 "value": "false"
                             }
+                        },
+                        {
+                            "type": "raise",
+                            "event": {
+                                "name": "eProcessMessage",
+                                "data": [
+                                    {
+                                        "name": "msg",
+                                        "value": "'Job started. Producing ' + totalProducts + ' products.'"
+                                    }
+                                ],
+                                "channel": "global"
+                            }
                         }
                     ],
                     "always": [
@@ -288,9 +301,6 @@
                         }
                     ],
                     "always": [
-                        {
-                            "target": "unloading"
-                        },
                         {
                             "target": "jobDone",
                             "actions": [
@@ -626,16 +636,7 @@
                     "on": [
                         {
                             "event": "eProcessMessage",
-                            "target": "process",
-                            "actions": [
-                                {
-                                    "type": "assign",
-                                    "variable": {
-                                        "name": "msg",
-                                        "value": "event_data"
-                                    }
-                                }
-                            ]
+                            "target": "process"
                         },
                         {
                             "event": "eJobDone",

@@ -97,7 +97,7 @@ public class TestLocal {
                 }
             }
 
-            InvokeActionCommand.setLogger(logger);
+            InvokeActionCommand.setLogger(logger); // Temporary, can be removed
 
             var thread = new Thread(sharedRuntime);
             thread.start();
