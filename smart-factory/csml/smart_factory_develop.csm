@@ -272,6 +272,20 @@
                             }
                         }
                     ],
+                    "after": [
+                        {
+                            "name": "roboticArmSystem.triggerPickup",
+                            "type": "timeout",
+                            "delay": "5000",
+                            "action": {
+                                "type": "raise",
+                                "event": {
+                                    "name": "eArmPickup",
+                                    "channel": "global"
+                                }
+                            }
+                        }
+                    ],
                     "on": [
                         {
                             "event": "ePickedUp",
@@ -378,7 +392,7 @@
                                 {
                                     "type": "invoke",
                                     // Upload photo to the cloud and scan for its validity.
-                                    "serviceType": "uploadAndScanPhoto",
+                                    "serviceType": "scanPhoto",
                                     "input": [
                                         {
                                             "name": "photoPath",
@@ -387,6 +401,20 @@
                                     ],
                                     "output": {
                                         "reference": "validObject"
+                                    }
+                                },
+                                {
+                                    "type": "raise",
+                                    "event": {
+                                        "name": "eCheckValidObject",
+                                        "channel": "internal"
+                                    }
+                                },
+                                {
+                                    "type": "raise",
+                                    "event": {
+                                        "name": "eCheckInvalidObject",
+                                        "channel": "internal"
                                     }
                                 }
                             ],
@@ -399,8 +427,9 @@
                                     }
                                 }
                             ],
-                            "always": [
+                            "on": [
                                 {
+                                    "event": "eCheckValidObject",
                                     "target": "idle",
                                     "guards": [
                                         {
@@ -418,6 +447,7 @@
                                     ]
                                 },
                                 {
+                                    "event": "eCheckInvalidObject",
                                     "target": "idle",
                                     "guards": [
                                         {
@@ -456,12 +486,17 @@
                             // Wait for some time and start detecting.
                             "initial": true,
                             "virtual": true,
-                            "entry": [
+                            "after": [
                                 {
-                                    "type": "raise",
-                                    "event": {
-                                        "name": "eBeamDetection",
-                                        "channel": "internal"
+                                    "name": "triggerBeamDetection",
+                                    "type": "timeout",
+                                    "delay": "3000",
+                                    "action": {
+                                        "type": "raise",
+                                        "event": {
+                                            "name": "eBeamDetection",
+                                            "channel": "internal"
+                                        }
                                     }
                                 }
                             ],
@@ -482,17 +517,6 @@
                             // Check if the beam is interrupted or not.
                             "initial": false,
                             "virtual": true,
-                            "always": [
-                                {
-                                    "target": "detected",
-                                    "guards": [
-                                        {
-                                            "expression": "isBeamInterrupted"
-                                        }
-                                    ],
-                                    "else": "idle"
-                                }
-                            ],
                             "on": [
                                 {
                                     "event": "eCheckBeamDetection",
@@ -562,6 +586,13 @@
                                     "output": {
                                         "reference": "isBeamInterrupted"
                                     }
+                                },
+                                {
+                                    "type": "raise",
+                                    "event": {
+                                        "name": "eCheckBeamDetection",
+                                        "channel": "internal"
+                                    }
                                 }
                             ]
                         },
@@ -595,6 +626,13 @@
                                     "serviceType": "beamDetectionEnd",
                                     "output": {
                                         "reference": "isBeamInterrupted"
+                                    }
+                                },
+                                {
+                                    "type": "raise",
+                                    "event": {
+                                        "name": "eCheckBeamDetection",
+                                        "channel": "internal"
                                     }
                                 }
                             ]
@@ -750,7 +788,7 @@
                             // Add message to the log.
                             "variable": {
                                 "name": "log",
-                                "value": "log.add(msg); log"
+                                "value": "var newLog = log; newLog.add(msg); newLog"
                             }
                         }
                     ],
@@ -845,12 +883,19 @@
                                 ],
                                 "channel": "global"
                             }
-                        },
+                        }
+                    ],
+                    "after": [
                         {
-                            "type": "raise",
-                            "event": {
-                                "name": "eRetry",
-                                "channel": "internal"
+                            "name": "triggerRetry",
+                            "type": "timeout",
+                            "delay": "10000",
+                            "action": {
+                                "type": "raise",
+                                "event": {
+                                    "name": "eRetry",
+                                    "channel": "internal"
+                                }
                             }
                         }
                     ],
@@ -888,19 +933,30 @@
                             "type": "match",
                             // Set error message.
                             "value": "pickUpSuccess",
-                            "case": {
-                                "false": {
-                                    "type": "assign",
-                                    "variable": {
-                                        "name": "errorMsg",
-                                        "value": "'Pickup failed'"
+                            "cases": [
+                                {
+                                    "case": "false",
+                                    "action": {
+                                        "type": "assign",
+                                        "variable": {
+                                            "name": "errorMsg",
+                                            "value": "'Pickup failed'"
+                                        }
                                     }
                                 }
+                            ]
+                        },
+                        {
+                            "type": "raise",
+                            "event": {
+                                "name": "eCheckPickUpSuccess",
+                                "channel": "internal"
                             }
                         }
                     ],
-                    "always": [
+                    "on": [
                         {
+                            "event": "eCheckPickUpSuccess",
                             "target": "assemble",
                             "guards": [
                                 {
@@ -937,19 +993,30 @@
                             "type": "match",
                             // Set error message.
                             "value": "assembleSuccess",
-                            "case": {
-                                "false": {
-                                    "type": "assign",
-                                    "variable": {
-                                        "name": "errorMsg",
-                                        "value": "'Assemble failed'"
+                            "cases": [
+                                {
+                                    "case": "false",
+                                    "action": {
+                                        "type": "assign",
+                                        "variable": {
+                                            "name": "errorMsg",
+                                            "value": "'Assemble failed'"
+                                        }
                                     }
                                 }
+                            ]
+                        },
+                        {
+                            "type": "raise",
+                            "event": {
+                                "name": "eCheckAssembleSuccess",
+                                "channel": "internal"
                             }
                         }
                     ],
-                    "always": [
+                    "on": [
                         {
+                            "event": "eCheckAssembleSuccess",
                             "target": "return",
                             "guards": [
                                 {

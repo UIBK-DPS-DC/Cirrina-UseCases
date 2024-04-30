@@ -1,6 +1,6 @@
 package at.ac.uibk.dps.smartfactory;
 
-import at.ac.uibk.dps.cirrina.core.exception.ParserException;
+import at.ac.uibk.dps.cirrina.core.exception.CirrinaException;
 import at.ac.uibk.dps.cirrina.core.exception.VerificationException;
 import at.ac.uibk.dps.cirrina.core.lang.classes.CollaborativeStateMachineClass;
 import at.ac.uibk.dps.cirrina.core.lang.parser.Parser;
@@ -8,13 +8,12 @@ import at.ac.uibk.dps.cirrina.core.object.collaborativestatemachine.Collaborativ
 import at.ac.uibk.dps.cirrina.core.object.collaborativestatemachine.CollaborativeStateMachineBuilder;
 import at.ac.uibk.dps.cirrina.core.object.context.Context;
 import at.ac.uibk.dps.cirrina.core.object.context.ContextBuilder;
-import at.ac.uibk.dps.cirrina.core.exception.RuntimeException;
 import at.ac.uibk.dps.cirrina.core.object.event.Event;
 import at.ac.uibk.dps.cirrina.core.object.event.EventHandler;
-import at.ac.uibk.dps.cirrina.runtime.command.action.InvokeActionCommand;
-import at.ac.uibk.dps.cirrina.runtime.instance.StateMachineInstance;
+import at.ac.uibk.dps.cirrina.execution.command.ActionInvokeCommand;
+import at.ac.uibk.dps.cirrina.execution.instance.statemachine.StateMachineInstance;
+import at.ac.uibk.dps.cirrina.runtime.SharedRuntime;
 import at.ac.uibk.dps.cirrina.runtime.scheduler.RoundRobinRuntimeScheduler;
-import at.ac.uibk.dps.cirrina.runtime.shared.SharedRuntime;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -27,7 +26,7 @@ public class TestLocal {
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            logger.severe("Usage: TestParser <csm_file_name>");
+            logger.severe("Usage: TestLocal <csm_file_name>");
             System.exit(1);
         }
 
@@ -45,7 +44,7 @@ public class TestLocal {
         CollaborativeStateMachineClass csmClass = null;
         try {
             csmClass = parser.parse(csmDescription);
-        } catch (ParserException e) {
+        } catch (CirrinaException e) {
             logger.severe(String.format("Parse error: %s", e.getMessage()));
             System.exit(1);
         }
@@ -74,8 +73,7 @@ public class TestLocal {
                 persistentContext.create("jobDone", false);
                 persistentContext.create("productsCompleted", 0);
                 persistentContext.create("log", new ArrayList<>());
-            }
-            catch (RuntimeException e) {
+            } catch (CirrinaException e) {
                 logger.warning("Persistent context variables already exist or could not be created");
             }
 
@@ -88,23 +86,21 @@ public class TestLocal {
             for (var instanceId : instanceIds) {
                 var instance = sharedRuntime.findInstance(instanceId);
                 if (instance.isPresent()) {
-                    logger.info(String.format("> %s", instance.get().getStateMachine().getName()));
+                    logger.info(String.format("> %s", instance.get().getStateMachineObject().getName()));
                     instances.put(instanceId.toString(), instance.get());
-                }
-                else {
+                } else {
                     logger.severe("Instance not found!");
                     System.exit(1);
                 }
             }
 
-            InvokeActionCommand.setLogger(logger); // Temporary, can be removed
+            ActionInvokeCommand.setLogger(logger); // Temporary, can be removed
 
             var thread = new Thread(sharedRuntime);
             thread.start();
             try {
                 thread.join();
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 logger.info("Interrupted");
             }
         } catch (Exception e) {
@@ -125,8 +121,9 @@ public class TestLocal {
             public void sendEvent(Event event, String source) {
                 propagateEvent(event);
 
-                logger.info(String.format("Send event '%s' (Source: %s)", event,
-                    instances.get(source).getStateMachine().getName()));
+                logger.info(String.format("Send event '%s' (Source: %s, Current state: %s)", event,
+                    instances.get(source).getStateMachineObject().getName(),
+                    instances.get(source).getActiveState().getName()));
 
                 if (!event.getData().isEmpty()) {
                     logger.info(event.getData().stream()
@@ -148,13 +145,13 @@ public class TestLocal {
             @Override
             public void subscribe(String source, String subject) {
                 logger.info(String.format("Subscribe to: %s (Source: %s)", subject,
-                    instances.get(source).getStateMachine().getName()));
+                    instances.get(source).getStateMachineObject().getName()));
             }
 
             @Override
             public void unsubscribe(String source, String subject) {
                 logger.info(String.format("Subscribe to: %s (Source: %s)", subject,
-                    instances.get(source).getStateMachine().getName()));
+                    instances.get(source).getStateMachineObject().getName()));
             }
         }, persistentContext);
     }

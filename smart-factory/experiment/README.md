@@ -16,7 +16,6 @@ git clone https://git.uibk.ac.at/informatik/dps/dps-dc-software/cirrina-usecases
 cd cirrina-usecases/smart-factory/experiment
 ./gradlew build
 ````
-
 3. Run the `runTestLocal` goal:
 ````bash
 ./gradlew runTestLocal --args="smart_factory_<default|develop|extended>.csm"
