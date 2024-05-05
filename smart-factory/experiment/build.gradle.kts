@@ -72,6 +72,12 @@ dependencies {
 }
 
 tasks {
+
+    task("runTestServer", type = JavaExec::class) {
+        mainClass = "at.ac.uibk.dps.smartfactory.TestServer"
+        classpath = sourceSets["main"].runtimeClasspath
+    }
+
     task("runTestLocal", type = JavaExec::class) {
         mainClass = "at.ac.uibk.dps.smartfactory.TestLocal"
         classpath = sourceSets["main"].runtimeClasspath

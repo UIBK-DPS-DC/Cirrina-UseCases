@@ -1,0 +1,136 @@
+{
+    "serviceImplementations": [
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/stopBelt",
+            "method": "get",
+            "name": "stopBelt",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/moveBelt",
+            "method": "get",
+            "name": "moveBelt",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/sendSms",
+            "method": "get",
+            "name": "sendSms",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/beamDetectionStart",
+            "method": "get",
+            "name": "beamDetectionStart",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/sendStatistics",
+            "method": "get",
+            "name": "sendStatistics",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/sendMail",
+            "method": "get",
+            "name": "sendMail",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/scanPhoto",
+            "method": "get",
+            "name": "scanPhoto",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/pickUp",
+            "method": "get",
+            "name": "pickUp",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/beamDetectionEnd",
+            "method": "get",
+            "name": "beamDetectionEnd",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/takePhoto",
+            "method": "get",
+            "name": "takePhoto",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/assemble",
+            "method": "get",
+            "name": "assemble",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/returnToStart",
+            "method": "get",
+            "name": "returnToStart",
+            "cost": 1.0,
+            "local": true
+        }  
+    ]
+}

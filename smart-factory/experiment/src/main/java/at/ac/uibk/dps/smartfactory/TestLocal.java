@@ -6,27 +6,37 @@ import at.ac.uibk.dps.cirrina.core.lang.classes.CollaborativeStateMachineClass;
 import at.ac.uibk.dps.cirrina.core.lang.parser.Parser;
 import at.ac.uibk.dps.cirrina.core.object.collaborativestatemachine.CollaborativeStateMachine;
 import at.ac.uibk.dps.cirrina.core.object.collaborativestatemachine.CollaborativeStateMachineBuilder;
-import at.ac.uibk.dps.cirrina.core.object.context.Context;
-import at.ac.uibk.dps.cirrina.core.object.context.ContextBuilder;
+import at.ac.uibk.dps.cirrina.core.object.context.*;
 import at.ac.uibk.dps.cirrina.core.object.event.Event;
-import at.ac.uibk.dps.cirrina.core.object.event.EventHandler;
-import at.ac.uibk.dps.cirrina.execution.command.ActionInvokeCommand;
+import at.ac.uibk.dps.cirrina.core.object.event.NatsEventHandler;
 import at.ac.uibk.dps.cirrina.execution.instance.statemachine.StateMachineInstance;
+import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementation;
+import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementationBuilder;
+import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementationSelector;
+import at.ac.uibk.dps.cirrina.execution.service.description.HttpServiceImplementationDescription;
+import at.ac.uibk.dps.cirrina.execution.service.description.ServiceImplementationType;
 import at.ac.uibk.dps.cirrina.runtime.SharedRuntime;
 import at.ac.uibk.dps.cirrina.runtime.scheduler.RoundRobinRuntimeScheduler;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.*;
 import java.util.stream.Collectors;
 
+/**
+ * Runs a cirrina shared runtime with the use case and a
+ */
 public class TestLocal {
 
-    private static final Logger logger = getLogger();
+    public static final Logger LOGGER = TestLogger.getLogger(TestLocal.class.getName());
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+
         if (args.length == 0) {
-            logger.severe("Usage: TestLocal <csm_file_name>");
+            LOGGER.severe("Usage: TestLocal <csm_file_name>");
             System.exit(1);
         }
 
@@ -35,7 +45,7 @@ public class TestLocal {
         try {
             csmDescription = CsmHelper.readCsm(args[0]);
         } catch (FileNotFoundException e) {
-            logger.severe(String.format("CSM not found: %s%n%s", args[0], e.getMessage()));
+            LOGGER.severe(String.format("CSM not found: %s%n%s", args[0], e.getMessage()));
             System.exit(1);
         }
         Parser parser = new Parser(new Parser.Options());
@@ -45,22 +55,31 @@ public class TestLocal {
         try {
             csmClass = parser.parse(csmDescription);
         } catch (CirrinaException e) {
-            logger.severe(String.format("Parse error: %s", e.getMessage()));
+            LOGGER.severe(String.format("Parse error: %s", e.getMessage()));
             System.exit(1);
         }
 
-        logger.info(String.format("CSM parsed: %s (%d state machines)", csmClass.name, csmClass.stateMachines.size()));
+        LOGGER.info(String.format("CSM parsed: %s (%d state machines)", csmClass.name, csmClass.stateMachines.size()));
 
         // Check state machine
         CollaborativeStateMachine csmObject = null;
         try {
             csmObject = CollaborativeStateMachineBuilder.from(csmClass).build();
         } catch (VerificationException e) {
-            logger.severe(String.format("Check error: %s", e.getMessage()));
+            LOGGER.severe(String.format("Check error: %s", e.getMessage()));
             System.exit(1);
         }
 
-        logger.info(String.format("CSM built: %s (%d state machines)", csmObject, csmObject.vertexSet().size()));
+        LOGGER.info(String.format("CSM built: %s (%d state machines)", csmObject, csmObject.vertexSet().size()));
+
+        Thread httpServerThread = null;
+        try {
+            httpServerThread = SmartFactoryHttpServer.runServer(Optional.empty());
+            LOGGER.info(String.format("Listening for service invocations on port %d.", SmartFactoryHttpServer.DEFAULT_PORT));
+        } catch (IOException e) {
+            LOGGER.severe(String.format("Could not run HTTP Server: %s", e.getMessage()));
+            System.exit(1);
+        }
 
         // Get the NATS URL
         String natsServerURL = System.getenv("NATS_SERVER_URL");
@@ -74,107 +93,86 @@ public class TestLocal {
                 persistentContext.create("productsCompleted", 0);
                 persistentContext.create("log", new ArrayList<>());
             } catch (CirrinaException e) {
-                logger.warning("Persistent context variables already exist or could not be created");
+                LOGGER.warning("Persistent context variables already exist or could not be created!");
             }
 
             // Create a shared runtime and run it
             Map<String, StateMachineInstance> instances = new HashMap<>();
-            var sharedRuntime = getSharedRuntime(persistentContext, instances);
-            var instanceIds = sharedRuntime.newInstance(csmObject);
-            logger.info(String.format("CSM instantiated: %d state machine instances%n", instanceIds.size()));
+            var sharedRuntime = getSharedRuntime(persistentContext, csmObject, natsServerURL, instances);
+            var instanceIds = sharedRuntime.newInstance(csmObject, getServiceSelector());
+            LOGGER.info(String.format("CSM instantiated: %d state machine instances.", instanceIds.size()));
 
             for (var instanceId : instanceIds) {
                 var instance = sharedRuntime.findInstance(instanceId);
                 if (instance.isPresent()) {
-                    logger.info(String.format("> %s", instance.get().getStateMachineObject().getName()));
+                    LOGGER.info(String.format("> %s", instance.get().getStateMachineObject().getName()));
                     instances.put(instanceId.toString(), instance.get());
                 } else {
-                    logger.severe("Instance not found!");
+                    LOGGER.severe("Instance not found!");
                     System.exit(1);
                 }
             }
 
-            ActionInvokeCommand.setLogger(logger); // Temporary, can be removed
-
-            var thread = new Thread(sharedRuntime);
-            thread.start();
+            var runtimeThread = new Thread(sharedRuntime);
+            runtimeThread.start();
             try {
-                thread.join();
+                runtimeThread.join();
             } catch (InterruptedException e) {
-                logger.info("Interrupted");
+                LOGGER.info("Interrupted");
             }
         } catch (Exception e) {
-          logger.severe(String.format("Runtime error: %s", e.getMessage()));
+          LOGGER.severe(String.format("Runtime error: %s", e.getMessage()));
+        }
+        finally {
+            LOGGER.info("Shutting down...");
+            httpServerThread.interrupt();
         }
     }
 
-    private static SharedRuntime getSharedRuntime(Context persistentContext,
-                                                  Map<String, StateMachineInstance> instances) throws Exception {
-        return new SharedRuntime(new RoundRobinRuntimeScheduler(), new EventHandler() {
+    private static ServiceImplementationSelector getServiceSelector() {
 
+        Multimap<String, ServiceImplementation> serviceImplementations
+            = ArrayListMultimap.create(SmartFactoryHttpServer.PATHS.size(), 1);
+
+        for (String path : SmartFactoryHttpServer.PATHS.keySet()) {
+
+            var service = new HttpServiceImplementationDescription();
+            service.name = path;
+            service.type = ServiceImplementationType.HTTP;
+            service.cost = 1.0f;
+            service.local = true;
+            service.scheme = "http";
+            service.host = "localhost";
+            service.port = SmartFactoryHttpServer.DEFAULT_PORT;
+            service.method = HttpServiceImplementationDescription.Method.GET;
+            service.endPoint = "/" + path;
+
+            serviceImplementations.put(path, ServiceImplementationBuilder.from(service).build());
+        }
+
+        return new ServiceImplementationSelector(serviceImplementations);
+    }
+
+    private static SharedRuntime getSharedRuntime(Context persistentContext, CollaborativeStateMachine csm,
+                                                  String natsServerURL, Map<String, StateMachineInstance> instances) throws Exception {
+        var eventHandler = new NatsEventHandler(natsServerURL) {
             @Override
-            public void close() {
-                logger.info("Closing");
-            }
+            public void sendEvent(Event event, String source) throws CirrinaException {
+                super.sendEvent(event, source);
 
-            @Override
-            public void sendEvent(Event event, String source) {
-                propagateEvent(event);
-
-                logger.info(String.format("Send event '%s' (Source: %s, Current state: %s)", event,
+                LOGGER.info(String.format("Send event '%s' (Source: %s, Current state: %s)", event,
                     instances.get(source).getStateMachineObject().getName(),
-                    instances.get(source).getActiveState().getName()));
+                    instances.get(source).getStatus().getActivateState().getState().getName()));
 
                 if (!event.getData().isEmpty()) {
-                    logger.info(event.getData().stream()
+                    LOGGER.info(event.getData().stream()
                         .map(var -> var.name() + " = " + var.value())
                         .collect(Collectors.joining(", ")));
                 }
             }
-
-            @Override
-            public void subscribe(String subject) {
-                logger.info(String.format("Subscribe to: %s", subject));
-            }
-
-            @Override
-            public void unsubscribe(String subject) {
-                logger.info(String.format("Unsubscribe to: %s", subject));
-            }
-
-            @Override
-            public void subscribe(String source, String subject) {
-                logger.info(String.format("Subscribe to: %s (Source: %s)", subject,
-                    instances.get(source).getStateMachineObject().getName()));
-            }
-
-            @Override
-            public void unsubscribe(String source, String subject) {
-                logger.info(String.format("Subscribe to: %s (Source: %s)", subject,
-                    instances.get(source).getStateMachineObject().getName()));
-            }
-        }, persistentContext);
-    }
-
-    private static Logger getLogger() {
-        var logger = Logger.getLogger(TestLocal.class.getName());
-
-        logger.setLevel(Level.INFO);
-        logger.setUseParentHandlers(false);
-
-        var consoleHandler = new ConsoleHandler();
-        var formatter = new SimpleFormatter() {
-            private static final String format = "[%1$tF %1$tT.%1$tL] [%2$-7s] %3$s %n";
-
-            @Override
-            public synchronized String format(LogRecord logRecord) {
-                return String.format(format, new Date(logRecord.getMillis()), logRecord.getLevel().getLocalizedName(),
-                    logRecord.getMessage());
-            }
         };
-        consoleHandler.setFormatter(formatter);
-        logger.addHandler(consoleHandler);
+        eventHandler.subscribe("*");
 
-        return logger;
+        return new SharedRuntime(new RoundRobinRuntimeScheduler(), eventHandler, persistentContext);
     }
 }
