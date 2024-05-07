@@ -47,57 +47,57 @@ public class SimulationHttpServer implements Runnable {
                              Function<Map<?, ?>, List<ContextVariable>> contextVariables) implements HttpHandler {
 
     @Override
-      public void handle(HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange exchange) throws IOException {
 
-        final var fury = Fury.builder()
-            .withLanguage(Language.XLANG)
-            .requireClassRegistration(false)
-            .build();
+      final var fury = Fury.builder()
+          .withLanguage(Language.XLANG)
+          .requireClassRegistration(false)
+          .build();
 
-        try {
+      try {
 
-          LOGGER.info(String.format("Handle request: %s", path));
+        LOGGER.info(String.format("Handle request: %s", path));
 
-          final var payload = exchange.getRequestBody().readAllBytes();
+        final var payload = exchange.getRequestBody().readAllBytes();
 
-          // Deserialize the payload (must be Map<?, ?>)
-          final var in = fury.deserialize(payload);
-          assert in instanceof Map<?, ?>;
+        // Deserialize the payload (must be Map<?, ?>)
+        final var in = fury.deserialize(payload);
+        assert in instanceof Map<?, ?>;
 
-          final String inString = ((Map<?, ?>) in).entrySet().stream()
-              .map(entry -> String.format("%s: %s", entry.getKey(), entry.getValue()))
-              .collect(Collectors.joining(", "));
+        final String inString = ((Map<?, ?>) in).entrySet().stream()
+            .map(entry -> String.format("%s: %s", entry.getKey(), entry.getValue()))
+            .collect(Collectors.joining(", "));
 
-          if (!inString.trim().isEmpty()) {
-            LOGGER.info("Input: " + inString);
-          }
+        if (!inString.trim().isEmpty()) {
+          LOGGER.info("Input: " + inString);
+        }
 
-          // Convert contextVariables to response map
-          Map<?, ?> responseBody = contextVariables.apply((Map<?, ?>) in).stream()
-              .collect(Collectors.toMap(ContextVariable::name, ContextVariable::value));
+        // Convert contextVariables to response map
+        Map<?, ?> responseBody = contextVariables.apply((Map<?, ?>) in).stream()
+            .collect(Collectors.toMap(ContextVariable::name, ContextVariable::value));
 
-          final var out = fury.serialize(responseBody);
+        final var out = fury.serialize(responseBody);
 
-          // Response status and length
-          exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, out.length);
+        // Response status and length
+        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, out.length);
 
-          // Write response
-          try (final var stream = exchange.getResponseBody()) {
-            stream.write(out);
-          }
-        } catch (Exception e) {
-          // Handle exceptions and send appropriate response
-          String errorMessage = "Internal Server Error: " + e.getMessage();
+        // Write response
+        try (final var stream = exchange.getResponseBody()) {
+          stream.write(out);
+        }
+      } catch (Exception e) {
+        // Handle exceptions and send appropriate response
+        String errorMessage = "Internal Server Error: " + e.getMessage();
 
-          final var out = fury.serialize(errorMessage);
+        final var out = fury.serialize(errorMessage);
 
-          exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, out.length);
+        exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, out.length);
 
-          try (final var stream = exchange.getResponseBody()) {
-            stream.write(out);
-          }
+        try (final var stream = exchange.getResponseBody()) {
+          stream.write(out);
         }
       }
     }
+  }
 }
 
