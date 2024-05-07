@@ -10,7 +10,7 @@
                 "variables": [
                     {
                         "name": "totalProducts",
-                        "value": "4"
+                        "value": "1"
                     }
                 ]
             },
@@ -276,7 +276,7 @@
                         {
                             "name": "roboticArmSystem.triggerPickup",
                             "type": "timeout",
-                            "delay": "5000",
+                            "delay": "3000",
                             "action": {
                                 "type": "raise",
                                 "event": {
@@ -341,7 +341,7 @@
                     "terminal": true
                 },
                 {
-                    "name": "beltSensorSystem",
+                    "name": "cameraSensorSystem",
                     // Represents a conveyor belt camera sensor used to detect objects on the belt.
                     "localContext": {
                         "variables": [
@@ -401,21 +401,13 @@
                                     ],
                                     "output": {
                                         "reference": "validObject"
-                                    }
-                                },
-                                {
-                                    "type": "raise",
-                                    "event": {
-                                        "name": "eCheckValidObject",
-                                        "channel": "internal"
-                                    }
-                                },
-                                {
-                                    "type": "raise",
-                                    "event": {
-                                        "name": "eCheckInvalidObject",
-                                        "channel": "internal"
-                                    }
+                                    },
+                                    "done": [
+                                        {
+                                            "name": "eCheckValidObject",
+                                            "channel": "internal"
+                                        }
+                                    ]
                                 }
                             ],
                             "exit": [
@@ -431,36 +423,33 @@
                                 {
                                     "event": "eCheckValidObject",
                                     "target": "idle",
-                                    "guards": [
-                                        {
-                                            "expression": "validObject"
-                                        }
-                                    ],
                                     "actions": [
                                         {
-                                            "type": "raise",
-                                            "event": {
-                                                "name": "eObjectValid",
-                                                "channel": "global"
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "event": "eCheckInvalidObject",
-                                    "target": "idle",
-                                    "guards": [
-                                        {
-                                            "expression": "!validObject"
-                                        }
-                                    ],
-                                    "actions": [
-                                        {
-                                            "type": "raise",
-                                            "event": {
-                                                "name": "eObjectInvalid",
-                                                "channel": "global"
-                                            }
+                                            "type": "match",
+                                            // Set error message.
+                                            "value": "validObject",
+                                            "cases": [
+                                                {
+                                                    "case": "false",
+                                                    "action": {
+                                                        "type": "raise",
+                                                        "event": {
+                                                            "name": "eObjectInvalid",
+                                                            "channel": "global"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "case": "true",
+                                                    "action": {
+                                                        "type": "raise",
+                                                        "event": {
+                                                            "name": "eObjectValid",
+                                                            "channel": "global"
+                                                        }
+                                                    }
+                                                }
+                                            ]
                                         }
                                     ]
                                 }
@@ -490,7 +479,7 @@
                                 {
                                     "name": "triggerBeamDetection",
                                     "type": "timeout",
-                                    "delay": "3000",
+                                    "delay": "1000",
                                     "action": {
                                         "type": "raise",
                                         "event": {
@@ -585,14 +574,13 @@
                                     "serviceType": "beamDetectionStart",
                                     "output": {
                                         "reference": "isBeamInterrupted"
-                                    }
-                                },
-                                {
-                                    "type": "raise",
-                                    "event": {
-                                        "name": "eCheckBeamDetection",
-                                        "channel": "internal"
-                                    }
+                                    },
+                                    "done": [
+                                        {
+                                            "name": "eCheckBeamDetection",
+                                            "channel": "internal"
+                                        }
+                                    ]
                                 }
                             ]
                         },
@@ -626,14 +614,13 @@
                                     "serviceType": "beamDetectionEnd",
                                     "output": {
                                         "reference": "isBeamInterrupted"
-                                    }
-                                },
-                                {
-                                    "type": "raise",
-                                    "event": {
-                                        "name": "eCheckBeamDetection",
-                                        "channel": "internal"
-                                    }
+                                    },
+                                    "done": [
+                                        {
+                                            "name": "eCheckBeamDetection",
+                                            "channel": "internal"
+                                        }
+                                    ]
                                 }
                             ]
                         },

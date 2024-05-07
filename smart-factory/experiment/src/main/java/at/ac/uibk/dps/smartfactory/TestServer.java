@@ -1,5 +1,7 @@
 package at.ac.uibk.dps.smartfactory;
 
+import at.ac.uibk.dps.smartfactory.server.SmartFactoryHttpServer;
+
 import java.io.IOException;
 import java.util.Optional;
 import java.util.logging.Logger;

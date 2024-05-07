@@ -24,7 +24,7 @@ public class TestPlantUML {
 
     // Read CSM file and construct parser
     String csmDescription = CsmHelper.readCsm(args[0]);
-    Parser parser = new Parser(new Parser.Options());
+    var parser = new Parser<>(CollaborativeStateMachineClass.class);
 
     // Parse state machine
     CollaborativeStateMachineClass csmClass = parser.parse(csmDescription);

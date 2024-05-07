@@ -17,6 +17,7 @@ import at.ac.uibk.dps.cirrina.execution.service.description.HttpServiceImplement
 import at.ac.uibk.dps.cirrina.execution.service.description.ServiceImplementationType;
 import at.ac.uibk.dps.cirrina.runtime.SharedRuntime;
 import at.ac.uibk.dps.cirrina.runtime.scheduler.RoundRobinRuntimeScheduler;
+import at.ac.uibk.dps.smartfactory.server.SmartFactoryHttpServer;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
@@ -48,7 +49,7 @@ public class TestLocal {
             LOGGER.severe(String.format("CSM not found: %s%n%s", args[0], e.getMessage()));
             System.exit(1);
         }
-        Parser parser = new Parser(new Parser.Options());
+        var parser = new Parser<>(CollaborativeStateMachineClass.class);
 
         // Parse state machine
         CollaborativeStateMachineClass csmClass = null;
@@ -108,15 +109,12 @@ public class TestLocal {
                     LOGGER.info(String.format("> %s", instance.get().getStateMachineObject().getName()));
                     instances.put(instanceId.toString(), instance.get());
                 } else {
-                    LOGGER.severe("Instance not found!");
-                    System.exit(1);
+                    throw CirrinaException.from("Instance not found!");
                 }
             }
 
-            var runtimeThread = new Thread(sharedRuntime);
-            runtimeThread.start();
             try {
-                runtimeThread.join();
+                Thread.currentThread().join();
             } catch (InterruptedException e) {
                 LOGGER.info("Interrupted");
             }
@@ -162,7 +160,7 @@ public class TestLocal {
 
                 LOGGER.info(String.format("Send event '%s' (Source: %s, Current state: %s)", event,
                     instances.get(source).getStateMachineObject().getName(),
-                    instances.get(source).getStatus().getActivateState().getState().getName()));
+                    "Status")); // instances.get(source).getStatus().getActivateState().getState().getName()
 
                 if (!event.getData().isEmpty()) {
                     LOGGER.info(event.getData().stream()
@@ -171,8 +169,8 @@ public class TestLocal {
                 }
             }
         };
-        eventHandler.subscribe("*");
+        eventHandler.subscribe(NatsEventHandler.GLOBAL_SOURCE, "*");
 
-        return new SharedRuntime(new RoundRobinRuntimeScheduler(), eventHandler, persistentContext);
+        return new SharedRuntime(eventHandler, persistentContext);
     }
 }
