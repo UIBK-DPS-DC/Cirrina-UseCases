@@ -1,6 +1,6 @@
 package at.ac.uibk.dps.smartfactory.server;
 
-import at.ac.uibk.dps.cirrina.core.object.context.ContextVariable;
+import at.ac.uibk.dps.cirrina.execution.object.context.ContextVariable;
 import at.ac.uibk.dps.smartfactory.TestLogger;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

@@ -1,11 +1,11 @@
 package at.ac.uibk.dps.smartfactory;
 
+import at.ac.uibk.dps.cirrina.classes.collaborativestatemachine.CollaborativeStateMachineClass;
+import at.ac.uibk.dps.cirrina.classes.collaborativestatemachine.CollaborativeStateMachineClassBuilder;
 import at.ac.uibk.dps.cirrina.core.exception.CirrinaException;
-import at.ac.uibk.dps.cirrina.core.io.plantuml.CollaborativeStateMachineExporter;
-import at.ac.uibk.dps.cirrina.core.lang.classes.CollaborativeStateMachineClass;
-import at.ac.uibk.dps.cirrina.core.lang.parser.Parser;
-import at.ac.uibk.dps.cirrina.core.object.collaborativestatemachine.CollaborativeStateMachine;
-import at.ac.uibk.dps.cirrina.core.object.collaborativestatemachine.CollaborativeStateMachineBuilder;
+import at.ac.uibk.dps.cirrina.csml.description.CollaborativeStateMachineDescription;
+import at.ac.uibk.dps.cirrina.io.description.DescriptionParser;
+import at.ac.uibk.dps.cirrina.io.plantuml.CollaborativeStateMachineExporter;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -23,15 +23,15 @@ public class TestPlantUML {
     }
 
     // Read CSM file and construct parser
-    String csmDescription = CsmHelper.readCsm(args[0]);
-    var parser = new Parser<>(CollaborativeStateMachineClass.class);
+    String csmDescriptionString = CsmHelper.readCsm(args[0]);
+    var parser = new DescriptionParser<>(CollaborativeStateMachineDescription.class);
 
     // Parse state machine
-    CollaborativeStateMachineClass csmClass = parser.parse(csmDescription);
+    CollaborativeStateMachineDescription csmClass = parser.parse(csmDescriptionString);
     logger.info(String.format("CSM parsed: %s (%d state machines)%n", csmClass.name, csmClass.stateMachines.size()));
 
     // Check state machine
-    CollaborativeStateMachine csmObject = CollaborativeStateMachineBuilder.from(csmClass).build();
+    CollaborativeStateMachineClass csmObject = CollaborativeStateMachineClassBuilder.from(csmClass).build();
     logger.info(String.format("CSM built: %s (%d state machines)%n", csmObject, csmObject.vertexSet().size()));
 
     var out = new StringWriter();

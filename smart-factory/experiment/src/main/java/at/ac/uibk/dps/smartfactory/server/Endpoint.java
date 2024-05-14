@@ -1,6 +1,6 @@
 package at.ac.uibk.dps.smartfactory.server;
 
-import at.ac.uibk.dps.cirrina.core.object.context.ContextVariable;
+import at.ac.uibk.dps.cirrina.execution.object.context.ContextVariable;
 
 import java.util.List;
 import java.util.function.Supplier;

@@ -6,12 +6,7 @@ if (cirrinaHome.isNullOrBlank()) {
     throw IllegalStateException("CIRRINA_HOME environment variable is not set.")
 }
 
-include("core")
-project(":core").projectDir = file("$cirrinaHome/core")
+include("cirrina")
+project(":cirrina").projectDir = file("$cirrinaHome")
 
-println("Core: " + project(":core").projectDir)
-
-include("runtime")
-project(":runtime").projectDir = file("$cirrinaHome/runtime")
-
-println("Runtime: " + project(":runtime").projectDir)
+println("Cirrina Home: " + project(":cirrina").projectDir)

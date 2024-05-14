@@ -30,10 +30,9 @@ repositories {
 
 dependencies {
 
-    implementation(project(":core"))
-    implementation(project(":runtime"))
+    implementation(project(":cirrina"))
 
-    implementation("org.apache.zookeeper:zookeeper-client:3.8.1.7.1.9.0-387")
+    implementation("com.beust:jcommander:1.82")
 
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.1")
     implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:2.15.1")
@@ -43,17 +42,21 @@ dependencies {
 
     implementation("com.google.guava:guava:33.0.0-jre")
 
-    implementation("dev.cel:cel:0.3.1")
+    implementation(platform("io.opentelemetry:opentelemetry-bom:1.37.0"));
+    implementation("io.opentelemetry:opentelemetry-api");
+    implementation("io.opentelemetry:opentelemetry-sdk");
+    implementation("io.opentelemetry:opentelemetry-exporter-logging");
+    implementation("io.opentelemetry:opentelemetry-exporter-otlp");
+    implementation("io.opentelemetry.semconv:opentelemetry-semconv:1.25.0-alpha");
+    implementation("io.opentelemetry:opentelemetry-sdk-extension-autoconfigure");
 
-    implementation("org.apache.commons:commons-jexl3:3.3")
-
-    implementation("org.furyio:fury-core:0.4.1")
-
-    implementation("io.cloudevents:cloudevents-core:2.5.0")
-
-    implementation("io.nats:jnats:2.17.3")
+    implementation("jakarta.annotation:jakarta.annotation-api:3.0.0")
 
     implementation("org.apache.logging.log4j:log4j-core:2.23.1")
+
+    implementation("org.apache.zookeeper:zookeeper-client:3.8.1.7.1.9.0-387")
+
+    implementation("org.furyio:fury-core:0.4.1")
 
     implementation("org.hibernate.validator:hibernate-validator:8.0.1.Final")
     implementation("org.hibernate:hibernate-validator-cdi:8.0.1.Final")
@@ -61,14 +64,10 @@ dependencies {
     implementation("org.jgrapht:jgrapht-core:1.5.2")
     implementation("org.jgrapht:jgrapht-io:1.5.2")
 
-    implementation("org.glassfish.expressly:expressly:5.0.0")
+    testImplementation("org.mockito:mockito-core:5.11.0")
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-
-    testImplementation("org.glassfish:jakarta.el:4.0.2")
-
-    testImplementation("org.mockito:mockito-core:5.11.0")
 }
 
 tasks {

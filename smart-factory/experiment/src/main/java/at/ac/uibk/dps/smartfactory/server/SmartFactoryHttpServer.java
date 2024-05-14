@@ -1,7 +1,7 @@
 package at.ac.uibk.dps.smartfactory.server;
 
-import at.ac.uibk.dps.cirrina.core.object.context.ContextVariable;
-import at.ac.uibk.dps.cirrina.core.object.context.ContextVariableBuilder;
+import at.ac.uibk.dps.cirrina.execution.object.context.ContextVariable;
+import at.ac.uibk.dps.cirrina.execution.object.context.ContextVariableBuilder;
 
 import java.io.IOException;
 import java.util.*;

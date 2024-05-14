@@ -1,30 +1,36 @@
 package at.ac.uibk.dps.smartfactory;
 
+import at.ac.uibk.dps.cirrina.classes.collaborativestatemachine.CollaborativeStateMachineClass;
+import at.ac.uibk.dps.cirrina.classes.collaborativestatemachine.CollaborativeStateMachineClassBuilder;
 import at.ac.uibk.dps.cirrina.core.exception.CirrinaException;
 import at.ac.uibk.dps.cirrina.core.exception.VerificationException;
-import at.ac.uibk.dps.cirrina.core.lang.classes.CollaborativeStateMachineClass;
-import at.ac.uibk.dps.cirrina.core.lang.parser.Parser;
-import at.ac.uibk.dps.cirrina.core.object.collaborativestatemachine.CollaborativeStateMachine;
-import at.ac.uibk.dps.cirrina.core.object.collaborativestatemachine.CollaborativeStateMachineBuilder;
-import at.ac.uibk.dps.cirrina.core.object.context.*;
-import at.ac.uibk.dps.cirrina.core.object.event.Event;
-import at.ac.uibk.dps.cirrina.core.object.event.NatsEventHandler;
-import at.ac.uibk.dps.cirrina.execution.instance.statemachine.StateMachineInstance;
+import at.ac.uibk.dps.cirrina.csml.description.CollaborativeStateMachineDescription;
+import at.ac.uibk.dps.cirrina.execution.object.context.Context;
+import at.ac.uibk.dps.cirrina.execution.object.context.ContextBuilder;
+import at.ac.uibk.dps.cirrina.execution.object.event.Event;
+import at.ac.uibk.dps.cirrina.execution.object.event.NatsEventHandler;
+import at.ac.uibk.dps.cirrina.execution.object.state.State;
+import at.ac.uibk.dps.cirrina.execution.object.statemachine.StateMachine;
 import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementation;
 import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementationBuilder;
 import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementationSelector;
 import at.ac.uibk.dps.cirrina.execution.service.description.HttpServiceImplementationDescription;
 import at.ac.uibk.dps.cirrina.execution.service.description.ServiceImplementationType;
-import at.ac.uibk.dps.cirrina.runtime.SharedRuntime;
-import at.ac.uibk.dps.cirrina.runtime.scheduler.RoundRobinRuntimeScheduler;
+import at.ac.uibk.dps.cirrina.io.description.DescriptionParser;
+import at.ac.uibk.dps.cirrina.runtime.OfflineRuntime;
 import at.ac.uibk.dps.smartfactory.server.SmartFactoryHttpServer;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdk;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
-import java.util.logging.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +40,7 @@ public class TestLocal {
 
     public static final Logger LOGGER = TestLogger.getLogger(TestLocal.class.getName());
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         if (args.length == 0) {
             LOGGER.severe("Usage: TestLocal <csm_file_name>");
@@ -42,30 +48,30 @@ public class TestLocal {
         }
 
         // Read CSM file and construct parser
-        String csmDescription = null;
+        String csmDescriptionString = null;
         try {
-            csmDescription = CsmHelper.readCsm(args[0]);
+            csmDescriptionString = CsmHelper.readCsm(args[0]);
         } catch (FileNotFoundException e) {
             LOGGER.severe(String.format("CSM not found: %s%n%s", args[0], e.getMessage()));
             System.exit(1);
         }
-        var parser = new Parser<>(CollaborativeStateMachineClass.class);
+        var parser = new DescriptionParser<>(CollaborativeStateMachineDescription.class);
 
         // Parse state machine
-        CollaborativeStateMachineClass csmClass = null;
+        CollaborativeStateMachineDescription csmDescription = null;
         try {
-            csmClass = parser.parse(csmDescription);
+            csmDescription = parser.parse(csmDescriptionString);
         } catch (CirrinaException e) {
             LOGGER.severe(String.format("Parse error: %s", e.getMessage()));
             System.exit(1);
         }
 
-        LOGGER.info(String.format("CSM parsed: %s (%d state machines)", csmClass.name, csmClass.stateMachines.size()));
+        LOGGER.info(String.format("CSM parsed: %s (%d state machines)", csmDescription.name, csmDescription.stateMachines.size()));
 
         // Check state machine
-        CollaborativeStateMachine csmObject = null;
+        CollaborativeStateMachineClass csmObject = null;
         try {
-            csmObject = CollaborativeStateMachineBuilder.from(csmClass).build();
+            csmObject = CollaborativeStateMachineClassBuilder.from(csmDescription).build();
         } catch (VerificationException e) {
             LOGGER.severe(String.format("Check error: %s", e.getMessage()));
             System.exit(1);
@@ -98,8 +104,9 @@ public class TestLocal {
             }
 
             // Create a shared runtime and run it
-            Map<String, StateMachineInstance> instances = new HashMap<>();
-            var sharedRuntime = getSharedRuntime(persistentContext, csmObject, natsServerURL, instances);
+            Map<String, StateMachine> instances = new HashMap<>();
+            var sharedRuntime = getSharedRuntime(persistentContext, natsServerURL, instances);
+
             var instanceIds = sharedRuntime.newInstance(csmObject, getServiceSelector());
             LOGGER.info(String.format("CSM instantiated: %d state machine instances.", instanceIds.size()));
 
@@ -151,8 +158,9 @@ public class TestLocal {
         return new ServiceImplementationSelector(serviceImplementations);
     }
 
-    private static SharedRuntime getSharedRuntime(Context persistentContext, CollaborativeStateMachine csm,
-                                                  String natsServerURL, Map<String, StateMachineInstance> instances) throws Exception {
+    private static OfflineRuntime getSharedRuntime(Context persistentContext,
+                                                   String natsServerURL, Map<String, StateMachine> instances) throws Exception {
+        // Modified NATS Event handler with logging
         var eventHandler = new NatsEventHandler(natsServerURL) {
             @Override
             public void sendEvent(Event event, String source) throws CirrinaException {
@@ -169,8 +177,10 @@ public class TestLocal {
                 }
             }
         };
+
+        // Subscribe to global.*
         eventHandler.subscribe(NatsEventHandler.GLOBAL_SOURCE, "*");
 
-        return new SharedRuntime(eventHandler, persistentContext);
+        return new OfflineRuntime(eventHandler, persistentContext);
     }
 }

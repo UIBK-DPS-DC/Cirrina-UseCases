@@ -385,9 +385,11 @@
                                     "type": "invoke",
                                     // Signal camera to take a photo.
                                     "serviceType": "takePhoto",
-                                    "output": {
-                                        "reference": "photoPath"
-                                    }
+                                    "output": [
+                                        {
+                                            "reference": "photoPath"
+                                        }
+                                    ]
                                 },
                                 {
                                     "type": "invoke",
@@ -399,9 +401,11 @@
                                             "value": "photoPath"
                                         }
                                     ],
-                                    "output": {
-                                        "reference": "validObject"
-                                    },
+                                    "output": [
+                                        {
+                                            "reference": "validObject"
+                                        }
+                                    ],
                                     "done": [
                                         {
                                             "name": "eCheckValidObject",
@@ -459,7 +463,7 @@
                 },
                 {
                     "name": "photoelectricSensor",
-                    // Represents a photoelectric sensor.
+                    // Represents a photoelectric sensor to be used as a base state machine.
                     "abstract": true, // Abstract, because this nested state machine would be initialized otherwise
                     "localContext": {
                         "variables": [
@@ -474,12 +478,11 @@
                             "name": "idle",
                             // Wait for some time and start detecting.
                             "initial": true,
-                            "virtual": true,
                             "after": [
                                 {
                                     "name": "triggerBeamDetection",
                                     "type": "timeout",
-                                    "delay": "1000",
+                                    "delay": "3000",
                                     "action": {
                                         "type": "raise",
                                         "event": {
@@ -495,7 +498,7 @@
                                     "target": "detecting",
                                     "guards": [
                                         {
-                                            "expression": "!isUnloading"
+                                            "reference": "guard.allowBeamDetection"
                                         }
                                     ]
                                 }
@@ -523,7 +526,11 @@
                             "name": "detected",
                             // Start sensor scan and return to idle.
                             "initial": false,
-                            "virtual": true,
+                            "entry": [
+                                {
+                                    "reference": "action.onDetected"
+                                }
+                            ],
                             "always": [
                                 {
                                     "target": "idle",
@@ -539,6 +546,22 @@
                                 }
                             ]
                         }
+                    ],
+                    "guards": [
+                        {
+                            "name": "guard.allowBeamDetection",
+                            "expression": "!isUnloading"
+                        }
+                    ],
+                    "actions": [
+                        {
+                            "name": "action.onDetected",
+                            "type": "raise",
+                            "event": {
+                                "name": "eNoOp",
+                                "channel": "internal"
+                            }
+                        }
                     ]
                 },
                 {
@@ -547,24 +570,6 @@
                     "extends": "photoelectricSensor",
                     "states": [
                         {
-                            "name": "idle",
-                            // Wait for some time and start detecting.
-                            "on": [
-                                {
-                                    "event": "eBeamDetection",
-                                    "target": "detecting",
-                                    "guards": [
-                                        {
-                                            "expression": "!isScanning"
-                                        },
-                                        {
-                                            "expression": "!isUnloading"
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
                             "name": "detecting",
                             // Check if the beam is interrupted or not.
                             "entry": [
@@ -572,9 +577,11 @@
                                     "type": "invoke",
                                     // Check if the beam is interrupted or not.
                                     "serviceType": "beamDetectionStart",
-                                    "output": {
-                                        "reference": "isBeamInterrupted"
-                                    },
+                                    "output": [
+                                        {
+                                            "reference": "isBeamInterrupted"
+                                        }
+                                    ],
                                     "done": [
                                         {
                                             "name": "eCheckBeamDetection",
@@ -583,19 +590,23 @@
                                     ]
                                 }
                             ]
-                        },
+                        }
+                    ],
+                    "guards": [
                         {
-                            "name": "detected",
+                            "name": "guard.allowBeamDetection",
+                            "expression": "!isUnloading && !isScanning"
+                        }
+                    ],
+                    "actions": [
+                        {
                             // Start sensor scan and return to idle.
-                            "entry": [
-                                {
-                                    "type": "raise",
-                                    "event": {
-                                        "name": "eStartScan",
-                                        "channel": "global"
-                                    }
-                                }
-                            ]
+                            "name": "action.onDetected",
+                            "type": "raise",
+                            "event": {
+                                "name": "eStartScan",
+                                "channel": "global"
+                            }
                         }
                     ]
                 },
@@ -612,9 +623,11 @@
                                     "type": "invoke",
                                     // Check if the beam is interrupted or not.
                                     "serviceType": "beamDetectionEnd",
-                                    "output": {
-                                        "reference": "isBeamInterrupted"
-                                    },
+                                    "output": [
+                                        {
+                                            "reference": "isBeamInterrupted"
+                                        }
+                                    ],
                                     "done": [
                                         {
                                             "name": "eCheckBeamDetection",
@@ -623,19 +636,23 @@
                                     ]
                                 }
                             ]
-                        },
+                        }
+                    ],
+                    "guards": [
                         {
-                            "name": "detected",
-                            // Start sensor scan and return to idle.
-                            "entry": [
-                                {
-                                    "type": "raise",
-                                    "event": {
-                                        "name": "eStartUnload",
-                                        "channel": "global"
-                                    }
-                                }
-                            ]
+                            "name": "guard.allowBeamDetection",
+                            "expression": "!isUnloading"
+                        }
+                    ],
+                    "actions": [
+                        {
+                            // Trigger robotic arm to pick up the current object
+                            "name": "action.onDetected",
+                            "type": "raise",
+                            "event": {
+                                "name": "eStartUnload",
+                                "channel": "global"
+                            }
                         }
                     ]
                 }
@@ -666,6 +683,16 @@
                         {
                             "event": "eJobDone",
                             "target": "jobDone"
+                        }
+                    ],
+                    "exit": [
+                        {
+                            "type": "assign",
+                            "variable": {
+                                "name": "msg",
+                                "value": "$msg"
+                            }
+
                         }
                     ],
                     "always": [
@@ -912,9 +939,11 @@
                             "type": "invoke",
                             // Signal arm to pickup the item.
                             "serviceType": "pickUp",
-                            "output": {
-                                "reference": "pickUpSuccess"
-                            }
+                            "output": [
+                                {
+                                    "reference": "pickUpSuccess"
+                                }
+                            ]
                         },
                         {
                             "type": "match",
@@ -972,9 +1001,11 @@
                             "type": "invoke",
                             // Signal arm to assemble the item.
                             "serviceType": "assemble",
-                            "output": {
-                                "reference": "assembleSuccess"
-                            }
+                            "output": [
+                                {
+                                    "reference": "assembleSuccess"
+                                }
+                            ]
                         },
                         {
                             "type": "match",
