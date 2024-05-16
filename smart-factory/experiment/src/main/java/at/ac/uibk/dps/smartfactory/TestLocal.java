@@ -2,14 +2,11 @@ package at.ac.uibk.dps.smartfactory;
 
 import at.ac.uibk.dps.cirrina.classes.collaborativestatemachine.CollaborativeStateMachineClass;
 import at.ac.uibk.dps.cirrina.classes.collaborativestatemachine.CollaborativeStateMachineClassBuilder;
-import at.ac.uibk.dps.cirrina.core.exception.CirrinaException;
-import at.ac.uibk.dps.cirrina.core.exception.VerificationException;
 import at.ac.uibk.dps.cirrina.csml.description.CollaborativeStateMachineDescription;
 import at.ac.uibk.dps.cirrina.execution.object.context.Context;
 import at.ac.uibk.dps.cirrina.execution.object.context.ContextBuilder;
 import at.ac.uibk.dps.cirrina.execution.object.event.Event;
 import at.ac.uibk.dps.cirrina.execution.object.event.NatsEventHandler;
-import at.ac.uibk.dps.cirrina.execution.object.state.State;
 import at.ac.uibk.dps.cirrina.execution.object.statemachine.StateMachine;
 import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementation;
 import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementationBuilder;
@@ -21,8 +18,6 @@ import at.ac.uibk.dps.cirrina.runtime.OfflineRuntime;
 import at.ac.uibk.dps.smartfactory.server.SmartFactoryHttpServer;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import io.opentelemetry.api.OpenTelemetry;
-import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdk;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -61,7 +56,7 @@ public class TestLocal {
         CollaborativeStateMachineDescription csmDescription = null;
         try {
             csmDescription = parser.parse(csmDescriptionString);
-        } catch (CirrinaException e) {
+        } catch (Exception e) {
             LOGGER.severe(String.format("Parse error: %s", e.getMessage()));
             System.exit(1);
         }
@@ -72,7 +67,7 @@ public class TestLocal {
         CollaborativeStateMachineClass csmObject = null;
         try {
             csmObject = CollaborativeStateMachineClassBuilder.from(csmDescription).build();
-        } catch (VerificationException e) {
+        } catch (Exception e) {
             LOGGER.severe(String.format("Check error: %s", e.getMessage()));
             System.exit(1);
         }
@@ -99,7 +94,7 @@ public class TestLocal {
                 persistentContext.create("jobDone", false);
                 persistentContext.create("productsCompleted", 0);
                 persistentContext.create("log", new ArrayList<>());
-            } catch (CirrinaException e) {
+            } catch (Exception e) {
                 LOGGER.warning("Persistent context variables already exist or could not be created!");
             }
 
@@ -116,7 +111,7 @@ public class TestLocal {
                     LOGGER.info(String.format("> %s", instance.get().getStateMachineObject().getName()));
                     instances.put(instanceId.toString(), instance.get());
                 } else {
-                    throw CirrinaException.from("Instance not found!");
+                    throw new IllegalStateException("Instance not found!");
                 }
             }
 
@@ -163,7 +158,7 @@ public class TestLocal {
         // Modified NATS Event handler with logging
         var eventHandler = new NatsEventHandler(natsServerURL) {
             @Override
-            public void sendEvent(Event event, String source) throws CirrinaException {
+            public void sendEvent(Event event, String source) throws IOException {
                 super.sendEvent(event, source);
 
                 LOGGER.info(String.format("Send event '%s' (Source: %s, Current state: %s)", event,

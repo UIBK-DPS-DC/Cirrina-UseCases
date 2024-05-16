@@ -2,7 +2,6 @@ package at.ac.uibk.dps.smartfactory;
 
 import at.ac.uibk.dps.cirrina.classes.collaborativestatemachine.CollaborativeStateMachineClass;
 import at.ac.uibk.dps.cirrina.classes.collaborativestatemachine.CollaborativeStateMachineClassBuilder;
-import at.ac.uibk.dps.cirrina.core.exception.CirrinaException;
 import at.ac.uibk.dps.cirrina.csml.description.CollaborativeStateMachineDescription;
 import at.ac.uibk.dps.cirrina.io.description.DescriptionParser;
 import at.ac.uibk.dps.cirrina.io.plantuml.CollaborativeStateMachineExporter;
@@ -37,7 +36,7 @@ public class TestPlantUML {
     var out = new StringWriter();
     try {
       CollaborativeStateMachineExporter.export(out, csmObject);
-    } catch (CirrinaException e) {
+    } catch (Exception e) {
       logger.severe(String.format("Failed to export collaborative state machine: %s", e.getMessage()));
       System.exit(1);
     }
