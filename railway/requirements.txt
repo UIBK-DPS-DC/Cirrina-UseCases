@@ -1,0 +1,4 @@
+fastapi
+nats-py
+protobuf
+uvicorn

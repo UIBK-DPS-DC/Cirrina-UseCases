@@ -1,0 +1,265 @@
+{
+  "serviceImplementations": [
+    {
+      "name": "gateUp",
+      "type": "HTTP",
+      "cost": 0.0,
+      "local": false,
+      "scheme": "http",
+      "host": "localhost",
+      "port": 8001,
+      "endPoint": "/gate/up",
+      "method": "POST"
+    },
+    {
+      "name": "gateDown",
+      "type": "HTTP",
+      "cost": 0.0,
+      "local": false,
+      "scheme": "http",
+      "host": "localhost",
+      "port": 8001,
+      "endPoint": "/gate/down",
+      "method": "POST"
+    },
+    {
+      "name": "lightOn",
+      "type": "HTTP",
+      "cost": 0.0,
+      "local": false,
+      "scheme": "http",
+      "host": "localhost",
+      "port": 8002,
+      "endPoint": "/light/on",
+      "method": "POST"
+    },
+    {
+      "name": "lightOff",
+      "type": "HTTP",
+      "cost": 0.0,
+      "local": false,
+      "scheme": "http",
+      "host": "localhost",
+      "port": 8002,
+      "endPoint": "/light/off",
+      "method": "POST"
+    }
+  ],
+  "collaborativeStateMachine": {
+    "name": "collaborativeStateMachine",
+    "version": "0.1",
+    "stateMachines": [
+      {
+        "name": "crossing",
+        "states": [
+          {
+            "name": "away",
+            "initial": true,
+            "on": [
+              {
+                "event": "sensor",
+                "guards": [
+                  {
+                    "expression": "$value"
+                  }
+                ],
+                "target": "approach"
+              },
+              {
+                "event": "sensor",
+                "guards": [
+                  {
+                    "expression": "$value == false"
+                  }
+                ],
+                "actions": [
+                  {
+                    "reference": "lightOff"
+                  },
+                  {
+                    "reference": "gateUp"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "approach",
+            "on": [
+              {
+                "event": "sensor",
+                "guards": [
+                  {
+                    "expression": "$value == false"
+                  }
+                ],
+                "target": "close"
+              },
+              {
+                "event": "sensor",
+                "guards": [
+                  {
+                    "expression": "$value"
+                  }
+                ],
+                "actions": [
+                  {
+                    "reference": "lightOn"
+                  },
+                  {
+                    "reference": "gateDown"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "close",
+            "on": [
+              {
+                "event": "sensor",
+                "guards": [
+                  {
+                    "expression": "$value"
+                  }
+                ],
+                "target": "present"
+              },
+              {
+                "event": "sensor",
+                "guards": [
+                  {
+                    "expression": "$value == false"
+                  }
+                ],
+                "actions": [
+                  {
+                    "reference": "lightOn"
+                  },
+                  {
+                    "reference": "gateDown"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "present",
+            "on": [
+              {
+                "event": "sensor",
+                "guards": [
+                  {
+                    "expression": "$value == false"
+                  }
+                ],
+                "target": "leaving"
+              },
+              {
+                "event": "sensor",
+                "guards": [
+                  {
+                    "expression": "$value"
+                  }
+                ],
+                "actions": [
+                  {
+                    "reference": "lightOn"
+                  },
+                  {
+                    "reference": "gateDown"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "leaving",
+            "on": [
+              {
+                "event": "sensor",
+                "guards": [
+                  {
+                    "expression": "$value"
+                  }
+                ],
+                "target": "left"
+              },
+              {
+                "event": "sensor",
+                "guards": [
+                  {
+                    "expression": "$value == false"
+                  }
+                ],
+                "actions": [
+                  {
+                    "reference": "lightOff"
+                  },
+                  {
+                    "reference": "gateUp"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "left",
+            "on": [
+              {
+                "event": "sensor",
+                "guards": [
+                  {
+                    "expression": "$value == false"
+                  }
+                ],
+                "target": "away"
+              },
+              {
+                "event": "sensor",
+                "guards": [
+                  {
+                    "expression": "$value"
+                  }
+                ],
+                "actions": [
+                  {
+                    "reference": "lightOff"
+                  },
+                  {
+                    "reference": "gateUp"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "gateUp",
+            "type": "invoke",
+            "serviceType": "gateUp"
+          },
+          {
+            "name": "gateDown",
+            "type": "invoke",
+            "serviceType": "gateDown"
+          },
+          {
+            "name": "lightOn",
+            "type": "invoke",
+            "serviceType": "lightOn"
+          },
+          {
+            "name": "lightOff",
+            "type": "invoke",
+            "serviceType": "lightOff"
+          }
+        ]
+      }
+    ]
+  },
+  "stateMachineName": "crossing",
+  "localData": {},
+  "bindEventInstanceIds": []
+}
