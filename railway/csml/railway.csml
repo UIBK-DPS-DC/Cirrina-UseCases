@@ -1,16 +1,41 @@
 {
   "name": "collaborativeStateMachine",
   "version": "0.1",
+  "persistentContext": {
+    "variables": [
+      {
+        "name": "numTrains",
+        "value": "0"
+      }
+    ]
+  },
   "stateMachines": [
     {
       "name": "crossing",
       "states": [
         {
           "name": "gate",
+          "localContext": {
+            "variables": [
+              {
+                "name": "numTransitions",
+                "value": "0"
+              }
+            ]
+          },
           "states": [
             {
               "name": "up",
               "initial": true,
+              "entry": [
+                {
+                  "type": "assign",
+                  "variable": {
+                    "name": "numTransitions",
+                    "value": "numTransitions + 1"
+                  }
+                }
+              ],
               "on": [
                 {
                   "event": "gateUp",
@@ -28,6 +53,15 @@
             },
             {
               "name": "down",
+              "entry": [
+                {
+                  "type": "assign",
+                  "variable": {
+                    "name": "numTransitions",
+                    "value": "numTransitions + 1"
+                  }
+                }
+              ],
               "on": [
                 {
                   "event": "gateDown",
@@ -59,10 +93,27 @@
         },
         {
           "name": "light",
+          "localContext": {
+            "variables": [
+              {
+                "name": "numTransitions",
+                "value": "0"
+              }
+            ]
+          },
           "states": [
             {
               "name": "off",
               "initial": true,
+              "entry": [
+                {
+                  "type": "assign",
+                  "variable": {
+                    "name": "numTransitions",
+                    "value": "numTransitions + 1"
+                  }
+                }
+              ],
               "on": [
                 {
                   "event": "lightOff",
@@ -80,6 +131,15 @@
             },
             {
               "name": "on",
+              "entry": [
+                {
+                  "type": "assign",
+                  "variable": {
+                    "name": "numTransitions",
+                    "value": "numTransitions + 1"
+                  }
+                }
+              ],
               "on": [
                 {
                   "event": "lightOn",
@@ -142,6 +202,15 @@
         },
         {
           "name": "approach",
+          "entry": [
+            {
+              "type": "assign",
+              "variable": {
+                "name": "numTrains",
+                "value": "numTrains + 1"
+              }
+            }
+          ],
           "on": [
             {
               "event": "sensor",
