@@ -1,4 +1,3 @@
-import ContextVariable_pb2
 import Event_pb2
 
 import asyncio
@@ -8,15 +7,15 @@ import argparse
 import sys
 
 TRAIN_SPEED_IN_MS = 33.3
-TRAIN_LENGTH_IN_M = 190.0
+TRAIN_LENGTH_IN_M = 150.0
 
-TICK_RATE_IN_S = 0.5
+TICK_RATE_IN_S = 0.01
 
 SENSOR_POSITIONS = [0.0, 200.0, 400.0]
 
 TRAINS_INTERVAL_IN_S = 30.0
 
-TIME_FACTOR = 10.0
+TIME_FACTOR = 1.0
 
 
 class Train:
@@ -43,7 +42,7 @@ class Simulation:
         self._last_simulation_time_in_s = self._simulated_time_in_s
 
         self._trains_interval_in_s = trains_interval_in_s
-        self._next_arrival_time_in_s = self._trains_interval_in_s
+        self._next_arrival_time_in_s = 0.0
 
         self._sensor_positions = sensor_positions
         self._sensor_values = [False for _ in self._sensor_positions]
@@ -105,27 +104,33 @@ class Simulation:
         for i, train in enumerate(self._trains):
             print(f"Train {i} at: {train.front_position()}")
 
+        s = False
+
         print("Sensor values:")
-        for sensor_value in self._sensor_values:
-            subject = "peripheral.sensor"
+        for i, sensor_value in enumerate(self._sensor_values):
+            print(f"{i}: {sensor_value}")
 
-            # Specify event data
-            event = Event_pb2.Event()
+            s = s or sensor_value
 
-            event.id = str(uuid.uuid4())
-            event.name = "sensor"
-            event.channel = Event_pb2.Event.PERIPHERAL
+        subject = "peripheral.sensor"
 
-            # Specify variable data
-            variable = event.data.add()
+        # Specify event data
+        event = Event_pb2.Event()
 
-            variable.name = "value"
-            variable.value.bool = sensor_value
+        event.id = str(uuid.uuid4())
+        event.name = "sensor"
+        event.channel = Event_pb2.Event.PERIPHERAL
 
-            # Publish event
-            await self._nc.publish(subject, event.SerializeToString())
+        # Specify variable data
+        variable = event.data.add()
 
-            print(event)
+        variable.name = "value"
+        variable.value.bool = s
+
+        # Publish event
+        await self._nc.publish(subject, event.SerializeToString())
+
+        print(event)
 
 
 async def main():
