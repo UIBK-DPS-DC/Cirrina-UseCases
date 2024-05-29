@@ -36,7 +36,7 @@ public class SurveillanceSystemUseCase {
       service.scheme = "http";
       service.host = "localhost";
       service.port = 8001;
-      service.endPoint = "/capture"; // where to specify query parameters e.g. ?start_time=0&video_number=0 ?
+      service.endPoint = "/capture";
       service.method = Method.POST;
 
       serviceDescriptions[0] = service;
@@ -50,7 +50,7 @@ public class SurveillanceSystemUseCase {
       service.scheme = "http";
       service.host = "localhost";
       service.port = 8000;
-      service.endPoint = "/process"; // where to specify query parameters e.g. ?start_time=0&video_number=0 ?
+      service.endPoint = "/process";
       service.method = Method.POST;
 
       serviceDescriptions[1] = service;
@@ -65,7 +65,7 @@ public class SurveillanceSystemUseCase {
       service.scheme = "http";
       service.host = "localhost";
       service.port = 8000;
-      service.endPoint = "/process"; // where to specify query parameters e.g. ?start_time=0&video_number=0 ?
+      service.endPoint = "/process";
       service.method = Method.POST;
 
       serviceDescriptions[2] = service;
