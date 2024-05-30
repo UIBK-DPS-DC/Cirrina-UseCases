@@ -51,7 +51,7 @@
     "persistentContext": {
       "variables": [
         {
-          "name": "numTrains",
+          "name": "persistentDataVariable",
           "value": "0"
         }
       ]
@@ -65,7 +65,7 @@
             "localContext": {
               "variables": [
                 {
-                  "name": "numTransitions",
+                  "name": "localDataVariable",
                   "value": "0"
                 }
               ]
@@ -78,8 +78,8 @@
                   {
                     "type": "assign",
                     "variable": {
-                      "name": "numTransitions",
-                      "value": "numTransitions + 1"
+                      "name": "localDataVariable",
+                      "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
                     }
                   }
                 ],
@@ -104,8 +104,8 @@
                   {
                     "type": "assign",
                     "variable": {
-                      "name": "numTransitions",
-                      "value": "numTransitions + 1"
+                      "name": "localDataVariable",
+                      "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
                     }
                   }
                 ],
@@ -143,7 +143,7 @@
             "localContext": {
               "variables": [
                 {
-                  "name": "numTransitions",
+                  "name": "localDataVariable",
                   "value": "0"
                 }
               ]
@@ -156,8 +156,8 @@
                   {
                     "type": "assign",
                     "variable": {
-                      "name": "numTransitions",
-                      "value": "numTransitions + 1"
+                      "name": "localDataVariable",
+                      "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
                     }
                   }
                 ],
@@ -182,8 +182,8 @@
                   {
                     "type": "assign",
                     "variable": {
-                      "name": "numTransitions",
-                      "value": "numTransitions + 1"
+                      "name": "localDataVariable",
+                      "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
                     }
                   }
                 ],
@@ -253,8 +253,8 @@
               {
                 "type": "assign",
                 "variable": {
-                  "name": "numTrains",
-                  "value": "numTrains + 1"
+                  "name": "persistentDataVariable",
+                  "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
                 }
               }
             ],

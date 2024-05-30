@@ -1,10 +1,19 @@
 import Event_pb2
 
 import asyncio
-import uuid
 import nats
+
+from opentelemetry import metrics
+from opentelemetry.sdk.metrics import MeterProvider
+from opentelemetry.sdk.metrics.export import (
+    ConsoleMetricExporter,
+    PeriodicExportingMetricReader,
+)
+
+import uuid
 import argparse
 import sys
+import time
 
 TRAIN_SPEED_IN_MS = 33.3
 TRAIN_LENGTH_IN_M = 150.0
@@ -16,6 +25,15 @@ SENSOR_POSITIONS = [0.0, 200.0, 400.0]
 TRAINS_INTERVAL_IN_S = 30.0
 
 TIME_FACTOR = 1.0
+
+metric_reader = PeriodicExportingMetricReader(ConsoleMetricExporter())
+provider = MeterProvider(metric_readers=[metric_reader])
+
+metrics.set_meter_provider(provider)
+
+meter = metrics.get_meter("railway")
+
+events_published_counter = meter.create_counter("events_published")
 
 
 class Train:
@@ -96,20 +114,20 @@ class Simulation:
             await asyncio.sleep(TICK_RATE_IN_S)
 
     async def _broadcast_sensor_values(self):
-        print("\033[H\033[J", end="")
-        print(f"Simulated time: {self._simulated_time_in_s}")
-        print(f"Next arrival: {self._next_arrival_time_in_s}")
-        print(f"Num. trains: {len(self._trains)}")
+        # print("\033[H\033[J", end="")
+        # print(f"Simulated time: {self._simulated_time_in_s}")
+        # print(f"Next arrival: {self._next_arrival_time_in_s}")
+        # print(f"Num. trains: {len(self._trains)}")
 
-        for i, train in enumerate(self._trains):
-            print(f"Train {i} at: {train.front_position()}")
+        # for i, train in enumerate(self._trains):
+        #    print(f"Train {i} at: {train.front_position()}")
 
         s = False
 
-        print("Sensor values:")
+        # print("Sensor values:")
         for i, sensor_value in enumerate(self._sensor_values):
-            print(f"{i}: {sensor_value}")
-
+            # print(f"{i}: {sensor_value}")
+            #
             s = s or sensor_value
 
         subject = "peripheral.sensor"
@@ -117,6 +135,7 @@ class Simulation:
         # Specify event data
         event = Event_pb2.Event()
 
+        event.createdTime = time.time_ns() / 1.0e6
         event.id = str(uuid.uuid4())
         event.name = "sensor"
         event.channel = Event_pb2.Event.PERIPHERAL
@@ -130,7 +149,9 @@ class Simulation:
         # Publish event
         await self._nc.publish(subject, event.SerializeToString())
 
-        print(event)
+        events_published_counter.add(1)
+
+        # print(event)
 
 
 async def main():
