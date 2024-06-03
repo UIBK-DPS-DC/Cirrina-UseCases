@@ -35,8 +35,20 @@
     restart_policy: always
     ports:
       - "4222:4222"
+      - "6222:6222"
       - "8222:8222"
     volumes:
       - /etc/nats/nats-cluster.conf:/etc/nats/nats.conf
     command: -c /etc/nats/nats.conf
+  become: true
+
+- name: Download NATS CLI client
+  get_url:
+    url: "https://github.com/nats-io/natscli/releases/download/v0.1.4/nats-0.1.4-amd64.deb"
+    dest: "/tmp/nats-cli.deb"
+
+- name: Install NATS CLI client
+  apt:
+    deb: "/tmp/nats-cli.deb"
+    state: present
   become: true
