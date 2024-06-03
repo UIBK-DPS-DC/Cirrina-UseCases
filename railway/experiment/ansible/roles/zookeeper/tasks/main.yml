@@ -27,20 +27,18 @@
     group: root
     mode: "0644"
 
-- name: Run NATS server in Docker
+- name: Run ZooKeeper server in Docker
   docker_container:
-    name: nats
-    image: nats:latest
+    name: zookeeper
+    image: zookeeper:latest
     state: started
     restart: true
     restart_policy: always
     ports:
-      - "4222:4222"
-      - "6222:6222"
-      - "8222:8222"
-    volumes:
-      - /etc/nats/nats-cluster.conf:/etc/nats/nats.conf
-    command: -c /etc/nats/nats.conf
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+      - "8080:8080"
   become: true
 
 - name: Download NATS CLI client

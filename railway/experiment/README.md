@@ -1,36 +1,44 @@
 # Cirrina Railway Experiment
 
+## Introduction
+
+This project, the Cirrina Railway Experiment, aims to demonstrate the utilization and performance of the Cirrina runtime, particularly focusing
+on communication between nodes in a Grid'5000 setup. This README provides detailed instructions on setting up the experiment environment,
+including the installation of necessary tools like Ansible and the configuration of resources.
+
 ## Grid5000 Setup
 
-The following instructions imply that the [Grid'5000 Getting Started Page](https://www.grid5000.fr/w/Getting_Started)
-has been read and understood. Determining the right location to execute the commands below is implied from an understanding
-of the Grid'5000 environment.
+Before proceeding, ensure familiarity with the [Grid'5000 Getting Started Page](https://www.grid5000.fr/w/Getting_Started) to understand the
+environment and execute commands appropriately.
 
 ### Step 1: Install Ansible
 
-Make sure to install Ansible as follows:
+Ansible is a crucial tool for automating the configuration of nodes in the Grid'5000 environment. To install Ansible, execute the following
+commands:
 
 ```bash
 export PATH=$HOME/.local/bin:$PATH
 pip install --user ansible
 ```
 
-### Step 2: Request resources
+### Step 2: Request Resources
 
-### Step 3: Install environment using Kadeploy
+Request the necessary resources on Grid'5000 following your experiment requirements.
 
-The environment (Ubuntu 22.04) is installed using [Kadeploy]() as follows:
+### Step 3: Install Environment using Kadeploy
+
+The environment for the experiment, based on Ubuntu 22.04, is installed on the allocated nodes using Kadeploy. Execute the following command:
 
 ```bash
 kadeploy3 ubuntu2204-min -k
 ```
 
-The _-k_ option ensures that kadeploy copies the contents of authorized_keys from the frontend account to the root account on
-each of your nodes.
+The `-k` option ensures that kadeploy copies the SSH public keys from the frontend account to the root account on each allocated node.
 
-### Step 4: Configure inventory
+### Step 4: Configure Inventory
 
-The Ansible inventory needs to be set up according to the requested resources, to view the nodes available use `oarstat`:
+To configure Ansible properly, create an inventory file reflecting the nodes allocated to your experiment. You can view the available nodes
+using the `oarstat` command:
 
 ```bash
 oarstat -u -f
@@ -38,16 +46,54 @@ oarstat -u -f
 
 ### Step 5: Configure using Ansible
 
-Next, Ansible is used to configure the resources.
+Utilize Ansible to configure the allocated nodes with the necessary software and settings by executing the following playbook:
 
 ```bash
 ansible-playbook -i inventory/hosts playbook.yml
 ```
 
+## NATS
+
+NATS is a lightweight and high-performance messaging system. Here's how to interact with it within the experiment environment:
+
 ### Benchmarking NATS
 
-NATS can be benchmarked as follows from the host that runs a NATS server:
+Benchmark NATS performance from a host with access to configured NATS servers using the following command:
 
 ```bash
-nats -s nats://localhost:4222 bench test --pub 1 --size 16 --msgs 10000000
+nats -s nats://node:4222 bench test --pub 1 --size 16 --msgs 10000000
 ```
+
+### Retrieving NATS Server Information
+
+Retrieve NATS server/cluster information using the following command:
+
+```bash
+nats --user=admin --password=admin server list
+```
+
+Ensure to replace the username and password with your configured credentials if different.
+
+### Testing NATS Cluster Functionality
+
+To verify the correct functioning of the NATS cluster, publish messages from one node and subscribe on another within the cluster. Utilize a
+tool like `tmux` for easier observation.
+
+On the publishing node:
+
+```bash
+nats -s nats://node1:4222 bench test --pub 1 --size 16 --msgs 10000000
+```
+
+On the subscribing node:
+
+```bash
+nats -s nats://node2:4222 subscribe test
+```
+
+Observe incoming events on the subscribing node to confirm proper communication within the NATS cluster.
+
+## Conclusion
+
+Following these steps ensures the successful setup and evaluation of the Cirrina Railway Experiment within the Grid'5000 environment.
+Adjustments may be necessary based on specific experiment requirements and configurations.

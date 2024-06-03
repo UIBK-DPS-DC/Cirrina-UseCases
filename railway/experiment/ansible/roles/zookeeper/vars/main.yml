@@ -1,0 +1,2 @@
+zookeeper_my_id: "{{ ansible_play_hosts.index(inventory_hostname) + 1 }}"
+zookeeper_servers: "{% for host in ansible_play_hosts_all %}server.{{ loop.index }}={{ host }}:2888:3888;2181{% if not loop.last %} {% endif %}{% endfor %}"
