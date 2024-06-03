@@ -1,10 +1,21 @@
 # NATS server configuration file
 
-jetstream: enabled
+accounts: {
+    SYS: {
+        users: [
+            { user: admin, password: qwerty }
+        ]
+    },
+}
 
 # Cluster configuration
 cluster {
   listen: "0.0.0.0:6222"
+
+  authorization {
+    user: admin
+    password: qwerty
+  }
 
   # Routes to other servers in the cluster
   routes = [
