@@ -1,16 +1,11 @@
 # NATS server configuration file
 
-accounts: {
-    SYS: {
-        users: [
-            { user: admin, password: qwerty }
-        ]
-    },
-}
+$SYS { users = [ { user: "admin", pass: "qwerty" } ] }
 
 # Cluster configuration
 cluster {
   listen: "0.0.0.0:6222"
+  name: {{ hostvars[host]['ansible_host'] }}
 
   authorization {
     user: admin
