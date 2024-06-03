@@ -1,0 +1,19 @@
+# NATS server configuration file
+
+# Cluster configuration
+cluster {
+  listen: "0.0.0.0:6222"
+
+  # Routes to other servers in the cluster
+  routes = [
+{% for host in groups['nats_servers'] %}
+    nats-route://{{ hostvars[host]['ansible_host'] }}:6222{% if not loop.last %},{% endif %}
+{% endfor %}
+  ]
+}
+
+# Client port
+port: 4222
+
+# HTTP monitoring port
+http_port: 8222

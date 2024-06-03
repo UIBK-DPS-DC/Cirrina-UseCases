@@ -1,0 +1,5 @@
+- name: Setup NATS cluster
+  hosts: nats_servers
+  become: true
+  roles:
+    - nats

@@ -1,0 +1,4 @@
+[nats_servers]
+nats1 ansible_host=192.168.1.101
+nats2 ansible_host=192.168.1.102
+nats3 ansible_host=192.168.1.103
