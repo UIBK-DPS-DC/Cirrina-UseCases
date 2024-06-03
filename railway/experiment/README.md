@@ -97,3 +97,17 @@ Observe incoming events on the subscribing node to confirm proper communication 
 
 Following these steps ensures the successful setup and evaluation of the Cirrina Railway Experiment within the Grid'5000 environment.
 Adjustments may be necessary based on specific experiment requirements and configurations.
+
+### Testing ZooKeeper Cluster Functionality
+
+To verify the correct functioning of the ZooKeeper cluster, the monitor command can be sent to a node in the ZooKeeper cluster using:
+
+```bash
+echo mntr | nc node 2181
+```
+
+Or to get the status of a ZooKeeper node:
+
+```bash
+echo stat | nc node 2181
+```
