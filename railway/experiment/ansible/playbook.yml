@@ -3,3 +3,9 @@
   become: true
   roles:
     - nats
+
+- name: Setup ZooKeeper cluster
+  hosts: zookeeper_servers
+  become: true
+  roles:
+    - zookeeper
