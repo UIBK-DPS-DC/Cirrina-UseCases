@@ -1,16 +1,18 @@
 # NATS server configuration file
 
-$SYS { users = [ { user: "admin", pass: "qwerty" } ] }
+accounts: {
+    SYS: { 
+        users: [
+            {user: "admin", password: "admin"}
+        ]
+    }
+}
+system_account: SYS
 
 # Cluster configuration
 cluster {
   listen: "0.0.0.0:6222"
   name: "{{ansible_hostname}}"
-
-  authorization {
-    user: admin
-    password: qwerty
-  }
 
   # Routes to other servers in the cluster
   routes = [
