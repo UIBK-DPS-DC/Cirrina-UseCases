@@ -34,7 +34,10 @@ To instrument the simulation script using OpenTelemetry, and using an OLTP colle
 needs to be executed as follows:
 
 ```bash
-opentelemetry-instrument --metric_export_interval 1000 --metrics_exporter otlp python simulate_sensors.py nats://localhost:4222
+opentelemetry-instrument \
+    --metric_export_interval 1000 \
+    --metrics_exporter otlp
+    python simulate_sensors.py nats://localhost:4222
 ```
 
 Where the export interval can be configured as desired.
