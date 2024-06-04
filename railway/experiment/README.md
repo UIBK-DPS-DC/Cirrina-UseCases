@@ -111,3 +111,19 @@ Or to get the status of a ZooKeeper node:
 ```bash
 echo stat | nc node 2181
 ```
+
+### Accessing InfluxDB
+
+To access the deployed InfluxDB, SSH (dynamic) tunneling can be used. Ensure that a [SSH jump host](http://chiclet-4.lille.grid5000.fr:8086)
+has been configured to access the appropriate Grid'5000 site. Then, set up SSH tunneling to the appropriate site:
+
+```bash
+ssh -D 9090 -N site.g5k
+```
+
+To browse configure to the InfluxDB web frontend, configure a web browser to use the created SSH tunnel. For instance, for Google Chrome on
+Linux, one can start Google Chrome as follows:
+
+```bash
+google-chrome-stable --proxy-server=socks://localhost:9090
+```
