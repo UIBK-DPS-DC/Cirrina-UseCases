@@ -66,5 +66,5 @@ Where the export interval can be configured as desired.
 To run, make use of the provided Docker compose configuration. Bring the services up as follows:
 
 ```bash
-OTEL_METRIC_EXPORT_INTERVAL=1000 OTEL_METRICS_EXPORTER=oltp NATS_URL=nats://nats-server-host:4222/ docker-compose up --build
+OTEL_EXPORTER_OTLP_ENDPOINT=http://oltp-host:4317 OTEL_METRIC_EXPORT_INTERVAL=1000 OTEL_METRICS_EXPORTER=oltp NATS_URL=nats://nats-server-host:4222/ docker-compose up
 ```
