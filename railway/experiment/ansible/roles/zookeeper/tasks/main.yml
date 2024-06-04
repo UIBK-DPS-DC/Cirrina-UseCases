@@ -28,3 +28,4 @@
       ZOO_SERVERS: "{{ zookeeper_servers }}"
       ZOO_4LW_COMMANDS_WHITELIST: "*"
   become: true
+  register: zookeeper_container

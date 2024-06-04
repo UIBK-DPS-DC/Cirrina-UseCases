@@ -1,11 +1,27 @@
+# NATS Cluster
 - name: Setup NATS cluster
   hosts: nats_servers
   become: true
   roles:
     - nats
 
+# ZooKeeper Cluster
 - name: Setup ZooKeeper cluster
   hosts: zookeeper_servers
   become: true
   roles:
     - zookeeper
+
+# InfluxDB
+- name: Setup InfluxDB
+  hosts: influxdb_servers
+  become: true
+  roles:
+    - influxdb
+
+# Telegraf
+- name: Setup Telegraf
+  hosts: telegraf_servers
+  become: true
+  roles:
+    - telegraf

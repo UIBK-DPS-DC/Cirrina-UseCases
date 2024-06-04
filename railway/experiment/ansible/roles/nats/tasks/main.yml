@@ -42,6 +42,7 @@
       - /etc/nats/nats-cluster.conf:/etc/nats/nats.conf
     command: -c /etc/nats/nats.conf
   become: true
+  register: nats_container
 
 - name: Download NATS CLI client
   get_url:

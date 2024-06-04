@@ -2,3 +2,17 @@
 nats1 ansible_host=192.168.1.101
 nats2 ansible_host=192.168.1.102
 nats3 ansible_host=192.168.1.103
+
+[zookeeper_servers]
+zookeeper1 ansible_host=192.168.1.104
+zookeeper2 ansible_host=192.168.1.105
+zookeeper3 ansible_host=192.168.1.106
+
+[influxdb_servers]
+influxdb1 ansible_host=192.168.1.107
+
+[telegraf_servers]
+telefraf1 ansible_host=192.168.1.108
+
+[influxdb_servers:vars]
+influxdb_url=http://192.168.1.107:8086
