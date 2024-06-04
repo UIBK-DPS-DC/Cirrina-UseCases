@@ -1,7 +1,5 @@
-fastapi
 nats-py
 opentelemetry-api
 opentelemetry-sdk
 opentelemetry-exporter-otlp
 protobuf
-uvicorn

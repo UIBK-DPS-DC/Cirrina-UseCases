@@ -5,14 +5,9 @@ import nats
 
 from opentelemetry import metrics
 from opentelemetry.sdk.metrics import MeterProvider
-from opentelemetry.sdk.metrics.export import (
-    ConsoleMetricExporter,
-    PeriodicExportingMetricReader,
-)
 
 import uuid
-import argparse
-import sys
+import os
 import time
 
 TRAIN_SPEED_IN_MS = 33.3
@@ -26,8 +21,7 @@ TRAINS_INTERVAL_IN_S = 30.0
 
 TIME_FACTOR = 1.0
 
-metric_reader = PeriodicExportingMetricReader(ConsoleMetricExporter())
-provider = MeterProvider(metric_readers=[metric_reader])
+provider = MeterProvider()
 
 metrics.set_meter_provider(provider)
 
@@ -114,20 +108,9 @@ class Simulation:
             await asyncio.sleep(TICK_RATE_IN_S)
 
     async def _broadcast_sensor_values(self):
-        # print("\033[H\033[J", end="")
-        # print(f"Simulated time: {self._simulated_time_in_s}")
-        # print(f"Next arrival: {self._next_arrival_time_in_s}")
-        # print(f"Num. trains: {len(self._trains)}")
-
-        # for i, train in enumerate(self._trains):
-        #    print(f"Train {i} at: {train.front_position()}")
-
         s = False
 
-        # print("Sensor values:")
         for i, sensor_value in enumerate(self._sensor_values):
-            # print(f"{i}: {sensor_value}")
-            #
             s = s or sensor_value
 
         subject = "peripheral.sensor"
@@ -151,17 +134,13 @@ class Simulation:
 
         events_published_counter.add(1)
 
-        # print(event)
-
 
 async def main():
-    parser = argparse.ArgumentParser(prog=sys.argv[0])
+    nats_url = os.environ["NATS_URL"]
 
-    parser.add_argument("nats_url")
+    nc = await nats.connect(nats_url)
 
-    args = parser.parse_args()
-
-    nc = await nats.connect(args.nats_url)
+    print(f"Running sensor simulation, NATS URL={nats_url}")
 
     simulation = Simulation(TRAINS_INTERVAL_IN_S, SENSOR_POSITIONS, TIME_FACTOR, nc)
     await simulation.simulate()

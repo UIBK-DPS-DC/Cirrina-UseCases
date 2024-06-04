@@ -1,0 +1,11 @@
+// Gather the data write latencies, defined as the assignment latencies, of persisten data over the last 12 hours
+// Resolution: 1 minute
+from(bucket: "bucket")
+    |> range(start: -12h)
+    |> filter(fn: (r) => r["_measurement"] == "cirrina.action.data_latency_ms")
+    |> filter(fn: (r) => r["_field"] == "gauge")
+    |> filter(fn: (r) => r["cirrina.data.locality"] == "persistent")
+    |> filter(fn: (r) => r["cirrina.data.operation"] == "assign")
+    |> group(columns: ["cirrina.data.operation", "cirrina.data.size"])
+    |> aggregateWindow(every: 1m, fn: mean, createEmpty: false)
+    |> yield(name: "mean")

@@ -1,0 +1,21 @@
+services:
+  gate:
+    build:
+      context: ./services
+      dockerfile: Gate.Dockerfile
+    ports:
+      - "8001:8000"
+  light:
+    build:
+      context: ./services
+      dockerfile: Light.Dockerfile
+    ports:
+      - "8002:8000"
+  simulate_sensors:
+    build:
+      context: ./simulate_sensors
+      dockerfile: Dockerfile
+    environment:
+      - "OTEL_METRIC_EXPORT_INTERVAL=${OTEL_METRIC_EXPORT_INTERVAL}"
+      - "OTEL_METRICS_EXPORTER=${OTEL_METRICS_EXPORTER}"
+      - "NATS_URL=${NATS_URL}"
