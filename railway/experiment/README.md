@@ -114,8 +114,9 @@ echo stat | nc node 2181
 
 ### Accessing InfluxDB
 
-To access the deployed InfluxDB, SSH (dynamic) tunneling can be used. Ensure that a [SSH jump host](http://chiclet-4.lille.grid5000.fr:8086)
-has been configured to access the appropriate Grid'5000 site. Then, set up SSH tunneling to the appropriate site:
+To access the deployed InfluxDB, SSH (dynamic) tunneling can be used. Ensure that a
+[SSH jump host](https://www.grid5000.fr/w/Getting_Started#Recommended_tips_and_tricks_for_an_efficient_use_of_Grid.275000) has been configured
+to access the appropriate Grid'5000 site. Then, set up SSH tunneling to the appropriate site:
 
 ```bash
 ssh -D 9090 -N site.g5k
