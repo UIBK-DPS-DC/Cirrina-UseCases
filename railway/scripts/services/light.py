@@ -10,6 +10,7 @@ from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExp
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 
 import os
+import time
 
 resource = Resource(attributes={SERVICE_NAME: "railway-simulation"})
 
@@ -24,7 +25,7 @@ provider = MeterProvider(resource=resource, metric_readers=[metric_reader])
 metrics.set_meter_provider(provider)
 meter = metrics.get_meter("railway")
 
-light_status_counter = meter.create_gauge("gate_status")
+light_response_time_gauge = meter.create_gauge("light_response_time")
 
 app = FastAPI()
 
@@ -41,9 +42,20 @@ def get_light_status():
     return light_status
 
 
+last = time.time()
+
+
 @app.post("/light/on")
 def light_on():
-    light_status_counter.set(1)
+    global last
+
+    if light_status.status == "off":
+        t = time.time()
+        dt = t - last
+
+        light_response_time_gauge.set(dt)
+
+        last = t
 
     light_status.status = "on"
     return Response(status_code=HTTP_200_OK)
@@ -51,7 +63,5 @@ def light_on():
 
 @app.post("/light/off")
 def light_off():
-    light_status_counter.set(0)
-
     light_status.status = "off"
     return Response(status_code=HTTP_200_OK)
