@@ -5,6 +5,9 @@ import nats
 
 from opentelemetry import metrics
 from opentelemetry.sdk.metrics import MeterProvider
+from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
+from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
+from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 
 import uuid
 import os
@@ -13,7 +16,9 @@ import time
 TRAIN_SPEED_IN_MS = 33.3
 TRAIN_LENGTH_IN_M = 150.0
 
-TICK_RATE_IN_S = 0.01
+START_INTERVAL_IN_SECONDS = 0.1
+END_INTERVAL_IN_SECONDS = 0.001
+DURATION_IN_SECONDS = 900
 
 SENSOR_POSITIONS = [0.0, 200.0, 400.0]
 
@@ -21,10 +26,17 @@ TRAINS_INTERVAL_IN_S = 30.0
 
 TIME_FACTOR = 1.0
 
-provider = MeterProvider()
+resource = Resource(attributes={SERVICE_NAME: "railway-simulation"})
+
+exporter = OTLPMetricExporter(endpoint=os.environ["OTLP_ENPOINT"])
+
+metric_reader = PeriodicExportingMetricReader(
+    exporter, export_interval_millis=int(os.environ["METRICS_INTERVAL"])
+)
+
+provider = MeterProvider(resource=resource, metric_readers=[metric_reader])
 
 metrics.set_meter_provider(provider)
-
 meter = metrics.get_meter("railway")
 
 events_published_counter = meter.create_counter("events_published")
@@ -63,6 +75,8 @@ class Simulation:
 
         self._nc = nc
 
+        self._start_time = time.time()
+
     def _new_train(self):
         train = Train()
         self._trains.append(train)
@@ -74,10 +88,25 @@ class Simulation:
                 for train in self._trains
             )
 
+    def _compute_broadcast_interval(self):
+        elapsed_time = time.time() - self._start_time
+        if elapsed_time > DURATION_IN_SECONDS:
+            # Reset the start time and elapsed time to loop
+            self._start_time = time.time()
+            elapsed_time = 0
+
+        # Linear interpolation
+        return START_INTERVAL_IN_SECONDS + (
+            END_INTERVAL_IN_SECONDS - START_INTERVAL_IN_SECONDS
+        ) * (elapsed_time / DURATION_IN_SECONDS)
+
     async def simulate(self):
         while True:
+            # Compute current broadcast interval
+            current_interval = self._compute_broadcast_interval()
+
             current_simulation_time = self._simulated_time_in_s
-            delta_simulation_time = TICK_RATE_IN_S * self._time_factor
+            delta_simulation_time = current_interval * self._time_factor
 
             self._last_simulation_time_in_s = current_simulation_time
             self._simulated_time_in_s += delta_simulation_time
@@ -104,8 +133,8 @@ class Simulation:
             # Broadcast sensor values
             await self._broadcast_sensor_values()
 
-            # Sleep to maintain tick rate
-            await asyncio.sleep(TICK_RATE_IN_S)
+            # Sleep to maintain broadcast rate
+            await asyncio.sleep(current_interval)
 
     async def _broadcast_sensor_values(self):
         s = False

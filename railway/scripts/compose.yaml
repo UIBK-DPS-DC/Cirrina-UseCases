@@ -16,7 +16,6 @@ services:
       context: ./simulate_sensors
       dockerfile: Dockerfile
     environment:
-      - "OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}"
-      - "OTEL_METRIC_EXPORT_INTERVAL=${OTEL_METRIC_EXPORT_INTERVAL}"
-      - "OTEL_METRICS_EXPORTER=${OTEL_METRICS_EXPORTER}"
+      - "OTLP_ENPOINT=${OTLP_ENPOINT}"
+      - "METRICS_INTERVAL=${METRICS_INTERVAL}"
       - "NATS_URL=${NATS_URL}"

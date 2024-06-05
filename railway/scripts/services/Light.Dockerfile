@@ -6,4 +6,4 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 WORKDIR /app
 COPY light.py .
 
-CMD ["uvicorn", "light:app", "--host", "0.0.0.0", "--log-level", "critical", "--port", "8000"]
+CMD ["uvicorn", "light:app", "--host", "0.0.0.0", "--port", "8000"]
