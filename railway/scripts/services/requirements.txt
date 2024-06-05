@@ -1,2 +1,5 @@
 uvicorn[standard]
 fastapi[all]
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-exporter-otlp
