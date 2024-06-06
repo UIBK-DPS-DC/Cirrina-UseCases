@@ -6,7 +6,7 @@ services:
     ports:
       - "8001:8000"
     environment:
-      - "OTLP_ENPOINT=${OTLP_ENPOINT}"
+      - "OTLP_ENDPOINT=${OTLP_ENDPOINT}"
       - "METRICS_INTERVAL=${METRICS_INTERVAL}"
   light:
     build:
@@ -15,13 +15,13 @@ services:
     ports:
       - "8002:8000"
     environment:
-      - "OTLP_ENPOINT=${OTLP_ENPOINT}"
+      - "OTLP_ENDPOINT=${OTLP_ENDPOINT}"
       - "METRICS_INTERVAL=${METRICS_INTERVAL}"
   simulate_sensors:
     build:
       context: ./simulate_sensors
       dockerfile: Dockerfile
     environment:
-      - "OTLP_ENPOINT=${OTLP_ENPOINT}"
+      - "OTLP_ENDPOINT=${OTLP_ENDPOINT}"
       - "METRICS_INTERVAL=${METRICS_INTERVAL}"
       - "NATS_URL=${NATS_URL}"

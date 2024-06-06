@@ -14,7 +14,7 @@ import time
 
 resource = Resource(attributes={SERVICE_NAME: "railway-simulation"})
 
-exporter = OTLPMetricExporter(endpoint=os.environ["OTLP_ENPOINT"])
+exporter = OTLPMetricExporter(endpoint=os.environ["OTLP_ENDPOINT"])
 
 metric_reader = PeriodicExportingMetricReader(
     exporter, export_interval_millis=int(os.environ["METRICS_INTERVAL"])

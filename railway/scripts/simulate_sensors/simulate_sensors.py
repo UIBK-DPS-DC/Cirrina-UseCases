@@ -17,7 +17,7 @@ TRAIN_SPEED_IN_MS = 33.3
 TRAIN_LENGTH_IN_M = 150.0
 
 START_INTERVAL_IN_SECONDS = 0.1
-END_INTERVAL_IN_SECONDS = 0.001
+END_INTERVAL_IN_SECONDS = 0.0001
 DURATION_IN_SECONDS = 900
 
 SENSOR_POSITIONS = [0.0, 200.0, 400.0]
@@ -28,7 +28,7 @@ TIME_FACTOR = 1.0
 
 resource = Resource(attributes={SERVICE_NAME: "railway-simulation"})
 
-exporter = OTLPMetricExporter(endpoint=os.environ["OTLP_ENPOINT"])
+exporter = OTLPMetricExporter(endpoint=os.environ["OTLP_ENDPOINT"])
 
 metric_reader = PeriodicExportingMetricReader(
     exporter, export_interval_millis=int(os.environ["METRICS_INTERVAL"])
