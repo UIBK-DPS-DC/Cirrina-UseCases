@@ -446,5 +446,6 @@
   },
   "stateMachineName": "crossing",
   "localData": {},
-  "bindEventInstanceIds": []
+  "bindEventInstanceIds": [],
+  "runtimeName": "runtime"
 }
