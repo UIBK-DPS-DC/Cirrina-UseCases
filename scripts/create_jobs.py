@@ -75,6 +75,7 @@ if __name__ == "__main__":
                 else {}
             ),
             "bindEventInstanceIds": [],
+            "runtimeName": "runtime"
         }
 
     # Create the KazooClient using the provided host
