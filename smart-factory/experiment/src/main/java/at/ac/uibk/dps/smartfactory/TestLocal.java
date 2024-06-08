@@ -12,6 +12,7 @@ import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementation;
 import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementationBuilder;
 import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementationSelector;
 import at.ac.uibk.dps.cirrina.execution.service.description.HttpServiceImplementationDescription;
+import at.ac.uibk.dps.cirrina.execution.service.description.ServiceImplementationDescription;
 import at.ac.uibk.dps.cirrina.execution.service.description.ServiceImplementationType;
 import at.ac.uibk.dps.cirrina.io.description.DescriptionParser;
 import at.ac.uibk.dps.cirrina.runtime.OfflineRuntime;
@@ -21,10 +22,7 @@ import com.google.common.collect.Multimap;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -87,7 +85,8 @@ public class TestLocal {
         String natsServerURL = System.getenv("NATS_SERVER_URL");
         assert natsServerURL != null;
 
-        try (var persistentContext = ContextBuilder.from().natsContext(natsServerURL, "persistent").build()) {
+        try (var persistentContext = ContextBuilder.from()
+            .natsContext(false, natsServerURL, "persistent").build()) {
 
             // Try add persistent context variables
             try {
@@ -108,7 +107,7 @@ public class TestLocal {
             for (var instanceId : instanceIds) {
                 var instance = sharedRuntime.findInstance(instanceId);
                 if (instance.isPresent()) {
-                    LOGGER.info(String.format("> %s", instance.get().getStateMachineObject().getName()));
+                    LOGGER.info(String.format("> %s", instance.get().getStateMachineClass().getName()));
                     instances.put(instanceId.toString(), instance.get());
                 } else {
                     throw new IllegalStateException("Instance not found!");
@@ -131,12 +130,11 @@ public class TestLocal {
 
     private static ServiceImplementationSelector getServiceSelector() {
 
-        Multimap<String, ServiceImplementation> serviceImplementations
-            = ArrayListMultimap.create(SmartFactoryHttpServer.PATHS.size(), 1);
+        List<ServiceImplementationDescription> services = new ArrayList<>();
 
         for (String path : SmartFactoryHttpServer.PATHS.keySet()) {
-
             var service = new HttpServiceImplementationDescription();
+
             service.name = path;
             service.type = ServiceImplementationType.HTTP;
             service.cost = 1.0f;
@@ -147,10 +145,14 @@ public class TestLocal {
             service.method = HttpServiceImplementationDescription.Method.GET;
             service.endPoint = "/" + path;
 
-            serviceImplementations.put(path, ServiceImplementationBuilder.from(service).build());
+            services.add(service);
         }
 
-        return new ServiceImplementationSelector(serviceImplementations);
+        var servicesMap = ServiceImplementationBuilder
+            .from(services.toArray(new ServiceImplementationDescription[0]))
+            .build();
+
+        return new ServiceImplementationSelector(servicesMap);
     }
 
     private static OfflineRuntime getSharedRuntime(Context persistentContext,
@@ -162,7 +164,7 @@ public class TestLocal {
                 super.sendEvent(event, source);
 
                 LOGGER.info(String.format("Send event '%s' (Source: %s, Current state: %s)", event,
-                    instances.get(source).getStateMachineObject().getName(),
+                    instances.get(source).getStateMachineClass().getName(),
                     "Status")); // instances.get(source).getStatus().getActivateState().getState().getName()
 
                 if (!event.getData().isEmpty()) {

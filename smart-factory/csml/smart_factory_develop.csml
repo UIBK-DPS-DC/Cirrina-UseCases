@@ -2,6 +2,22 @@
     "version": "0.1",
     "name": "Industrial automation",
     // Master project: Industrial automation use case.
+    "persistentContext": {
+        "variables": [
+            {
+                "name": "productsCompleted",
+                "value": "0"
+            },
+            {
+                "name": "jobDone",
+                "value": "false"
+            },
+            {
+                "name": "log",
+                "value": "[...]"
+            }
+        ]
+    },
     "stateMachines": [
         {
             "name": "jobControlSystem",
@@ -11,18 +27,6 @@
                     {
                         "name": "totalProducts",
                         "value": "1"
-                    }
-                ]
-            },
-            "persistentContext": {
-                "variables": [
-                    {
-                        "name": "productsCompleted",
-                        "value": "0"
-                    },
-                    {
-                        "name": "jobDone",
-                        "value": "false"
                     }
                 ]
             },
@@ -66,7 +70,6 @@
                     "on": [
                         {
                             "event": "eProductComplete",
-                            "target": "running",
                             "actions": [
                                 {
                                     "type": "assign",
@@ -478,20 +481,7 @@
                             "name": "idle",
                             // Wait for some time and start detecting.
                             "initial": true,
-                            "after": [
-                                {
-                                    "name": "triggerBeamDetection",
-                                    "type": "timeout",
-                                    "delay": "3000",
-                                    "action": {
-                                        "type": "raise",
-                                        "event": {
-                                            "name": "eBeamDetection",
-                                            "channel": "internal"
-                                        }
-                                    }
-                                }
-                            ],
+                            "virtual": true,
                             "on": [
                                 {
                                     "event": "eBeamDetection",
@@ -570,6 +560,23 @@
                     "extends": "photoelectricSensor",
                     "states": [
                         {
+                            "name": "idle",
+                            "after": [
+                                {
+                                    "name": "startTriggerBeamDetection",
+                                    "type": "timeout",
+                                    "delay": "1000",
+                                    "action": {
+                                        "type": "raise",
+                                        "event": {
+                                            "name": "eBeamDetection",
+                                            "channel": "internal"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
                             "name": "detecting",
                             // Check if the beam is interrupted or not.
                             "entry": [
@@ -615,6 +622,23 @@
                     // Represents a photoelectric sensor (End of belt).
                     "extends": "photoelectricSensor",
                     "states": [
+                        {
+                            "name": "idle",
+                            "after": [
+                                {
+                                    "name": "endTriggerBeamDetection",
+                                    "type": "timeout",
+                                    "delay": "1000",
+                                    "action": {
+                                        "type": "raise",
+                                        "event": {
+                                            "name": "eBeamDetection",
+                                            "channel": "internal"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
                         {
                             "name": "detecting",
                             // Check if the beam is interrupted or not.
@@ -781,16 +805,8 @@
         },
         {
             "name": "logProcessor",
-            // Store a message to a persistent log file.
+            // Store a message to the persistent log variable.
             "extends": "messageProcessor",
-            "persistentContext": {
-                "variables": [
-                    {
-                        "name": "log",
-                        "value": "[...]"
-                    }
-                ]
-            },
             "states": [
                 {
                     "name": "process",
@@ -937,7 +953,7 @@
                     "entry": [
                         {
                             "type": "invoke",
-                            // Signal arm to pickup the item.
+                            // Signal arm to pick up the item.
                             "serviceType": "pickUp",
                             "output": [
                                 {
@@ -1161,7 +1177,6 @@
                     "on": [
                         {
                             "event": "eStartScan",
-                            "target": "monitoring",
                             "actions": [
                                 {
                                     "type": "assign",
@@ -1181,7 +1196,6 @@
                         },
                         {
                             "event": "eAssembleComplete",
-                            "target": "monitoring",
                             "actions": [
                                 {
                                     "type": "assign",
@@ -1201,7 +1215,6 @@
                         },
                         {
                             "event": "eSendStatistics",
-                            "target": "monitoring",
                             "actions": [
                                 {
                                     "reference": "aSendStatistics"

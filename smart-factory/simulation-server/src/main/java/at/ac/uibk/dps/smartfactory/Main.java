@@ -3,25 +3,28 @@ package at.ac.uibk.dps.smartfactory;
 import at.ac.uibk.dps.smartfactory.server.SmartFactoryHttpServer;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.logging.Logger;
 
-public class TestServer {
+public class Main {
 
-  public static final Logger LOGGER = TestLogger.getLogger(TestServer.class.getName());
+  public static final Logger LOGGER = SimpleLogger.getLogger(Main.class.getName());
 
+  /**
+   * Main entry point.
+   *
+   * @throws IOException if running the HTTP server produced an error.
+   * @throws InterruptedException if the HTTP server was interrupted.
+   */
   public static void main(String[] args) throws IOException, InterruptedException {
-    Optional<Integer> port;
-
+    int port;
     if (args.length == 0) {
-      port = Optional.empty();
+      port = 0;
     }
     else {
       try {
-        port = Optional.of(Integer.parseInt(args[0]));
+        port = Integer.parseInt(args[0]);
       } catch (NumberFormatException e) {
         LOGGER.info(String.format("Invalid port: %s", args[0]));
-
         System.exit(1);
         return;
       }

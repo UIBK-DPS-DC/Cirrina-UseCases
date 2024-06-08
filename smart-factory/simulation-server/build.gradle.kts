@@ -1,25 +1,29 @@
+import com.google.protobuf.gradle.id
+
 plugins {
     application
     id("java")
     id("org.graalvm.buildtools.native") version "0.10.1"
+    id("com.google.protobuf") version "0.9.4"
 }
 
 group = "at.ac.uibk.dps.smartfactory"
 version = "1.0-SNAPSHOT"
 
-graalvmNative {
-    binaries {
-        named("main") {
-            imageName.set("cirrina_smartfactory")
-            mainClass.set("ac.at.uibk.dps.smartfactory.TestLocal")
-            buildArgs.add("-O4")
-        }
-        named("test") {
-            buildArgs.add("-O0")
-        }
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
     }
-    binaries.all {
-        buildArgs.add("--verbose")
+}
+
+protobuf {
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                id("python")
+                id("cpp")
+            }
+        }
     }
 }
 
@@ -29,9 +33,6 @@ repositories {
 }
 
 dependencies {
-
-    implementation(project(":cirrina"))
-
     implementation("com.beust:jcommander:1.82")
 
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.1")
@@ -79,18 +80,8 @@ dependencies {
 
 tasks {
 
-    task("runTestServer", type = JavaExec::class) {
-        mainClass = "at.ac.uibk.dps.smartfactory.TestServer"
-        classpath = sourceSets["main"].runtimeClasspath
-    }
-
-    task("runTestLocal", type = JavaExec::class) {
-        mainClass = "at.ac.uibk.dps.smartfactory.TestLocal"
-        classpath = sourceSets["main"].runtimeClasspath
-    }
-
-    task("runTestPlantUML", type = JavaExec::class) {
-        mainClass = "at.ac.uibk.dps.smartfactory.TestPlantUML"
+    task("runMain", type = JavaExec::class) {
+        mainClass = "at.ac.uibk.dps.smartfactory.Main"
         classpath = sourceSets["main"].runtimeClasspath
     }
 }

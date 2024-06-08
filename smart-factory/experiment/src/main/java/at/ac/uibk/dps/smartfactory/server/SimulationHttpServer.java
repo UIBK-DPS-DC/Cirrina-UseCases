@@ -1,16 +1,19 @@
 package at.ac.uibk.dps.smartfactory.server;
 
 import at.ac.uibk.dps.cirrina.execution.object.context.ContextVariable;
+import at.ac.uibk.dps.cirrina.execution.object.exchange.ContextVariableExchange;
+import at.ac.uibk.dps.cirrina.execution.object.exchange.ContextVariableProtos;
+import at.ac.uibk.dps.cirrina.execution.object.exchange.ValueExchange;
 import at.ac.uibk.dps.smartfactory.TestLogger;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import io.fury.Fury;
-import io.fury.config.Language;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -53,12 +56,6 @@ public class SimulationHttpServer implements Runnable {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-      final var fury = Fury.builder()
-          .withLanguage(Language.XLANG)
-          .requireClassRegistration(false)
-          .suppressClassRegistrationWarnings(true)
-          .build();
-
       try {
 
         LOGGER.info(String.format("Handle request: %s", path));
@@ -66,29 +63,46 @@ public class SimulationHttpServer implements Runnable {
         final var payload = exchange.getRequestBody().readAllBytes();
 
         // Deserialize the payload (must be Map<?, ?>)
-        final var in = fury.deserialize(payload);
-        assert in instanceof Map<?, ?>;
+        Map<?, ?> in;
+        if (payload.length > 0) {
+          in = ContextVariableProtos.ContextVariables.parseFrom(payload)
+                .getDataList().stream()
+                  .collect(Collectors.toMap(
+                      ContextVariableProtos.ContextVariable::getName,
+                      ContextVariableProtos.ContextVariable::getValue
+                  ));
+        } else {
+          in = new HashMap<>();
+        }
 
-        if (!((Map<?, ?>) in).isEmpty()) {
-          final String inString = mapToString((Map<?, ?>) in);
+        if (!in.isEmpty()) {
+          final String inString = mapToString(in);
           LOGGER.info("Input: " + inString);
         }
 
         // Call handler and convert response context variables into a map
-        Map<?, ?> responseBody = endpoint.handler().onHandle((Map<?, ?>) in).stream()
-            .collect(Collectors.toMap(ContextVariable::name, ContextVariable::value));
+        var responseBody = new ArrayList<>(endpoint.handler().onHandle(in));
 
+        /* TODO ENABLE
         int delay = endpoint.delay().get();
         if (delay > 0) {
           Thread.sleep(delay);
         }
+        */
 
         if (!responseBody.isEmpty()) {
-          final String outString = mapToString(responseBody);
+          final String outString = mapToString(responseBody.stream()
+              .collect(Collectors.toMap(ContextVariable::name, ContextVariable::value)));
           LOGGER.info("Output: " + outString);
         }
 
-        final var out = fury.serialize(responseBody);
+        final byte[] out = ContextVariableProtos.ContextVariables.newBuilder()
+            .addAllData(responseBody.stream()
+                .map(contextVariable -> new ContextVariableExchange(contextVariable).toProto())
+                .toList()
+            )
+            .build()
+            .toByteArray();
 
         // Response status and length
         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, out.length);
@@ -100,8 +114,9 @@ public class SimulationHttpServer implements Runnable {
       } catch (Exception e) {
         // Handle exceptions and send appropriate response
         String errorMessage = "Internal Server Error: " + e.getMessage();
+        LOGGER.severe(errorMessage);
 
-        final var out = fury.serialize(errorMessage);
+        final var out = new ValueExchange(errorMessage).toBytes();
 
         exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, out.length);
 
