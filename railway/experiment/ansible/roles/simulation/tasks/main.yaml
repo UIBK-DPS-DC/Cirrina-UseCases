@@ -1,0 +1,26 @@
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: present
+  become: true
+
+- name: Ensure Docker is started and enabled
+  service:
+    name: docker
+    state: started
+    enabled: true
+  become: true
+
+- name: Run simulation script in Docker
+  docker_container:
+    name: simulation
+    image: "marlonetheredgeuibk/cirrina-examples-railway-simulate-sensors:develop"
+    state: started
+    restart: true
+    restart_policy: always
+    env:
+      OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
+      METRICS_INTERVAL: "60000"
+      NATS_URL: "{{ hostvars[inventory_hostname]['NATS_URL'] }}"
+  become: true
+  register: simulation_container

@@ -1,0 +1,31 @@
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: present
+  become: true
+
+- name: Ensure Docker is started and enabled
+  service:
+    name: docker
+    state: started
+    enabled: true
+  become: true
+
+- name: Run ZooKeeper server in Docker
+  docker_container:
+    name: zookeeper
+    image: zookeeper:latest
+    state: started
+    restart: true
+    restart_policy: always
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+      - "8080:8080"
+    env:
+      ZOO_MY_ID: "{{ zookeeper_my_id }}"
+      ZOO_SERVERS: "{{ zookeeper_servers }}"
+      ZOO_4LW_COMMANDS_WHITELIST: "*"
+  become: true
+  register: zookeeper_container

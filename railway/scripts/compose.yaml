@@ -1,0 +1,27 @@
+services:
+  gate:
+    build:
+      context: ./services
+      dockerfile: Gate.Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      - "OTLP_ENDPOINT=${OTLP_ENDPOINT}"
+      - "METRICS_INTERVAL=${METRICS_INTERVAL}"
+  light:
+    build:
+      context: ./services
+      dockerfile: Light.Dockerfile
+    ports:
+      - "8002:8000"
+    environment:
+      - "OTLP_ENDPOINT=${OTLP_ENDPOINT}"
+      - "METRICS_INTERVAL=${METRICS_INTERVAL}"
+  simulate_sensors:
+    build:
+      context: ./simulate_sensors
+      dockerfile: Dockerfile
+    environment:
+      - "OTLP_ENDPOINT=${OTLP_ENDPOINT}"
+      - "METRICS_INTERVAL=${METRICS_INTERVAL}"
+      - "NATS_URL=${NATS_URL}"

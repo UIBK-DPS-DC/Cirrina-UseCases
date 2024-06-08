@@ -1,21 +1,45 @@
 import Event_pb2
 
 import asyncio
-import uuid
 import nats
-import argparse
-import sys
+
+from opentelemetry import metrics
+from opentelemetry.sdk.metrics import MeterProvider
+from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
+from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
+from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+
+import uuid
+import os
+import time
 
 TRAIN_SPEED_IN_MS = 33.3
 TRAIN_LENGTH_IN_M = 150.0
 
-TICK_RATE_IN_S = 0.01
+START_INTERVAL_IN_SECONDS = 0.1
+END_INTERVAL_IN_SECONDS = 0.0001
+DURATION_IN_SECONDS = 900
 
 SENSOR_POSITIONS = [0.0, 200.0, 400.0]
 
 TRAINS_INTERVAL_IN_S = 30.0
 
 TIME_FACTOR = 1.0
+
+resource = Resource(attributes={SERVICE_NAME: "railway-simulation"})
+
+exporter = OTLPMetricExporter(endpoint=os.environ["OTLP_ENDPOINT"])
+
+metric_reader = PeriodicExportingMetricReader(
+    exporter, export_interval_millis=int(os.environ["METRICS_INTERVAL"])
+)
+
+provider = MeterProvider(resource=resource, metric_readers=[metric_reader])
+
+metrics.set_meter_provider(provider)
+meter = metrics.get_meter("railway")
+
+events_published_counter = meter.create_counter("events_published")
 
 
 class Train:
@@ -51,6 +75,8 @@ class Simulation:
 
         self._nc = nc
 
+        self._start_time = time.time()
+
     def _new_train(self):
         train = Train()
         self._trains.append(train)
@@ -62,10 +88,25 @@ class Simulation:
                 for train in self._trains
             )
 
+    def _compute_broadcast_interval(self):
+        elapsed_time = time.time() - self._start_time
+        if elapsed_time > DURATION_IN_SECONDS:
+            # Reset the start time and elapsed time to loop
+            self._start_time = time.time()
+            elapsed_time = 0
+
+        # Linear interpolation
+        return START_INTERVAL_IN_SECONDS + (
+            END_INTERVAL_IN_SECONDS - START_INTERVAL_IN_SECONDS
+        ) * (elapsed_time / DURATION_IN_SECONDS)
+
     async def simulate(self):
         while True:
+            # Compute current broadcast interval
+            current_interval = self._compute_broadcast_interval()
+
             current_simulation_time = self._simulated_time_in_s
-            delta_simulation_time = TICK_RATE_IN_S * self._time_factor
+            delta_simulation_time = current_interval * self._time_factor
 
             self._last_simulation_time_in_s = current_simulation_time
             self._simulated_time_in_s += delta_simulation_time
@@ -92,24 +133,13 @@ class Simulation:
             # Broadcast sensor values
             await self._broadcast_sensor_values()
 
-            # Sleep to maintain tick rate
-            await asyncio.sleep(TICK_RATE_IN_S)
+            # Sleep to maintain broadcast rate
+            await asyncio.sleep(current_interval)
 
     async def _broadcast_sensor_values(self):
-        print("\033[H\033[J", end="")
-        print(f"Simulated time: {self._simulated_time_in_s}")
-        print(f"Next arrival: {self._next_arrival_time_in_s}")
-        print(f"Num. trains: {len(self._trains)}")
-
-        for i, train in enumerate(self._trains):
-            print(f"Train {i} at: {train.front_position()}")
-
         s = False
 
-        print("Sensor values:")
         for i, sensor_value in enumerate(self._sensor_values):
-            print(f"{i}: {sensor_value}")
-
             s = s or sensor_value
 
         subject = "peripheral.sensor"
@@ -117,6 +147,7 @@ class Simulation:
         # Specify event data
         event = Event_pb2.Event()
 
+        event.createdTime = time.time_ns() / 1.0e6
         event.id = str(uuid.uuid4())
         event.name = "sensor"
         event.channel = Event_pb2.Event.PERIPHERAL
@@ -130,17 +161,15 @@ class Simulation:
         # Publish event
         await self._nc.publish(subject, event.SerializeToString())
 
-        print(event)
+        events_published_counter.add(1)
 
 
 async def main():
-    parser = argparse.ArgumentParser(prog=sys.argv[0])
+    nats_url = os.environ["NATS_URL"]
 
-    parser.add_argument("nats_url")
+    nc = await nats.connect(nats_url)
 
-    args = parser.parse_args()
-
-    nc = await nats.connect(args.nats_url)
+    print(f"Running sensor simulation, NATS URL={nats_url}")
 
     simulation = Simulation(TRAINS_INTERVAL_IN_S, SENSOR_POSITIONS, TIME_FACTOR, nc)
     await simulation.simulate()
