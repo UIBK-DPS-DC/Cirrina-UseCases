@@ -23,7 +23,28 @@ pip install --user ansible
 
 ### Step 2: Request Resources
 
-Request the necessary resources on Grid'5000 following your experiment requirements.
+Request the necessary resources on Grid'5000 following your experiment requirements. To request a total of 16 nodes spread across 5 sites
+(Grenoble, Nantes, Sophia, Rennes, Nancy), we utilize [oargrid]():
+
+```bash
+oargridsub -w '2:00:00' grenoble:rdef="/nodes=3",nantes:rdef="/nodes=3",sophia:rdef="/nodes=3",rennes:rdef="/nodes=3",nancy:rdef="/nodes=4"
+```
+
+Where the reservation time needs to be adjusted per the requirements of the experiment.
+
+In case the reservation cannot be made now, the time at which the reservation could be made can be found using [funk]():
+
+```bash
+funk -m free -r grenoble:3,nantes:3,sophia:3,rennes:3,nancy:4 -w 2:00:00
+```
+
+We acquire the list of reserved nodes through:
+
+```bash
+oargridstat -w -l 73314 > ~/machines (&& sort -u ~/machines)
+```
+
+The resulting file may contain duplicate or empty lines.
 
 ### Step 3: Install Environment using Kadeploy
 
