@@ -1,0 +1,24 @@
+[nats_servers]
+nats0 ansible_host=<dep-host>
+
+[zookeeper_servers]
+zookeeper0 ansible_host=<dep-host>
+
+[services_servers]
+services0 ansible_host=<dep-host> OTLP_ENDPOINT=http://<dep-host>:4317/
+
+[simulation_servers]
+simulation0 ansible_host=<dep-host> OTLP_ENDPOINT=http://<dep-host>:4317/
+
+[runtime_servers]
+runtime0 ansible_host=<runtime-1-host> NATS_PERSISTENT_CONTEXT_URL=nats://<dep-host>:4222/ NATS_EVENT_HANDLER_URL=nats://<dep-host>:4222/ ZOOKEEPER_CONNECT_STRING=<dep-host>:2181 OTLP_ENDPOINT=http://<dep-host>:4317/ RUNTIME_NAME=runtime0
+runtime1 ansible_host=<runtime-2-host> NATS_PERSISTENT_CONTEXT_URL=nats://<dep-host>:4222/ NATS_EVENT_HANDLER_URL=nats://<dep-host>:4222/ ZOOKEEPER_CONNECT_STRING=<dep-host>:2181 OTLP_ENDPOINT=http://<dep-host>:4317/ RUNTIME_NAME=runtime1
+
+[influxdb_servers]
+influxdb0 ansible_host=<dep-host>
+
+[telegraf_servers]
+telegraf0 ansible_host=<dep-host>
+
+[telegraf_servers:vars]
+influxdb_url=http://<dep-host>:8086
