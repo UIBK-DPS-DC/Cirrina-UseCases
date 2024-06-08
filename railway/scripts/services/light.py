@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from starlette.responses import Response
 from starlette.status import HTTP_200_OK
@@ -32,36 +32,46 @@ app = FastAPI()
 
 class LightStatus(BaseModel):
     status: str
+    last: float
 
 
-light_status = LightStatus(status="off")
-
-
-@app.get("/light/status")
-def get_light_status():
-    return light_status
-
-
-last = time.time()
+light_statuses = {}
 
 
 @app.post("/light/on")
-def light_on():
-    global last
+async def light_on(request: Request):
+    # Retrieve the sender ID
+    id = request.headers.get("Cirrina-Sender-ID")
 
-    if light_status.status == "off":
+    # Create the gate status if not seen before
+    if id not in light_statuses:
+        light_statuses[id] = LightStatus(status="off", last=time.time())
+
+    # Train is coming, capture response time
+    if light_statuses[id].status == "off":
         t = time.time()
-        dt = t - last
+        dt = t - light_statuses[id].last
 
         light_response_time_gauge.set(dt)
 
-        last = t
+        light_statuses[id].last = t
 
-    light_status.status = "on"
+    # Update its state
+    light_statuses[id].status = "on"
+
     return Response(status_code=HTTP_200_OK)
 
 
 @app.post("/light/off")
-def light_off():
-    light_status.status = "off"
+async def light_off(request: Request):
+    # Retrieve the sender ID
+    id = request.headers.get("Cirrina-Sender-ID")
+
+    # Create the gate status if not seen before
+    if id not in light_statuses:
+        light_statuses[id] = LightStatus(status="off")
+
+    # Update its state
+    light_statuses[id].status = "off"
+
     return Response(status_code=HTTP_200_OK)
