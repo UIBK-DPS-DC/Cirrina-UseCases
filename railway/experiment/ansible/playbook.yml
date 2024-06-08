@@ -25,3 +25,24 @@
   become: true
   roles:
     - telegraf
+
+# Services
+- name: Setup Services
+  hosts: services_servers
+  become: true
+  roles:
+    - services
+
+# Simulation
+- name: Setup Simulation
+  hosts: simulation_servers
+  become: true
+  roles:
+    - simulation
+
+# Runtime
+- name: Setup Runtimes
+  hosts: runtime_servers
+  become: true
+  roles:
+    - runtime
