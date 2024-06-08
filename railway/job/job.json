@@ -6,7 +6,7 @@
       "cost": 0.0,
       "local": false,
       "scheme": "http",
-      "host": "localhost",
+      "host": "192.168.64.84",
       "port": 8001,
       "endPoint": "/gate/up",
       "method": "POST"
@@ -17,7 +17,7 @@
       "cost": 0.0,
       "local": false,
       "scheme": "http",
-      "host": "localhost",
+      "host": "192.168.64.84",
       "port": 8001,
       "endPoint": "/gate/down",
       "method": "POST"
@@ -28,7 +28,7 @@
       "cost": 0.0,
       "local": false,
       "scheme": "http",
-      "host": "localhost",
+      "host": "192.168.64.84",
       "port": 8002,
       "endPoint": "/light/on",
       "method": "POST"
@@ -39,7 +39,7 @@
       "cost": 0.0,
       "local": false,
       "scheme": "http",
-      "host": "localhost",
+      "host": "192.168.64.84",
       "port": 8002,
       "endPoint": "/light/off",
       "method": "POST"
