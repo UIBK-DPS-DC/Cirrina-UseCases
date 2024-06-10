@@ -34,6 +34,7 @@
     state: started
     restart: true
     restart_policy: always
+    pull: true
     ports:
       - "4317:4317"
     volumes:

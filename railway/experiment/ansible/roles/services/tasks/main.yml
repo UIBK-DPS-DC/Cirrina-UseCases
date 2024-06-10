@@ -18,6 +18,7 @@
     state: started
     restart: true
     restart_policy: always
+    pull: true
     ports:
       - "8001:8000"
     env:
@@ -33,6 +34,7 @@
     state: started
     restart: true
     restart_policy: always
+    pull: true
     ports:
       - "8002:8000"
     env:

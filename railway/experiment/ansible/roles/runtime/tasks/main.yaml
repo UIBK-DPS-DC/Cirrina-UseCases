@@ -18,6 +18,7 @@
     state: started
     restart: true
     restart_policy: always
+    pull: true
     env:
       OTEL_EXPORTER_OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
     command: >
