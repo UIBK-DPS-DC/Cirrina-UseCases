@@ -1,6 +1,6 @@
 # NATS server configuration file
 
-server_name={{ hostvars[host]['ansible_host'] }}
+server_name={{ hostvars[inventory_hostname]['ansible_host'] }}
 
 accounts: {
     SYS: { 
