@@ -1,5 +1,6 @@
 [nats_servers]
 nats0 ansible_host=gros-112.nancy.grid5000.fr
+nats1 ansible_host=gros-113.nancy.grid5000.fr
 
 [zookeeper_servers]
 zookeeper0 ansible_host=gros-112.nancy.grid5000.fr
