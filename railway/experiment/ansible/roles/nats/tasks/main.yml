@@ -40,7 +40,7 @@
       - "8222:8222"
     volumes:
       - /etc/nats/nats-cluster.conf:/etc/nats/nats.conf
-    command: -c /etc/nats/nats.conf
+    command: -js -c /etc/nats/nats.conf
   become: true
   register: nats_container
 

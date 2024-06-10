@@ -26,4 +26,4 @@
       --zookeeper-connect-string {{ hostvars[inventory_hostname]['ZOOKEEPER_CONNECT_STRING'] }}
       --name {{ hostvars[inventory_hostname]['RUNTIME_NAME'] }}
   become: true
-  register: simulation_container
+  register: runtime_container
