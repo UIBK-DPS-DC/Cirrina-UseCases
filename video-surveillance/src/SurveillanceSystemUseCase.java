@@ -5,8 +5,8 @@ import at.ac.uibk.dps.cirrina.example.surveillance.utils.IoUtils;
 import at.ac.uibk.dps.cirrina.execution.object.context.InMemoryContext;
 import at.ac.uibk.dps.cirrina.execution.object.event.Event;
 import at.ac.uibk.dps.cirrina.execution.object.event.EventHandler;
+import at.ac.uibk.dps.cirrina.execution.service.OptimalServiceImplementationSelector;
 import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementationBuilder;
-import at.ac.uibk.dps.cirrina.execution.service.ServiceImplementationSelector;
 import at.ac.uibk.dps.cirrina.execution.service.description.HttpServiceImplementationDescription;
 import at.ac.uibk.dps.cirrina.execution.service.description.HttpServiceImplementationDescription.Method;
 import at.ac.uibk.dps.cirrina.execution.service.description.ServiceImplementationDescription;
@@ -36,7 +36,7 @@ public class SurveillanceSystemUseCase {
       service.scheme = "http";
       service.host = "localhost";
       service.port = 8001;
-      service.endPoint = "/capture";
+      service.endPoint = "/capture"; // where to specify query parameters e.g. ?start_time=0&video_number=0 ?
       service.method = Method.POST;
 
       serviceDescriptions[0] = service;
@@ -50,7 +50,7 @@ public class SurveillanceSystemUseCase {
       service.scheme = "http";
       service.host = "localhost";
       service.port = 8000;
-      service.endPoint = "/process";
+      service.endPoint = "/process"; // where to specify query parameters e.g. ?start_time=0&video_number=0 ?
       service.method = Method.POST;
 
       serviceDescriptions[1] = service;
@@ -65,18 +65,18 @@ public class SurveillanceSystemUseCase {
       service.scheme = "http";
       service.host = "localhost";
       service.port = 8000;
-      service.endPoint = "/process";
+      service.endPoint = "/process"; // where to specify query parameters e.g. ?start_time=0&video_number=0 ?
       service.method = Method.POST;
 
       serviceDescriptions[2] = service;
     }
 
-
     final var services = ServiceImplementationBuilder.from(serviceDescriptions).build();
-    final var serviceImplementationSelector = new ServiceImplementationSelector(services);
+
+    final var serviceSelector = new OptimalServiceImplementationSelector(services);
 
     // Create the collaborative state machine instances
-    final var instances = runtime.newInstance(collaborativeStateMachineClass, serviceImplementationSelector);
+    final var instances = runtime.newInstance(collaborativeStateMachineClass, serviceSelector);
   }
 
   private static OfflineRuntime getOfflineRuntime() {
@@ -114,9 +114,9 @@ public class SurveillanceSystemUseCase {
     };
 
     // Mock a persistent context using an in-memory context
-    var mockPersistentContext = new InMemoryContext();
+    var mockPersistentContext = new InMemoryContext(false);
 
     // Create a runtime
-    return new OfflineRuntime(mockEventHandler, mockPersistentContext);
+    return new OfflineRuntime("localRuntime", mockEventHandler, mockPersistentContext);
   }
 }
