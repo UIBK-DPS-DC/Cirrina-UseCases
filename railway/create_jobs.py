@@ -21,10 +21,15 @@ if __name__ == "__main__":
         # Start the Kazoo Client
         zk.start()
 
+        try:
+            zk.delete("/jobs", recursive=True)
+        except:
+            pass
+
         # Ensure the /jobs node exists, create if necessary
         zk.ensure_path("/jobs")
 
-        job_dir = "railway/job"
+        job_dir = "job"
 
         for job in os.listdir(job_dir):
             with open(os.path.join(job_dir, job)) as file:
