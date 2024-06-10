@@ -64,18 +64,13 @@ if hist[3] != 4 or hist[4] != 1:
 nats_servers = []
 zookeeper_servers = []
 services_servers = []
-simulation_servers = []
 
 runtime_servers = []
-
-influxdb_server = []
-telegraf_server = []
 
 for site, nodes in site_nodes.items():
     nats_servers.append(f"ansible_host={nodes[0].hostname}")
     zookeeper_servers.append(f"ansible_host={nodes[0].hostname}")
     services_servers.append(f"ansible_host={nodes[0].hostname}")
-    simulation_servers.append(f"ansible_host={nodes[0].hostname}")
 
     runtime_servers.append(
         f"ansible_host={nodes[1].hostname} NATS_PERSISTENT_CONTEXT_URL=nats://{nodes[0].hostname}:4222/ NATS_EVENT_HANDLER_URL=nats://{nodes[0].hostname}:4222/ ZOOKEEPER_CONNECT_STRING={nodes[0].hostname}:2181"
@@ -87,6 +82,7 @@ for site, nodes in site_nodes.items():
     if site_count[site] == 4:
         influxdb_host = nodes[3].hostname
         telegraf_host = nodes[3].hostname
+        simulation_host = f"{nodes[3].hostname} NATS_URL=nats://{nodes[0].hostname}:422"
 
 # Output
 print("[nats_servers]")
@@ -102,11 +98,6 @@ print()
 print("[services_servers]")
 for i, server in enumerate(services_servers):
     print(f"services{i} {server} OTLP_ENDPOINT=http://{telegraf_host}:4317/")
-print()
-
-print("[simulation_servers]")
-for i, server in enumerate(simulation_servers):
-    print(f"simulation{i} {server} OTLP_ENDPOINT=http://{telegraf_host}:4317/")
 print()
 
 print("[runtime_servers]")
@@ -131,6 +122,12 @@ print()
 print(
     f"""[telegraf_servers:vars]
 influxdb_url=http://{telegraf_host}:8086"""
+)
+print()
+
+print(
+    f"""[simulation_servers]
+simulation0 ansible_host={simulation_host} OTLP_ENDPOINT=http://{telegraf_host}:4317/"""
 )
 
 sys.exit(0)
