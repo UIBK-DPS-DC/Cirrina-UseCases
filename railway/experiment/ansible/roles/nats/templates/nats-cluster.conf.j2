@@ -1,5 +1,7 @@
 # NATS server configuration file
 
+server_name={{ hostvars[host]['ansible_host'] }}
+
 accounts: {
     SYS: { 
         users: [
