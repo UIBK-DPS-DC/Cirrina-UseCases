@@ -3,6 +3,7 @@ package at.ac.uibk.dps.smartfactory.server;
 import at.ac.uibk.dps.smartfactory.SimpleLogger;
 import at.ac.uibk.dps.smartfactory.objects.ContextVariable;
 import at.ac.uibk.dps.smartfactory.objects.Response;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.ByteString;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -30,10 +31,12 @@ public class SimulationHttpServer implements Runnable {
   private final Map<String, Response> pathToResponseMap;
 
   private final HttpServer server;
+  private final boolean useProto;
 
-  public SimulationHttpServer(Map<String, Response> pathToResponseMap, int port) throws IOException {
+  public SimulationHttpServer(Map<String, Response> pathToResponseMap, int port, boolean useProto) throws IOException {
     this.pathToResponseMap = pathToResponseMap;
     this.server = HttpServer.create(new InetSocketAddress(port), 0);
+    this.useProto = useProto;
   }
 
   /**
@@ -112,7 +115,7 @@ public class SimulationHttpServer implements Runnable {
   public void run() {
     // Create endpoints
     pathToResponseMap.forEach(
-        (path, responseData) -> server.createContext("/" + path, new ProtoHandler(path, responseData))
+        (path, responseData) -> server.createContext("/" + path, new ProtoHandler(path, responseData, useProto))
     );
 
     // Start the server
@@ -126,7 +129,7 @@ public class SimulationHttpServer implements Runnable {
    * @param path The path for which this handler is responsible (Only used for logging)
    * @param responseData The responseData to handle the request.
    */
-  private record ProtoHandler(String path, Response responseData) implements HttpHandler {
+  private record ProtoHandler(String path, Response responseData, boolean useProto) implements HttpHandler {
 
     /**
      * Handles a http exchange
@@ -144,12 +147,19 @@ public class SimulationHttpServer implements Runnable {
         // Deserialize the payload (must be Map<?, ?>)
         Map<?, ?> in;
         if (payload.length > 0) {
-          in = ContextVariableProtos.ContextVariables.parseFrom(payload)
+          if (useProto) {
+            in = ContextVariableProtos.ContextVariables.parseFrom(payload)
                 .getDataList().stream()
-                  .collect(Collectors.toMap(
-                      ContextVariableProtos.ContextVariable::getName,
-                      ContextVariableProtos.ContextVariable::getValue
-                  ));
+                .collect(Collectors.toMap(
+                    ContextVariableProtos.ContextVariable::getName,
+                    ContextVariableProtos.ContextVariable::getValue
+                ));
+          } else {
+            in = new ObjectMapper().readValue(new String(payload), Map.class);
+            if (in.containsKey("Parameter")) {
+              in = (Map<?, ?>) in.get("Parameter");
+            }
+          }
         } else {
           in = new HashMap<>();
         }
@@ -160,7 +170,7 @@ public class SimulationHttpServer implements Runnable {
         }
 
         // Call handler and convert response context variables into a map
-        var responseBody = new ArrayList<>(responseData.handler().onHandle(in));
+        final var responseBody = new ArrayList<>(responseData.handler().onHandle(in));
 
         /* TODO ENABLE OR REMOVE DELAY?
         int delay = responseData.delay().get();
@@ -169,22 +179,30 @@ public class SimulationHttpServer implements Runnable {
         }
         */
 
+        final var responseMap = responseBody.stream()
+            .collect(Collectors.toMap(ContextVariable::name, ContextVariable::value));
+
         if (!responseBody.isEmpty()) {
-          final String outString = mapToString(responseBody.stream()
-              .collect(Collectors.toMap(ContextVariable::name, ContextVariable::value)));
+          final String outString = mapToString(responseMap);
           LOGGER.info("Output: " + outString);
         }
 
-        final byte[] out = ContextVariableProtos.ContextVariables.newBuilder()
-            .addAllData(responseBody.stream()
-                .map(contextVariable -> ContextVariableProtos.ContextVariable.newBuilder()
-                    .setName(contextVariable.name())
-                    .setValue(toProto(contextVariable.value()))
-                    .build())
-                .toList()
-            )
-            .build()
-            .toByteArray();
+        final byte[] out;
+        if (useProto) {
+          out = ContextVariableProtos.ContextVariables.newBuilder()
+              .addAllData(responseBody.stream()
+                  .map(contextVariable -> ContextVariableProtos.ContextVariable.newBuilder()
+                      .setName(contextVariable.name())
+                      .setValue(toProto(contextVariable.value()))
+                      .build())
+                  .toList()
+              )
+              .build()
+              .toByteArray();
+        }
+        else {
+          out = new ObjectMapper().writeValueAsBytes(responseMap);
+        }
 
         // Response status and length
         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, out.length);

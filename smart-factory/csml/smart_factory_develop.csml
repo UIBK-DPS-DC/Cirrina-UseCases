@@ -77,12 +77,18 @@
                                         "name": "productsCompleted",
                                         "value": "productsCompleted + 1"
                                     }
+                                },
+                                {
+                                    "type": "raise",
+                                    "event": {
+                                        "name": "eCheckJobDone",
+                                        "channel": "internal"
+                                    }
                                 }
                             ]
-                        }
-                    ],
-                    "always": [
+                        },
                         {
+                            "event": "eCheckJobDone",
                             "target": "jobDone",
                             "guards": [
                                 {

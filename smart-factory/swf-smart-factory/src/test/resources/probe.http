@@ -1,0 +1,58 @@
+######################################################## 
+# SEND PRODUCT COMPLETE CLOUD EVENT
+
+POST http://localhost:8080/
+Content-Type: application/json
+Accept: application/json
+ce-specversion: 1.0
+ce-kogitoproctype: SW
+ce-kogitoprocist: Active
+ce-kogitoprocversion: 1.0.0
+ce-kogitoprocid: robotic_arm
+ce-id: 2c2ad0f3-07f0-42d7-90e6-ea3fa4fd70e9
+ce-source: global
+ce-type: do-pick-up
+ce-kogitobusinesskey: 1
+
+######################################################## 
+# START JOB CONTROL
+
+POST http://localhost:8080/job_control?businessKey=1
+Content-Type: application/json
+Accept: application/json
+
+######################################################## 
+# START PRODUCT COMPLETE
+
+POST http://localhost:8080/product_complete?businessKey=1
+Content-Type: application/json
+Accept: application/json
+
+######################################################## 
+# START ROBOTIC ARM
+
+POST http://localhost:8080/robotic_arm?businessKey=1
+Content-Type: application/json
+Accept: application/json
+
+######################################################## 
+# START CONVEYOR BELT
+
+POST http://localhost:8080/conveyor_belt?businessKey=1
+Content-Type: application/json
+Accept: application/json
+
+######################################################## 
+# GET INSTANCE IDS BY WORKFLOW
+
+GET http://localhost:8080/robotic_arm
+
+######################################################## 
+# PICKUP SERVICE TEST
+
+GET http://localhost:8000/pickUp
+
+######################################################## 
+# SERVER PING
+
+GET http://localhost:8000/

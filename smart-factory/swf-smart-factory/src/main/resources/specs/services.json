@@ -1,0 +1,116 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Service API",
+      "version": "1.0.0",
+      "description": "API for service operations"
+    },
+    "servers": [
+      {
+        "url": "http://127.0.0.1:8000",
+        "description": "Local server"
+      }
+    ],
+    "paths": {
+      "/beamDetectionStart": {
+        "get": {
+          "summary": "Photoelectric sensor detection service at start of belt",
+          "operationId": "serviceBeamDetectionStart",
+          "responses": {
+            "200": {
+              "description": "Beam detection status"
+            }
+          }
+        }
+      },
+      "/beamDetectionEnd": {
+        "get": {
+          "summary": "Photoelectric sensor detection service at end of belt",
+          "operationId": "serviceBeamDetectionEnd",
+          "responses": {
+            "200": {
+              "description": "Beam detection status"
+            }
+          }
+        }
+      },
+      "/takePhoto": {
+        "get": {
+          "summary": "Take photo of the object on the start of the belt",
+          "operationId": "serviceTakePhoto",
+          "responses": {
+            "200": {
+              "description": "Photo taken"
+            }
+          }
+        }
+      },
+      "/scanPhoto": {
+        "get": {
+          "summary": "Scan photo and check for validity",
+          "operationId": "serviceScanPhoto",
+          "responses": {
+            "200": {
+              "description": "Photo scanned"
+            }
+          }
+        }
+      },
+      "/moveBelt": {
+        "get": {
+          "summary": "Start conveyor belt",
+          "operationId": "serviceMoveBelt",
+          "responses": {
+            "200": {
+              "description": "Belt is moving"
+            }
+          }
+        }
+      },
+      "/stopBelt": {
+        "get": {
+          "summary": "Stop conveyor belt",
+          "operationId": "serviceStopBelt",
+          "responses": {
+            "200": {
+              "description": "Belt stopped"
+            }
+          }
+        }
+      },
+      "/pickUp": {
+        "get": {
+          "summary": "Pick up service",
+          "operationId": "servicePickUp",
+          "responses": {
+            "200": {
+              "description": "Picked up"
+            }
+          }
+        }
+      },
+      "/assemble": {
+        "get": {
+          "summary": "Assemble service",
+          "operationId": "serviceAssemble",
+          "responses": {
+            "200": {
+              "description": "Assembled"
+            }
+          }
+        }
+      },
+      "/returnToStart": {
+        "get": {
+          "summary": "Return to start service",
+          "operationId": "serviceReturnToStart",
+          "responses": {
+            "200": {
+              "description": "Returned to start"
+            }
+          }
+        }
+      }
+    }
+  }
+  

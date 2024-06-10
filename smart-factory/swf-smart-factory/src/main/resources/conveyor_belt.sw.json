@@ -1,0 +1,201 @@
+{
+    "id": "conveyor_belt",
+    "name": "Conveyor Belt System",
+    "description": "Moves products",
+    "version": "1.0",
+    "specVersion": "0.8",
+    "start": "loading",
+    "events": [
+        {
+            "name": "object-valid",
+            "source": "belt",
+            "type": "object-valid"
+        },
+        {
+            "name": "object-invalid",
+            "source": "belt",
+            "type": "object-invalid"
+        },
+        {
+            "name": "unload",
+            "source": "belt",
+            "type": "unload"
+        },
+        {
+            "name": "do-pick-up",
+            "source": "belt",
+            "type": "do-pick-up",
+            "kind": "produced"
+        },
+        {
+            "name": "picked-up",
+            "source": "belt",
+            "type": "picked-up"
+        }
+    ],
+    "functions": [
+        {
+            "name": "set-object-valid",
+            "operation": ".objectValid = true | .objectValid",
+            "type": "expression"
+        },
+        {
+            "name": "set-object-invalid",
+            "operation": ".objectValid = false | .objectValid",
+            "type": "expression"
+        }
+    ],
+    "states": [
+        {
+            "name": "loading",
+            "type": "inject",
+            "data": {
+                "objectValid": false,
+                "jobDone": false
+            },
+            "transition": "loading-event"
+        },
+        {
+            "name": "loading-event",
+            "type": "event",
+            "timeouts": {
+                "eventTimeout": "PT60S"
+            },
+            "onEvents": [
+                {
+                    "actions": [
+                        {
+                            "name": "action-set-object-valid",
+                            "actionDataFilter": {
+                                "toStateData": "${ .objectValid }"
+                            },
+                            "functionRef": {
+                                "refName": "set-object-valid"
+                            }
+                        }
+                    ],
+                    "eventRefs": [
+                        "object-valid"
+                    ],
+                    "eventDataFilter": {}
+                },
+                {
+                    "actions": [
+                        {
+                            "name": "action-set-object-invalid",
+                            "actionDataFilter": {
+                                "toStateData": "${ .objectValid }"
+                            },
+                            "functionRef": {
+                                "refName": "set-object-invalid"
+                            }
+                        }
+                    ],
+                    "eventRefs": [
+                        "object-invalid"
+                    ],
+                    "eventDataFilter": {}
+                }
+            ],
+            "transition": "loading-switch"
+        },
+        {
+            "name": "loading-switch",
+            "type": "switch",
+            "dataConditions": [
+                {
+                    "name": "case-done",
+                    "end": true,
+                    "condition": "${ .jobDone }"
+                },
+                {
+                    "name": "case-valid",
+                    "transition": "transporting",
+                    "condition": "${ .objectValid }"
+                }
+            ],
+            "defaultCondition": {
+                "transition": "error"
+            }
+        },
+        {
+            "name": "error",
+            "type": "event",
+            "timeouts": {
+                "eventTimeout": "PT60S"
+            },
+            "onEvents": [
+                {
+                    "actions": [
+                        {
+                            "name": "action-set-object-valid",
+                            "actionDataFilter": {
+                                "toStateData": "${ .objectValid }"
+                            },
+                            "functionRef": {
+                                "refName": "set-object-valid"
+                            }
+                        }
+                    ],
+                    "eventRefs": [
+                        "object-valid"
+                    ],
+                    "eventDataFilter": {}
+                }
+            ],
+            "transition": "transporting"
+        },
+        {
+            "name": "transporting",
+            "type": "event",
+            "timeouts": {
+                "eventTimeout": "PT60S"
+            },
+            "onEvents": [
+                {
+                    "actions": [],
+                    "eventRefs": [
+                        "unload"
+                    ],
+                    "eventDataFilter": {}
+                }
+            ],
+            "transition": {
+                "nextState": "unloading-switch",
+                "produceEvents": [
+                    {
+                        "eventRef": "do-pick-up"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "unloading-switch",
+            "type": "switch",
+            "dataConditions": [
+              {
+                "name": "case-jobDone2",
+                "end": true,
+                "condition": "${ .jobDone }"
+              }
+            ],
+            "defaultCondition": {
+              "transition": "unloading"
+            }
+        },
+        {
+            "name": "unloading",
+            "type": "event",
+            "onEvents": [
+                {
+                    "actions": [],
+                    "eventRefs": [
+                        "picked-up"
+                    ],
+                    "eventDataFilter": {}
+                }
+            ],
+            "transition": "loading-event"
+        }
+    ]
+}

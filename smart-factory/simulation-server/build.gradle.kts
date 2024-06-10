@@ -32,7 +32,10 @@ repositories {
 }
 
 dependencies {
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.1")
+
     implementation("com.google.protobuf:protobuf-java:3.25.3")
+
     implementation("org.apache.logging.log4j:log4j-core:2.23.1")
 }
 

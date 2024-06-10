@@ -19,8 +19,7 @@ public class Main {
     int port;
     if (args.length == 0) {
       port = 0;
-    }
-    else {
+    } else {
       try {
         port = Integer.parseInt(args[0]);
       } catch (NumberFormatException e) {
@@ -30,8 +29,15 @@ public class Main {
       }
     }
 
+    boolean useProto;
+    if (args.length <= 1) {
+      useProto = true;
+    } else {
+      useProto = args[1].equals("true");
+    }
+
     LOGGER.info("Starting Server...");
-    Thread httpServerThread = SmartFactoryHttpServer.runServer(port);
+    Thread httpServerThread = SmartFactoryHttpServer.runServer(port, useProto);
     httpServerThread.join();
   }
 }

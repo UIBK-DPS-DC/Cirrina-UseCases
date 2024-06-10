@@ -87,15 +87,6 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
             .build()
     );
 
-    //TODO Remove
-    PATHS.put(
-        "",
-        new Response.Builder()
-            .dynamicResult(in -> List.of(var("pickUpSuccess", RANDOM.nextFloat() > 0.1F)))
-            .delay(() -> 700 + RANDOM.nextInt(300))
-            .build()
-    );
-
     PATHS.put(
         "assemble",
         new Response.Builder()
@@ -137,8 +128,8 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     );
   }
 
-  private SmartFactoryHttpServer(int port) throws IOException {
-    super(PATHS, port);
+  private SmartFactoryHttpServer(int port, boolean useProto) throws IOException {
+    super(PATHS, port, useProto);
   }
 
   /**
@@ -148,12 +139,12 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
    * @return The HTTP server thread.
    * @throws IOException if the server could not be created.
    */
-  public static Thread runServer(int port) throws IOException {
+  public static Thread runServer(int port, boolean useProto) throws IOException {
     final int actualPort = port == 0
         ? DEFAULT_PORT
         : port;
 
-    final var httpServer = new SmartFactoryHttpServer(actualPort);
+    final var httpServer = new SmartFactoryHttpServer(actualPort, useProto);
 
     final var httpServerThread = new Thread(httpServer);
     httpServerThread.start();

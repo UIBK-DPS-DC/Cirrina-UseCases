@@ -1,0 +1,198 @@
+{
+    "id": "robotic_arm",
+    "name": "Robotic arm system",
+    "description": "Picks up an object, assembles it and returns to its starting position",
+    "version": "1.0.0",
+    "specVersion": "0.8",
+    "start": "config",
+    "events": [
+        {
+            "name": "do-pick-up",
+            "source": "belt",
+            "type": "do-pick-up"
+        },
+        {
+            "name": "job-done",
+            "source": "belt",
+            "type": "job-done"
+        }
+    ],
+    "functions": [
+        {
+            "name": "set-job-done",
+            "operation": ".jobDone = true | .jobDone",
+            "type": "expression"
+        },
+        {
+            "name": "service-pick-up",
+            "type": "rest",
+            "operation": "specs/services.json#servicePickUp"
+        },
+        {
+            "name": "service-assemble",
+            "type": "rest",
+            "operation": "specs/services.json#serviceAssemble"
+        },
+        {
+            "name": "service-return-to-start",
+            "type": "rest",
+            "operation": "specs/services.json#serviceReturnToStart"
+        }
+    ],
+    "states": [
+        {
+            "name": "config",
+            "type": "inject",
+            "data": {
+                "partsPerProductDefault": 4
+            },
+            "stateDataFilter": {
+                "output": "{ \"partsPerProduct\": (if .partsPerProduct then .partsPerProduct else .partsPerProductDefault end) }"
+            },
+            "transition": "start"
+        },
+        {
+            "name": "start",
+            "type": "inject",
+            "data": {
+                "jobDone": false,
+                "partsAssembled": 0,
+                "pickUpSuccess": false,
+                "assembleSuccess": false
+            },
+            "transition": "idle"
+        },
+        {
+            "name": "idle",
+            "type": "event",
+            "onEvents": [
+                {
+                    "actions": [
+                        {
+                            "name": "action-set-job-done",
+                            "actionDataFilter": {
+                                "toStateData": "${ .jobDone }"
+                            },
+                            "functionRef": {
+                                "refName": "set-job-done"
+                            }
+                        }
+                    ],
+                    "eventRefs": [
+                        "job-done"
+                    ],
+                    "eventDataFilter": {}
+                },
+                {
+                    "actions": [],
+                    "eventRefs": [
+                        "do-pick-up"
+                    ],
+                    "eventDataFilter": {}
+                }
+            ],
+            "transition": "continue-switch"
+        },
+        {
+            "name": "continue-switch",
+            "type": "switch",
+            "dataConditions": [
+                {
+                    "name": "case-done",
+                    "end": true,
+                    "condition": "${ .jobDone }"
+                }
+            ],
+            "defaultCondition": {
+                "transition": "pick-up"
+            }
+        },
+        {
+            "name": "pick-up",
+            "type": "operation",
+            "actions": [
+                {
+                    "name": "action-pick-up",
+                    "actionDataFilter": {
+                        "toStateData": "${ .pickUpSuccess }"
+                    },
+                    "functionRef": {
+                        "refName": "service-pick-up"
+                    }
+                }
+            ],
+            "transition": "pick-up-switch"
+        },
+        {
+            "name": "pick-up-switch",
+            "type": "switch",
+            "dataConditions": [
+                {
+                    "name": "case-done",
+                    "transition": "assemble",
+                    "condition": "${ .pickUpSuccess }"
+                }
+            ],
+            "defaultCondition": {
+                "transition": "pick-up-error"
+            }
+        },
+        {
+            "name": "pick-up-error",
+            "type": "sleep",
+            "duration": "PT10S",
+            "transition": "return"
+        },
+        {
+            "name": "assemble",
+            "type": "operation",
+            "actions": [
+                {
+                    "name": "action-assemble",
+                    "actionDataFilter": {
+                        "results": "${ .assembleSuccess }",
+                        "toStateData": "${ .assembleSuccess }"
+                    },
+                    "functionRef": {
+                        "refName": "service-assemble"
+                    }
+                }
+            ],
+            "transition": "assemble-switch"
+        },
+        {
+            "name": "assemble-switch",
+            "type": "switch",
+            "dataConditions": [
+                {
+                    "name": "case-done",
+                    "transition": "return",
+                    "condition": "${ .assembleSuccess }"
+                }
+            ],
+            "defaultCondition": {
+                "transition": "assemble-error"
+            }
+        },
+        {
+            "name": "assemble-error",
+            "type": "sleep",
+            "duration": "PT10S",
+            "transition": "assemble"
+        },
+        {
+            "name": "return",
+            "type": "operation",
+            "actions": [
+                {
+                    "name": "action-return-to-start",
+                    "actionDataFilter": {},
+                    "functionRef": {
+                        "refName": "service-return-to-start"
+                    }
+                }
+            ],
+            "transition": "idle"
+        }
+    ]
+}
