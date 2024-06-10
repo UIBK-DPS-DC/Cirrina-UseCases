@@ -2,7 +2,7 @@
     "id": "job_control",
     "name": "Job Control System",
     "description": "Controls jobs and handles job progress (Increases a persistent counter for each completed product). Stops a job after a specified amount of products was created.",
-    "version": "1.0.13",
+    "version": "1.0.0",
     "specVersion": "0.8",
     "events": [
       {

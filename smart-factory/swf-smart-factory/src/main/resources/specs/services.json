@@ -18,7 +18,19 @@
           "operationId": "serviceBeamDetectionStart",
           "responses": {
             "200": {
-              "description": "Beam detection status"
+              "description": "Beam detection status",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "pickUpSuccess": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -29,7 +41,19 @@
           "operationId": "serviceBeamDetectionEnd",
           "responses": {
             "200": {
-              "description": "Beam detection status"
+              "description": "Beam detection status",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "assembleSuccess": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }

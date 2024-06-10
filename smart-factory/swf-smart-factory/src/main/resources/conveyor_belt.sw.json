@@ -2,7 +2,7 @@
     "id": "conveyor_belt",
     "name": "Conveyor Belt System",
     "description": "Moves products",
-    "version": "1.0",
+    "version": "1.0.0",
     "specVersion": "0.8",
     "start": "loading",
     "events": [
@@ -31,9 +31,19 @@
             "name": "picked-up",
             "source": "belt",
             "type": "picked-up"
+        },
+        {
+            "name": "job-done",
+            "source": "belt",
+            "type": "job-done"
         }
     ],
     "functions": [
+        {
+            "name": "set-job-done",
+            "operation": ".jobDone = true | .jobDone",
+            "type": "expression"
+        },
         {
             "name": "set-object-valid",
             "operation": ".objectValid = true | .objectValid",
@@ -43,6 +53,16 @@
             "name": "set-object-invalid",
             "operation": ".objectValid = false | .objectValid",
             "type": "expression"
+        },
+        {
+            "name": "service-move-belt",
+            "type": "custom",
+            "operation": "rest:get:http://localhost:8000/moveBelt"
+        },
+        {
+            "name": "service-stop-belt",
+            "type": "custom",
+            "operation": "rest:get:http://localhost:8000/stopBelt"
         }
     ],
     "states": [
@@ -58,19 +78,47 @@
         {
             "name": "loading-event",
             "type": "event",
-            "timeouts": {
-                "eventTimeout": "PT60S"
-            },
             "onEvents": [
+                {
+                    "actions": [
+                        {
+                            "name": "action-set-job-done",
+                            "actionDataFilter": {
+                                "fromStateData": "${ .jobDone }",
+                                "toStateData": "${ .jobDone }"
+                            },
+                            "functionRef": {
+                                "refName": "set-job-done"
+                            }
+                        }
+                    ],
+                    "eventRefs": [
+                        "job-done"
+                    ],
+                    "eventDataFilter": {}
+                },
                 {
                     "actions": [
                         {
                             "name": "action-set-object-valid",
                             "actionDataFilter": {
+                                "fromStateData": "${ .objectValid }",
                                 "toStateData": "${ .objectValid }"
                             },
                             "functionRef": {
                                 "refName": "set-object-valid"
+                            }
+                        },
+                        {
+                            "name": "action-move-belt",
+                            "actionDataFilter": {
+                                "fromStateData": "${ {} }",
+                                "useResults": false
+                            },
+                            "functionRef": {
+                                "refName": "service-move-belt",
+                                "arguments": {},
+                                "invoke": "async"
                             }
                         }
                     ],
@@ -84,6 +132,7 @@
                         {
                             "name": "action-set-object-invalid",
                             "actionDataFilter": {
+                                "fromStateData": "${ .objectValid }",
                                 "toStateData": "${ .objectValid }"
                             },
                             "functionRef": {
@@ -97,10 +146,10 @@
                     "eventDataFilter": {}
                 }
             ],
-            "transition": "loading-switch"
+            "transition": "valid-or-done-switch"
         },
         {
-            "name": "loading-switch",
+            "name": "valid-or-done-switch",
             "type": "switch",
             "dataConditions": [
                 {
@@ -121,19 +170,47 @@
         {
             "name": "error",
             "type": "event",
-            "timeouts": {
-                "eventTimeout": "PT60S"
-            },
             "onEvents": [
+                {
+                    "actions": [
+                        {
+                            "name": "action-set-job-done",
+                            "actionDataFilter": {
+                                "fromStateData": "${ .jobDone }",
+                                "toStateData": "${ .jobDone }"
+                            },
+                            "functionRef": {
+                                "refName": "set-job-done"
+                            }
+                        }
+                    ],
+                    "eventRefs": [
+                        "job-done"
+                    ],
+                    "eventDataFilter": {}
+                },
                 {
                     "actions": [
                         {
                             "name": "action-set-object-valid",
                             "actionDataFilter": {
+                                "fromStateData": "${ .objectValid }",
                                 "toStateData": "${ .objectValid }"
                             },
                             "functionRef": {
                                 "refName": "set-object-valid"
+                            }
+                        },
+                        {
+                            "name": "action-move-belt",
+                            "actionDataFilter": {
+                                "fromStateData": "${ {} }",
+                                "useResults": false
+                            },
+                            "functionRef": {
+                                "refName": "service-move-belt",
+                                "arguments": {},
+                                "invoke": "async"
                             }
                         }
                     ],
@@ -143,17 +220,59 @@
                     "eventDataFilter": {}
                 }
             ],
-            "transition": "transporting"
+            "transition": "transporting-or-done-switch"
+        },
+        {
+            "name": "transporting-or-done-switch",
+            "type": "switch",
+            "dataConditions": [
+              {
+                "name": "case-jobDone2",
+                "end": true,
+                "condition": "${ .jobDone }"
+              }
+            ],
+            "defaultCondition": {
+              "transition": "transporting"
+            }
         },
         {
             "name": "transporting",
             "type": "event",
-            "timeouts": {
-                "eventTimeout": "PT60S"
-            },
             "onEvents": [
                 {
-                    "actions": [],
+                    "actions": [
+                        {
+                            "name": "action-set-job-done",
+                            "actionDataFilter": {
+                                "fromStateData": "${ .jobDone }",
+                                "toStateData": "${ .jobDone }"
+                            },
+                            "functionRef": {
+                                "refName": "set-job-done"
+                            }
+                        }
+                    ],
+                    "eventRefs": [
+                        "job-done"
+                    ],
+                    "eventDataFilter": {}
+                },
+                {
+                    "actions": [
+                        {
+                            "name": "action-stop-belt",
+                            "actionDataFilter": {
+                                "fromStateData": "${ {} }",
+                                "useResults": false
+                            },
+                            "functionRef": {
+                                "refName": "service-stop-belt",
+                                "arguments": {},
+                                "invoke": "async"
+                            }
+                        }
+                    ],
                     "eventRefs": [
                         "unload"
                     ],
@@ -161,7 +280,7 @@
                 }
             ],
             "transition": {
-                "nextState": "unloading-switch",
+                "nextState": "unloading-or-done-switch",
                 "produceEvents": [
                     {
                         "eventRef": "do-pick-up"
@@ -170,11 +289,11 @@
             }
         },
         {
-            "name": "unloading-switch",
+            "name": "unloading-or-done-switch",
             "type": "switch",
             "dataConditions": [
               {
-                "name": "case-jobDone2",
+                "name": "case-jobDone3",
                 "end": true,
                 "condition": "${ .jobDone }"
               }

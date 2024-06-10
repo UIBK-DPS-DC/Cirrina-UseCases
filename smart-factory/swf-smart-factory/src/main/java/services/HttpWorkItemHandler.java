@@ -13,6 +13,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpRequest.BodyPublishers;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -49,11 +50,10 @@ public class HttpWorkItemHandler implements KogitoWorkItemHandler {
     final String responseBody = response.body();
     LOGGER.info("Response status code: %d, response body: %s".formatted(statusCode, responseBody));
 
-    final Map<String, Object> results = mapper.readValue(
+    final Map<String, Object> results = new HashMap<>(mapper.readValue(
       responseBody, 
       new TypeReference<Map<String, Object>>() {}
-    );
-    LOGGER.info(results.entrySet().stream().findFirst().map(entry -> entry.getKey() + ": " + entry.getValue()).orElse("NULL"));
+    ));
     kogitoWorkItemManager.completeWorkItem(kogitoWorkItem.getStringId(), results);
   }
 
