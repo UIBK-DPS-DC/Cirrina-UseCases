@@ -1,35 +1,17 @@
 [nats_servers]
 nats0 ansible_host=node1.site1.grid5000.fr
-nats1 ansible_host=node4.site2.grid5000.fr
-nats2 ansible_host=node7.site3.grid5000.fr
-nats3 ansible_host=node10.site4.grid5000.fr
-nats4 ansible_host=node13.site5.grid5000.fr
 
 [zookeeper_servers]
 zookeeper0 ansible_host=node1.site1.grid5000.fr
-zookeeper1 ansible_host=node4.site2.grid5000.fr
-zookeeper2 ansible_host=node7.site3.grid5000.fr
-zookeeper3 ansible_host=node10.site4.grid5000.fr
-zookeeper4 ansible_host=node13.site5.grid5000.fr
 
 [services_servers]
-services0 ansible_host=node1.site1.grid5000.fr OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
-services1 ansible_host=node4.site2.grid5000.fr OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
-services2 ansible_host=node7.site3.grid5000.fr OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
-services3 ansible_host=node10.site4.grid5000.fr OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
-services4 ansible_host=node13.site5.grid5000.fr OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
+remoteservices0 ansible_host=node1.site1.grid5000.fr OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
+localservices0 ansible_host=node2.site1.grid5000.fr OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
+localservices1 ansible_host=node3.site1.grid5000.fr OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
 
 [runtime_servers]
 runtime0 ansible_host=node2.site1.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node1.site1.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node1.site1.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node1.site1.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime0
 runtime1 ansible_host=node3.site1.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node1.site1.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node1.site1.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node1.site1.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime1
-runtime2 ansible_host=node5.site2.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node4.site2.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node4.site2.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node4.site2.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime2
-runtime3 ansible_host=node6.site2.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node4.site2.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node4.site2.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node4.site2.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime3
-runtime4 ansible_host=node8.site3.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node7.site3.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node7.site3.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node7.site3.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime4
-runtime5 ansible_host=node9.site3.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node7.site3.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node7.site3.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node7.site3.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime5
-runtime6 ansible_host=node11.site4.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node10.site4.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node10.site4.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node10.site4.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime6
-runtime7 ansible_host=node12.site4.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node10.site4.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node10.site4.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node10.site4.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime7
-runtime8 ansible_host=node14.site5.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node13.site5.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node13.site5.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node13.site5.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime8
-runtime9 ansible_host=node15.site5.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node13.site5.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node13.site5.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node13.site5.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime9
 
 [influxdb_servers]
 influxdb0 ansible_host=node16.site5.grid5000.fr
@@ -38,7 +20,8 @@ influxdb0 ansible_host=node16.site5.grid5000.fr
 telegraf0 ansible_host=node16.site5.grid5000.fr
 
 [telegraf_servers:vars]
-influxdb_url=http://node16.site5.grid5000.fr:8086
+influxdb_url=http://node16.site5.grid5000.fr:8086/
 
 [simulation_servers]
-simulation0 ansible_host=node16.site5.grid5000.fr NATS_URL=nats://node13.site5.grid5000.fr:422 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
+simulation0 ansible_host=node16.site5.grid5000.fr NATS_URL=nats://node1.site1.grid5000.fr:4222/ OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
+
