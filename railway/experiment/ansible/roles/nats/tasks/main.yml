@@ -2,6 +2,7 @@
   apt:
     name: docker.io
     state: present
+    update_cache: true
   become: true
 
 - name: Ensure Docker is started and enabled

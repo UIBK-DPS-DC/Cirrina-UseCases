@@ -65,6 +65,9 @@ using the `oarstat` command:
 oarstat -u -f
 ```
 
+A script _generate_config.py_ is provided that generates _inventory/hosts_ and _job/job\*.json_ based on a _machines.json_ file. The machines JSON
+file needs to be populated with the reserved nodes.
+
 ### Step 5: Configure using Ansible
 
 Utilize Ansible to configure the allocated nodes with the necessary software and settings by executing the following playbook:
