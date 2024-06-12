@@ -21,7 +21,7 @@
     restart_policy: always
     pull: true
     env:
-      OTEL_EXPORTER_OTLP_METRICS_TIMEOUT: 10000
+      OTEL_EXPORTER_OTLP_METRICS_TIMEOUT: "10000"
       OTEL_EXPORTER_OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
     command: >
       --nats-persistent-context-url {{ hostvars[inventory_hostname]['NATS_PERSISTENT_CONTEXT_URL'] }}
