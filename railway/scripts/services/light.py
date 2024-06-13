@@ -69,7 +69,7 @@ async def light_off(request: Request):
 
     # Create the gate status if not seen before
     if id not in light_statuses:
-        light_statuses[id] = LightStatus(status="off")
+        light_statuses[id] = LightStatus(status="off", last=time.time())
 
     # Update its state
     light_statuses[id].status = "off"

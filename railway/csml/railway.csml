@@ -27,21 +27,15 @@
             {
               "name": "up",
               "initial": true,
-              "entry": [
-                {
-                  "type": "assign",
-                  "variable": {
-                    "name": "localDataVariable",
-                    "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
-                  }
-                }
-              ],
               "on": [
                 {
                   "event": "gateUp",
                   "actions": [
                     {
                       "reference": "doGateUp"
+                    },
+                    {
+                      "reference": "writeData"
                     }
                   ]
                 },
@@ -53,21 +47,15 @@
             },
             {
               "name": "down",
-              "entry": [
-                {
-                  "type": "assign",
-                  "variable": {
-                    "name": "localDataVariable",
-                    "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
-                  }
-                }
-              ],
               "on": [
                 {
                   "event": "gateDown",
                   "actions": [
                     {
                       "reference": "doGateDown"
+                    },
+                    {
+                      "reference": "writeData"
                     }
                   ]
                 },
@@ -82,12 +70,22 @@
             {
               "name": "doGateUp",
               "type": "invoke",
-              "serviceType": "gateUp"
+              "serviceType": "gateUp",
+              "isLocal": true
             },
             {
               "name": "doGateDown",
               "type": "invoke",
-              "serviceType": "gateDown"
+              "serviceType": "gateDown",
+              "isLocal": true
+            },
+            {
+              "name": "writeData",
+              "type": "assign",
+              "variable": {
+                "name": "localDataVariable",
+                "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
+              }
             }
           ]
         },
@@ -105,21 +103,15 @@
             {
               "name": "off",
               "initial": true,
-              "entry": [
-                {
-                  "type": "assign",
-                  "variable": {
-                    "name": "localDataVariable",
-                    "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
-                  }
-                }
-              ],
               "on": [
                 {
                   "event": "lightOff",
                   "actions": [
                     {
                       "reference": "doLightOff"
+                    },
+                    {
+                      "reference": "writeData"
                     }
                   ]
                 },
@@ -131,21 +123,15 @@
             },
             {
               "name": "on",
-              "entry": [
-                {
-                  "type": "assign",
-                  "variable": {
-                    "name": "localDataVariable",
-                    "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
-                  }
-                }
-              ],
               "on": [
                 {
                   "event": "lightOn",
                   "actions": [
                     {
                       "reference": "doLightOn"
+                    },
+                    {
+                      "reference": "writeData"
                     }
                   ]
                 },
@@ -160,12 +146,22 @@
             {
               "name": "doLightOn",
               "type": "invoke",
-              "serviceType": "lightOn"
+              "serviceType": "lightOn",
+              "isLocal": true
             },
             {
               "name": "doLightOff",
               "type": "invoke",
-              "serviceType": "lightOff"
+              "serviceType": "lightOff",
+              "isLocal": true
+            },
+            {
+              "name": "writeData",
+              "type": "assign",
+              "variable": {
+                "name": "localDataVariable",
+                "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
+              }
             }
           ]
         },
@@ -202,15 +198,6 @@
         },
         {
           "name": "approach",
-          "entry": [
-            {
-              "type": "assign",
-              "variable": {
-                "name": "persistentDataVariable",
-                "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
-              }
-            }
-          ],
           "on": [
             {
               "event": "sensor",

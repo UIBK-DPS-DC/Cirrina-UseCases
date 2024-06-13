@@ -2,6 +2,7 @@
   apt:
     name: docker.io
     state: present
+    update_cache: true
   become: true
 
 - name: Ensure Docker is started and enabled
@@ -18,7 +19,9 @@
     state: started
     restart: true
     restart_policy: always
+    pull: true
     env:
+      OTEL_EXPORTER_OTLP_METRICS_TIMEOUT: "10000"
       OTEL_EXPORTER_OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
     command: >
       --nats-persistent-context-url {{ hostvars[inventory_hostname]['NATS_PERSISTENT_CONTEXT_URL'] }}
@@ -26,4 +29,4 @@
       --zookeeper-connect-string {{ hostvars[inventory_hostname]['ZOOKEEPER_CONNECT_STRING'] }}
       --name {{ hostvars[inventory_hostname]['RUNTIME_NAME'] }}
   become: true
-  register: simulation_container
+  register: runtime_container

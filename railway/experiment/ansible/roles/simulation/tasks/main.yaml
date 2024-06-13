@@ -2,6 +2,7 @@
   apt:
     name: docker.io
     state: present
+    update_cache: true
   become: true
 
 - name: Ensure Docker is started and enabled
@@ -18,9 +19,10 @@
     state: started
     restart: true
     restart_policy: always
+    pull: true
     env:
       OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
-      METRICS_INTERVAL: "60000"
+      METRICS_INTERVAL: "10000"
       NATS_URL: "{{ hostvars[inventory_hostname]['NATS_URL'] }}"
   become: true
   register: simulation_container

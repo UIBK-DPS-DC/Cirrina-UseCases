@@ -40,6 +40,7 @@ metrics.set_meter_provider(provider)
 meter = metrics.get_meter("railway")
 
 events_published_counter = meter.create_counter("events_published")
+phase_counter = meter.create_counter("phase")
 
 
 class Train:
@@ -94,6 +95,8 @@ class Simulation:
             # Reset the start time and elapsed time to loop
             self._start_time = time.time()
             elapsed_time = 0
+
+            phase_counter.add(1)
 
         # Linear interpolation
         return START_INTERVAL_IN_SECONDS + (

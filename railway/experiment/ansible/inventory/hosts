@@ -1,26 +1,27 @@
-# Per site
 [nats_servers]
-nats1 ansible_host=192.168.1.101
+nats0 ansible_host=node1.site1.grid5000.fr
 
 [zookeeper_servers]
-zookeeper1 ansible_host=192.168.1.101
+zookeeper0 ansible_host=node1.site1.grid5000.fr
 
 [services_servers]
-services1 ansible_host=192.168.1.101
-
-[simulation_servers]
-services1 ansible_host=192.168.1.101
+remoteservices0 ansible_host=node1.site1.grid5000.fr OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
+localservices0 ansible_host=node2.site1.grid5000.fr OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
+localservices1 ansible_host=node3.site1.grid5000.fr OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
 
 [runtime_servers]
-runtime1 ansible_host=192.168.1.102 OTLP_ENDPOINT=http://192.168.1.104:4317/ NATS_PERSISTENT_CONTEXT_URL=nats://192.168.1.101:4222/ NATS_EVENT_HANDLER_URL=nats://192.168.1.101:4222/ ZOOKEEPER_CONNECT_STRING=192.168.1.101:2181 RUNTIME_NAME=runtime1
-runtime2 ansible_host=192.168.1.103 OTLP_ENDPOINT=http://192.168.1.104:4317/ NATS_PERSISTENT_CONTEXT_URL=nats://192.168.1.101:4222/ NATS_EVENT_HANDLER_URL=nats://192.168.1.101:4222/ ZOOKEEPER_CONNECT_STRING=192.168.1.101:2181 RUNTIME_NAME=runtime2
+runtime0 ansible_host=node2.site1.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node1.site1.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node1.site1.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node1.site1.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime0
+runtime1 ansible_host=node3.site1.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node1.site1.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node1.site1.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node1.site1.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime1
 
-# Global
 [influxdb_servers]
-influxdb1 ansible_host=192.168.1.104
+influxdb0 ansible_host=node16.site5.grid5000.fr
 
 [telegraf_servers]
-telefraf1 ansible_host=192.168.1.104
+telegraf0 ansible_host=node16.site5.grid5000.fr
 
 [telegraf_servers:vars]
-influxdb_url=http://192.168.1.104:8086
+influxdb_url=http://node16.site5.grid5000.fr:8086/
+
+[simulation_servers]
+simulation0 ansible_host=node16.site5.grid5000.fr NATS_URL=nats://node1.site1.grid5000.fr:4222/ OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
+

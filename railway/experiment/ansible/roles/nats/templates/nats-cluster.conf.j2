@@ -1,5 +1,7 @@
 # NATS server configuration file
 
+server_name={{ hostvars[inventory_hostname]['ansible_host'] }}
+
 accounts: {
     SYS: { 
         users: [
@@ -17,7 +19,9 @@ cluster {
   # Routes to other servers in the cluster
   routes = [
 {% for host in groups['nats_servers'] %}
+{% if hostvars[host]['ansible_host'] != hostvars[inventory_hostname]['ansible_host'] %}
     nats-route://{{ hostvars[host]['ansible_host'] }}:6222{% if not loop.last %},{% endif %}
+{% endif %}
 {% endfor %}
   ]
 }

@@ -2,6 +2,7 @@
   apt:
     name: docker.io
     state: present
+    update_cache: true
   become: true
 
 - name: Ensure Docker is started and enabled
@@ -34,13 +35,14 @@
     state: started
     restart: true
     restart_policy: always
+    pull: true
     ports:
       - "4222:4222"
       - "6222:6222"
       - "8222:8222"
     volumes:
       - /etc/nats/nats-cluster.conf:/etc/nats/nats.conf
-    command: -c /etc/nats/nats.conf
+    command: -js -c /etc/nats/nats.conf
   become: true
   register: nats_container
 

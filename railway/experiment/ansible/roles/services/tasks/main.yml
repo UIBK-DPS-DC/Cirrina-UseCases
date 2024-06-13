@@ -2,6 +2,7 @@
   apt:
     name: docker.io
     state: present
+    update_cache: true
   become: true
 
 - name: Ensure Docker is started and enabled
@@ -18,11 +19,12 @@
     state: started
     restart: true
     restart_policy: always
+    pull: true
     ports:
       - "8001:8000"
     env:
       OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
-      METRICS_INTERVAL: "60000"
+      METRICS_INTERVAL: "10000"
   become: true
   register: gate_container
 
@@ -33,10 +35,11 @@
     state: started
     restart: true
     restart_policy: always
+    pull: true
     ports:
       - "8002:8000"
     env:
       OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
-      METRICS_INTERVAL: "60000"
+      METRICS_INTERVAL: "10000"
   become: true
   register: light_container

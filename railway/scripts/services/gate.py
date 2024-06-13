@@ -69,7 +69,7 @@ def gate_up(request: Request):
 
     # Create the gate status if not seen before
     if id not in gate_statuses:
-        gate_statuses[id] = GateStatus(status="up")
+        gate_statuses[id] = GateStatus(status="up", last=time.time())
 
     # Update its state
     gate_statuses[id].status = "up"
