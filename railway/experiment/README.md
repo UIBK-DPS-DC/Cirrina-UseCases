@@ -51,15 +51,9 @@ option performs a multi-site deploy. With `-f` we can specify the generated mach
 
 ### Step 4: Configure Inventory
 
-To configure Ansible properly, create an inventory file reflecting the nodes allocated to your experiment. You can view the available nodes
-using the `oarstat` command:
-
-```bash
-oarstat -u -f
-```
-
-A script _generate_config.py_ is provided that generates _inventory/hosts_ and _job/job\*.json_ based on a _machines.json_ file. The machines JSON
-file needs to be populated with the reserved nodes.
+The `generate_config.py` script reads the `machines.json` file, which should be updated to reflect the assigned hosts across different sites.
+Running the `generate_config.py` script with an appropriate `machines.json` file will result in an Ansible inventory hosts file that reflects
+the required configuration for this experiment. The script also generates the required Cirrina job files.
 
 ### Step 5: Configure using Ansible
 
@@ -70,6 +64,13 @@ ansible-playbook -i inventory/hosts playbook.yml
 ```
 
 ### Step 6: Create jobs
+
+The job files need to be submitted to a ZooKeeper server to ensure that the Cirrina runtimes perform the state machine instances. A valid ZooKeeper
+host needs to be passed to the `create_jobs.py` script upon execution.
+
+```bash
+python create_jobs.py --host dahu-3.grenoble.grid5000.fr
+```
 
 ### Step 7: Download the InfluxDB bucket
 
