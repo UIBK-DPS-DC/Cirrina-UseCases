@@ -1,7 +1,10 @@
 package at.ac.uibk.dps.smartfactory.server;
 
-import at.ac.uibk.dps.smartfactory.objects.ContextVariable;
-import at.ac.uibk.dps.smartfactory.objects.Response;
+import at.ac.uibk.dps.smartfactory.object.response.Response;
+import at.ac.uibk.dps.smartfactory.object.variable.ContextVariable;
+import at.ac.uibk.dps.smartfactory.object.variable.DefaultVariableHandler;
+import at.ac.uibk.dps.smartfactory.object.variable.ProtoVariableHandler;
+import at.ac.uibk.dps.smartfactory.object.variable.VariableHandler;
 
 import java.io.IOException;
 import java.util.*;
@@ -128,8 +131,8 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     );
   }
 
-  private SmartFactoryHttpServer(int port, boolean useProto) throws IOException {
-    super(PATHS, port, useProto);
+  private SmartFactoryHttpServer(int port, VariableHandler handler) throws IOException {
+    super(PATHS, port, handler);
   }
 
   /**
@@ -144,7 +147,14 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
         ? DEFAULT_PORT
         : port;
 
-    final var httpServer = new SmartFactoryHttpServer(actualPort, useProto);
+    VariableHandler variableHandler;
+    if (useProto) {
+      variableHandler = new ProtoVariableHandler();
+    } else {
+      variableHandler = new DefaultVariableHandler();
+    }
+
+    final var httpServer = new SmartFactoryHttpServer(actualPort, variableHandler);
 
     final var httpServerThread = new Thread(httpServer);
     httpServerThread.start();

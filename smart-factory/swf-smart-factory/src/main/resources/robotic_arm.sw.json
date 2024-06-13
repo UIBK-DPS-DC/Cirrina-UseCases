@@ -17,6 +17,12 @@
             "type": "do-pick-up"
         },
         {
+            "name": "picked-up",
+            "source": "belt",
+            "type": "picked-up",
+            "kind": "produced"
+        },
+        {
             "name": "product-complete",
             "source": "job",
             "type": "product-complete",
@@ -87,7 +93,6 @@
                         {
                             "name": "action-set-job-done",
                             "actionDataFilter": {
-                                "fromStateData": "${ .jobDone }",
                                 "toStateData": "${ .jobDone }"
                             },
                             "functionRef": {
@@ -150,7 +155,14 @@
             "dataConditions": [
                 {
                     "name": "case-done",
-                    "transition": "assemble",
+                    "transition": {
+                        "nextState": "assemble",
+                        "produceEvents": [
+                            {
+                                "eventRef": "picked-up"
+                            }
+                        ]
+                    },
                     "condition": "${ .pickUpSuccess }"
                 }
             ],
@@ -211,7 +223,6 @@
               {
                 "name": "action-increment",
                 "actionDataFilter": {
-                    "fromStateData": "${ .partsAssembled }",
                     "toStateData": "${ .partsAssembled }"
                 },
                 "functionRef": {
@@ -242,7 +253,6 @@
               {
                 "name": "action-reset",
                 "actionDataFilter": {
-                    "fromStateData": "${ .partsAssembled }",
                     "toStateData": "${ .partsAssembled }"
                 },
                 "functionRef": {

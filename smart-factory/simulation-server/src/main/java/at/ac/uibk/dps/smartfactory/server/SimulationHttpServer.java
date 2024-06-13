@@ -1,10 +1,9 @@
 package at.ac.uibk.dps.smartfactory.server;
 
 import at.ac.uibk.dps.smartfactory.SimpleLogger;
-import at.ac.uibk.dps.smartfactory.objects.ContextVariable;
-import at.ac.uibk.dps.smartfactory.objects.Response;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.protobuf.ByteString;
+import at.ac.uibk.dps.smartfactory.object.variable.ContextVariable;
+import at.ac.uibk.dps.smartfactory.object.response.Response;
+import at.ac.uibk.dps.smartfactory.object.variable.VariableHandler;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -16,7 +15,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * HTTP server for use case service simulation.
@@ -31,12 +29,13 @@ public class SimulationHttpServer implements Runnable {
   private final Map<String, Response> pathToResponseMap;
 
   private final HttpServer server;
-  private final boolean useProto;
+  private final VariableHandler variableHandler;
 
-  public SimulationHttpServer(Map<String, Response> pathToResponseMap, int port, boolean useProto) throws IOException {
+  public SimulationHttpServer(Map<String, Response> pathToResponseMap, int port, VariableHandler variableHandler)
+      throws IOException {
     this.pathToResponseMap = pathToResponseMap;
     this.server = HttpServer.create(new InetSocketAddress(port), 0);
-    this.useProto = useProto;
+    this.variableHandler = variableHandler;
   }
 
   /**
@@ -52,70 +51,13 @@ public class SimulationHttpServer implements Runnable {
   }
 
   /**
-   * Converts a stream into a {@link ContextVariableProtos.ValueCollection} proto message.
-   *
-   * @param stream stream to convert.
-   * @return {@link ContextVariableProtos.ValueCollection} proto message.
-   */
-  private static ContextVariableProtos.ValueCollection toCollectionProto(Stream<?> stream) {
-    return ContextVariableProtos.ValueCollection.newBuilder()
-        .addAllEntry(stream
-            .map(SimulationHttpServer::toProto)
-            .collect(Collectors.toList()))
-        .build();
-  }
-
-  /**
-   * Converts a map into a {@link ContextVariableProtos.ValueMap} proto message.
-   *
-   * @param map map to convert.
-   * @return {@link ContextVariableProtos.ValueMap} proto message.
-   */
-  private static ContextVariableProtos.ValueMap toMapProto(Map<?, ?> map) {
-    return ContextVariableProtos.ValueMap.newBuilder()
-        .addAllEntry(map.entrySet().stream()
-            .map(entry -> ContextVariableProtos.ValueMapEntry.newBuilder()
-                .setKey(toProto(entry.getKey()))
-                .setValue(toProto(entry.getValue()))
-                .build())
-            .collect(Collectors.toList()))
-        .build();
-  }
-
-  /**
-   * Returns a proto for the given value.
-   *
-   * @return Proto.
-   * @throws UnsupportedOperationException If the value type is unknown.
-   */
-  public static ContextVariableProtos.Value toProto(Object value) throws UnsupportedOperationException {
-    final var builder = ContextVariableProtos.Value.newBuilder();
-
-    switch (value) {
-      case Integer i -> builder.setInteger(i);
-      case Float f -> builder.setFloat(f);
-      case Long l -> builder.setLong(l);
-      case Double d -> builder.setDouble(d);
-      case String s -> builder.setString(s);
-      case Boolean b -> builder.setBool(b);
-      case byte[] bytes -> builder.setBytes(ByteString.copyFrom(bytes));
-      case Object[] array -> builder.setArray(toCollectionProto(Arrays.stream(array)));
-      case List<?> list -> builder.setList(toCollectionProto(list.stream()));
-      case Map<?, ?> map -> builder.setMap(toMapProto(map));
-      default -> throw new UnsupportedOperationException("Value type could not be converted to proto");
-    }
-
-    return builder.build();
-  }
-
-  /**
    * Run this server
    */
   @Override
   public void run() {
     // Create endpoints
     pathToResponseMap.forEach(
-        (path, responseData) -> server.createContext("/" + path, new ProtoHandler(path, responseData, useProto))
+        (path, responseData) -> server.createContext("/" + path, new ProtoHandler(path, responseData, variableHandler))
     );
 
     // Start the server
@@ -129,7 +71,7 @@ public class SimulationHttpServer implements Runnable {
    * @param path The path for which this handler is responsible (Only used for logging)
    * @param responseData The responseData to handle the request.
    */
-  private record ProtoHandler(String path, Response responseData, boolean useProto) implements HttpHandler {
+  private record ProtoHandler(String path, Response responseData, VariableHandler variableHandler) implements HttpHandler {
 
     /**
      * Handles a http exchange
@@ -147,19 +89,7 @@ public class SimulationHttpServer implements Runnable {
         // Deserialize the payload (must be Map<?, ?>)
         Map<?, ?> in;
         if (payload.length > 0) {
-          if (useProto) {
-            in = ContextVariableProtos.ContextVariables.parseFrom(payload)
-                .getDataList().stream()
-                .collect(Collectors.toMap(
-                    ContextVariableProtos.ContextVariable::getName,
-                    ContextVariableProtos.ContextVariable::getValue
-                ));
-          } else {
-            in = new ObjectMapper().readValue(new String(payload), Map.class);
-            if (in.containsKey("Parameter")) {
-              in = (Map<?, ?>) in.get("Parameter");
-            }
-          }
+          in = variableHandler.fromBytes(payload);
         } else {
           in = new HashMap<>();
         }
@@ -187,22 +117,7 @@ public class SimulationHttpServer implements Runnable {
           LOGGER.info("Output: " + outString);
         }
 
-        final byte[] out;
-        if (useProto) {
-          out = ContextVariableProtos.ContextVariables.newBuilder()
-              .addAllData(responseBody.stream()
-                  .map(contextVariable -> ContextVariableProtos.ContextVariable.newBuilder()
-                      .setName(contextVariable.name())
-                      .setValue(toProto(contextVariable.value()))
-                      .build())
-                  .toList()
-              )
-              .build()
-              .toByteArray();
-        }
-        else {
-          out = new ObjectMapper().writeValueAsBytes(responseMap);
-        }
+        final byte[] out = variableHandler.toBytes(responseMap);
 
         // Response status and length
         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, out.length);

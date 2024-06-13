@@ -1,6 +1,6 @@
-package at.ac.uibk.dps.smartfactory.objects;
+package at.ac.uibk.dps.smartfactory.object.response;
 
-import at.ac.uibk.dps.smartfactory.objects.ContextVariable;
+import at.ac.uibk.dps.smartfactory.object.variable.ContextVariable;
 
 import java.util.List;
 import java.util.Map;

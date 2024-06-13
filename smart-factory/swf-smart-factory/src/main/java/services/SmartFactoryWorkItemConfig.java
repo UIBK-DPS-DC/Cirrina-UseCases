@@ -4,7 +4,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.kie.kogito.process.impl.DefaultWorkItemHandlerConfig;
-import org.kie.kogito.serverless.workflow.openapi.OpenApiWorkItemHandler;
 
 @ApplicationScoped
 public class SmartFactoryWorkItemConfig extends DefaultWorkItemHandlerConfig {

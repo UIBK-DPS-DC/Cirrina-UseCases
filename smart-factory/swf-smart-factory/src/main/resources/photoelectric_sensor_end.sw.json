@@ -52,7 +52,6 @@
                 {
                     "name": "action-set-job-done",
                     "actionDataFilter": {
-                        "fromStateData": "${ .jobDone }",
                         "toStateData": "${ .jobDone }"
                     },
                     "functionRef": {

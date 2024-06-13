@@ -22,13 +22,6 @@ Content-Type: application/json
 Accept: application/json
 
 ######################################################## 
-# START PRODUCT COMPLETE
-
-POST http://localhost:8080/product_complete?businessKey=1
-Content-Type: application/json
-Accept: application/json
-
-######################################################## 
 # START ROBOTIC ARM
 
 POST http://localhost:8080/robotic_arm?businessKey=1
@@ -42,10 +35,31 @@ POST http://localhost:8080/conveyor_belt?businessKey=1
 Content-Type: application/json
 Accept: application/json
 
+########################################################
+# START CAMERA SENSOR
+
+POST http://localhost:8080/camera_sensor?businessKey=1
+Content-Type: application/json
+Accept: application/json
+
+########################################################
+# START PHOTOELECTIC SENSOR (START)
+
+POST http://localhost:8080/photoelectric_sensor_start?businessKey=1
+Content-Type: application/json
+Accept: application/json
+
+########################################################
+# START PHOTOELECTIC SENSOR (END)
+
+POST http://localhost:8080/photoelectric_sensor_end?businessKey=1
+Content-Type: application/json
+Accept: application/json
+
 ######################################################## 
 # GET INSTANCE IDS BY WORKFLOW
 
-GET http://localhost:8080/robotic_arm
+GET http://localhost:8080/conveyor_belt/
 
 ######################################################## 
 # PICKUP SERVICE TEST

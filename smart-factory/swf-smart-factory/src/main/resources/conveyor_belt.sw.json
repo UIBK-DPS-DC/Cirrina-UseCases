@@ -46,12 +46,12 @@
         },
         {
             "name": "set-object-valid",
-            "operation": ".objectValid = true | .objectValid",
+            "operation": ".validObject = true | .validObject",
             "type": "expression"
         },
         {
             "name": "set-object-invalid",
-            "operation": ".objectValid = false | .objectValid",
+            "operation": ".validObject = false | .validObject",
             "type": "expression"
         },
         {
@@ -70,7 +70,7 @@
             "name": "loading",
             "type": "inject",
             "data": {
-                "objectValid": false,
+                "validObject": false,
                 "jobDone": false
             },
             "transition": "loading-event"
@@ -84,7 +84,6 @@
                         {
                             "name": "action-set-job-done",
                             "actionDataFilter": {
-                                "fromStateData": "${ .jobDone }",
                                 "toStateData": "${ .jobDone }"
                             },
                             "functionRef": {
@@ -102,8 +101,7 @@
                         {
                             "name": "action-set-object-valid",
                             "actionDataFilter": {
-                                "fromStateData": "${ .objectValid }",
-                                "toStateData": "${ .objectValid }"
+                                "toStateData": "${ .validObject }"
                             },
                             "functionRef": {
                                 "refName": "set-object-valid"
@@ -118,7 +116,7 @@
                             "functionRef": {
                                 "refName": "service-move-belt",
                                 "arguments": {},
-                                "invoke": "async"
+                                "invoke": "sync"
                             }
                         }
                     ],
@@ -132,8 +130,7 @@
                         {
                             "name": "action-set-object-invalid",
                             "actionDataFilter": {
-                                "fromStateData": "${ .objectValid }",
-                                "toStateData": "${ .objectValid }"
+                                "toStateData": "${ .validObject }"
                             },
                             "functionRef": {
                                 "refName": "set-object-invalid"
@@ -158,13 +155,13 @@
                     "condition": "${ .jobDone }"
                 },
                 {
-                    "name": "case-valid",
-                    "transition": "transporting",
-                    "condition": "${ .objectValid }"
+                    "name": "case-invalid",
+                    "transition": "error",
+                    "condition": "${ .validObject == false }"
                 }
             ],
             "defaultCondition": {
-                "transition": "error"
+                "transition": "transporting"
             }
         },
         {
@@ -176,7 +173,6 @@
                         {
                             "name": "action-set-job-done",
                             "actionDataFilter": {
-                                "fromStateData": "${ .jobDone }",
                                 "toStateData": "${ .jobDone }"
                             },
                             "functionRef": {
@@ -194,8 +190,7 @@
                         {
                             "name": "action-set-object-valid",
                             "actionDataFilter": {
-                                "fromStateData": "${ .objectValid }",
-                                "toStateData": "${ .objectValid }"
+                                "toStateData": "${ .validObject }"
                             },
                             "functionRef": {
                                 "refName": "set-object-valid"
@@ -210,7 +205,7 @@
                             "functionRef": {
                                 "refName": "service-move-belt",
                                 "arguments": {},
-                                "invoke": "async"
+                                "invoke": "sync"
                             }
                         }
                     ],
@@ -245,7 +240,6 @@
                         {
                             "name": "action-set-job-done",
                             "actionDataFilter": {
-                                "fromStateData": "${ .jobDone }",
                                 "toStateData": "${ .jobDone }"
                             },
                             "functionRef": {
@@ -269,7 +263,7 @@
                             "functionRef": {
                                 "refName": "service-stop-belt",
                                 "arguments": {},
-                                "invoke": "async"
+                                "invoke": "sync"
                             }
                         }
                     ],

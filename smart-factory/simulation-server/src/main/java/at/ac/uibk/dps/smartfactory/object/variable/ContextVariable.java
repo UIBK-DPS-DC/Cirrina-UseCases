@@ -1,4 +1,4 @@
-package at.ac.uibk.dps.smartfactory.objects;
+package at.ac.uibk.dps.smartfactory.object.variable;
 
 /**
  * Corresponds to a Cirrina context variable.

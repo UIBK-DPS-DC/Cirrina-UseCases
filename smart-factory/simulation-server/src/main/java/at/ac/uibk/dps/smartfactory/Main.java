@@ -16,6 +16,8 @@ public class Main {
    * @throws InterruptedException if the HTTP server was interrupted.
    */
   public static void main(String[] args) throws IOException, InterruptedException {
+
+    // Get port from the command line args
     int port;
     if (args.length == 0) {
       port = 0;
@@ -29,6 +31,7 @@ public class Main {
       }
     }
 
+    // Get whether the server should use protobuf for variables
     boolean useProto;
     if (args.length <= 1) {
       useProto = true;

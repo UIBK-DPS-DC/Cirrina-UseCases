@@ -53,7 +53,7 @@
         "data": {
           "jobDone": false,
           "validObject": false,
-          "photoPath": null
+          "photoPath": ""
         },
         "transition": "idle"
       },
@@ -96,14 +96,14 @@
               {
                 "name": "action-scan-photo",
                 "actionDataFilter": {
-                    "fromStateData": "${ .photoPath }",
+                    "fromStateData": "${ {photoPath: .photoPath} }",
                     "results": "${ .validObject }",
                     "toStateData": "${ .validObject }"
                 },
                 "functionRef": {
                     "refName": "service-scan-photo",
                     "arguments": {
-                      "photoPath": "${ .photoPath }"
+                      "photoPath": "${ {photoPath: .photoPath} }"
                     },
                     "invoke": "sync"
                 }
@@ -128,16 +128,16 @@
             "condition": "${ .jobDone }"
           },
           {
-            "name": "case-validObject",
+            "name": "case-invalidObject",
             "transition": {
               "nextState": "idle",
               "produceEvents": [
                 {
-                  "eventRef": "object-valid"
+                  "eventRef": "object-invalid"
                 }
               ]
             },
-            "condition": "${ .validObject }"
+            "condition": "${ .validObject == false }"
           }
         ],
         "defaultCondition": {
@@ -145,7 +145,7 @@
               "nextState": "idle",
               "produceEvents": [
                 {
-                  "eventRef": "object-invalid"
+                  "eventRef": "object-valid"
                 }
               ]
           }
