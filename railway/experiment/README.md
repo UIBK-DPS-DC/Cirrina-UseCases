@@ -24,37 +24,30 @@ pip install --user ansible
 ### Step 2: Request Resources
 
 Request the necessary resources on Grid'5000 following your experiment requirements. To request a total of 16 nodes spread across 5 sites
-(Grenoble, Nantes, Sophia, Rennes, Nancy), we utilize [oargrid]():
+(Grenoble, Nantes, Sophia, Rennes, Nancy), we utilize [Funk]():
 
 ```bash
-oargridsub -w '2:00:00' grenoble:rdef="/nodes=3",nantes:rdef="/nodes=3",sophia:rdef="/nodes=3",rennes:rdef="/nodes=3",nancy:rdef="/nodes=4"
+funk --no-oargrid -m free -r grenoble:3,nantes:3,sophia:3,rennes:3,nancy:4 -w 4:00:00 -o "-t deploy"
 ```
 
 Where the reservation time needs to be adjusted per the requirements of the experiment.
 
-In case the reservation cannot be made now, the time at which the reservation could be made can be found using [funk]():
+We acquire the list of assigned hosts using the `get_hosts.py` script:
 
 ```bash
-funk -m free -r grenoble:3,nantes:3,sophia:3,rennes:3,nancy:4 -w 2:00:00
+python python get_hosts.py grenoble,nantes,sophia,rennes,nancy > machines.txt
 ```
-
-We acquire the list of reserved nodes through:
-
-```bash
-oargridstat -w -l 73314 > ~/machines (&& sort -u ~/machines)
-```
-
-The resulting file may contain duplicate or empty lines.
 
 ### Step 3: Install Environment using Kadeploy
 
 The environment for the experiment, based on Ubuntu 22.04, is installed on the allocated nodes using Kadeploy. Execute the following command:
 
 ```bash
-kadeploy3 ubuntu2204-min -k
+kadeploy3 -M -f machines.txt ubuntu2204-min -k
 ```
 
-The `-k` option ensures that kadeploy copies the SSH public keys from the frontend account to the root account on each allocated node.
+The `-k` option ensures that kadeploy copies the SSH public keys from the frontend account to the root account on each allocated node. The `-M`
+option performs a multi-site deploy. With `-f` we can specify the generated machines list.
 
 ### Step 4: Configure Inventory
 
@@ -74,6 +67,22 @@ Utilize Ansible to configure the allocated nodes with the necessary software and
 
 ```bash
 ansible-playbook -i inventory/hosts playbook.yml
+```
+
+### Step 6: Create jobs
+
+### Step 7: Download the InfluxDB bucket
+
+The InfluxDB bucket can be backed up for further analysis:
+
+```bash
+./influx backup -b bucket -t bzO10KmR8x ~/bucket_$(date '+%Y-%m-%d_%H-%M')
+```
+
+And be restored as follows:
+
+```bash
+influx restore -o org -t bzO10KmR8x bucket_file
 ```
 
 ## NATS
