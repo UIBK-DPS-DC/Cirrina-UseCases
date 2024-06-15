@@ -51,7 +51,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     PATHS.put(
         "scanPhoto",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("validObject", RANDOM.nextFloat() > 0.1F)))
+            .dynamicResult(in -> List.of(var("validObject", RANDOM.nextFloat() > 0.2F)))
             .delay(() -> 1000 + RANDOM.nextInt(500))
             .build()
     );
@@ -85,7 +85,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     PATHS.put(
         "pickUp",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("pickUpSuccess", RANDOM.nextFloat() > 0.1F)))
+            .dynamicResult(in -> List.of(var("pickUpSuccess", RANDOM.nextFloat() > 0.2F)))
             .delay(() -> 700 + RANDOM.nextInt(300))
             .build()
     );
@@ -93,7 +93,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     PATHS.put(
         "assemble",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("assembleSuccess", RANDOM.nextFloat() > 0.1F)))
+            .dynamicResult(in -> List.of(var("assembleSuccess", RANDOM.nextFloat() > 0.2F)))
             .delay(() -> 1000 + RANDOM.nextInt(500))
             .build()
     );
@@ -138,7 +138,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
   /**
    * Run this HTTP server on the given port.
    *
-   * @param port The port the server will listen to.
+   * @param port The port the server will listen to or 0 if the default port should be used.
    * @return The HTTP server thread.
    * @throws IOException if the server could not be created.
    */

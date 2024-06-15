@@ -57,7 +57,10 @@ public class SimulationHttpServer implements Runnable {
   public void run() {
     // Create endpoints
     pathToResponseMap.forEach(
-        (path, responseData) -> server.createContext("/" + path, new ProtoHandler(path, responseData, variableHandler))
+        (path, responseData) -> server.createContext(
+            "/" + path,
+            new Handler(path, responseData, variableHandler)
+        )
     );
 
     // Start the server
@@ -71,13 +74,14 @@ public class SimulationHttpServer implements Runnable {
    * @param path The path for which this handler is responsible (Only used for logging)
    * @param responseData The responseData to handle the request.
    */
-  private record ProtoHandler(String path, Response responseData, VariableHandler variableHandler) implements HttpHandler {
+  private record Handler(String path, Response responseData, VariableHandler variableHandler) implements HttpHandler {
 
     /**
      * Handles a http exchange
      *
      * @param exchange the exchange containing the request from the client
      * @throws IOException if an error occurs during handling the request
+     * TODO currently doesn't care about the HTTP method for simplicity reasons
      */
     @Override
     public void handle(HttpExchange exchange) throws IOException {
