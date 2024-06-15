@@ -13,7 +13,7 @@
     ],
     "paths": {
       "/beamDetectionStart": {
-        "get": {
+        "post": {
           "summary": "Photoelectric sensor detection service at start of belt",
           "operationId": "serviceBeamDetectionStart",
           "responses": {
@@ -36,7 +36,7 @@
         }
       },
       "/beamDetectionEnd": {
-        "get": {
+        "post": {
           "summary": "Photoelectric sensor detection service at end of belt",
           "operationId": "serviceBeamDetectionEnd",
           "responses": {
@@ -59,7 +59,7 @@
         }
       },
       "/takePhoto": {
-        "get": {
+        "post": {
           "summary": "Take photo of the object on the start of the belt",
           "operationId": "serviceTakePhoto",
           "responses": {
@@ -70,7 +70,7 @@
         }
       },
       "/scanPhoto": {
-        "get": {
+        "post": {
           "summary": "Scan photo and check for validity",
           "operationId": "serviceScanPhoto",
           "responses": {
@@ -81,7 +81,7 @@
         }
       },
       "/moveBelt": {
-        "get": {
+        "post": {
           "summary": "Start conveyor belt",
           "operationId": "serviceMoveBelt",
           "responses": {
@@ -92,7 +92,7 @@
         }
       },
       "/stopBelt": {
-        "get": {
+        "post": {
           "summary": "Stop conveyor belt",
           "operationId": "serviceStopBelt",
           "responses": {
@@ -103,7 +103,7 @@
         }
       },
       "/pickUp": {
-        "get": {
+        "post": {
           "summary": "Pick up service",
           "operationId": "servicePickUp",
           "responses": {
@@ -114,7 +114,7 @@
         }
       },
       "/assemble": {
-        "get": {
+        "post": {
           "summary": "Assemble service",
           "operationId": "serviceAssemble",
           "responses": {
@@ -125,7 +125,7 @@
         }
       },
       "/returnToStart": {
-        "get": {
+        "post": {
           "summary": "Return to start service",
           "operationId": "serviceReturnToStart",
           "responses": {

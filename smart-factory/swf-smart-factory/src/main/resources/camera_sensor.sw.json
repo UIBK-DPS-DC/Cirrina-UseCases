@@ -5,151 +5,150 @@
     "version": "1.0.0",
     "specVersion": "0.8",
     "events": [
-      {
-        "name": "job-done",
-        "source": "belt",
-        "type": "job-done"
-      },
-      {
-        "name": "start-scan",
-        "source": "camera",
-        "type": "start-scan"
-      },
-      {
-        "name": "object-valid",
-        "source": "camera",
-        "type": "object-valid",
-        "kind": "produced"
-      },
-      {
-        "name": "object-invalid",
-        "source": "camera",
-        "type": "object-invalid",
-        "kind": "produced"
-      }
+        {
+            "name": "job-done-camera-sensor",
+            "source": "belt",
+            "type": "job-done-camera-sensor"
+        },
+        {
+            "name": "start-scan",
+            "source": "camera",
+            "type": "start-scan"
+        },
+        {
+            "name": "object-valid",
+            "source": "camera",
+            "type": "object-valid",
+            "kind": "produced"
+        },
+        {
+            "name": "object-invalid",
+            "source": "camera",
+            "type": "object-invalid",
+            "kind": "produced"
+        }
     ],
     "functions": [
-      {
-        "name": "set-job-done",
-        "operation": ".jobDone = true | .jobDone",
-        "type": "expression"
-      },
-      {
-        "name": "service-take-photo",
-        "type": "custom",
-        "operation": "rest:get:http://localhost:8000/takePhoto"
-      },
-      {
-          "name": "service-scan-photo",
-          "type": "custom",
-          "operation": "rest:get:http://localhost:8000/scanPhoto"
-      }
+        {
+            "name": "set-job-done",
+            "operation": ".jobDone = true | .jobDone",
+            "type": "expression"
+        },
+        {
+            "name": "service-take-photo",
+            "type": "custom",
+            "operation": "rest:post:http://localhost:8000/takePhoto"
+        },
+        {
+            "name": "service-scan-photo",
+            "type": "custom",
+            "operation": "rest:post:http://localhost:8000/scanPhoto"
+        }
     ],
     "start": "starting",
     "states": [
-      {
-        "name": "starting",
-        "type": "inject",
-        "data": {
-          "jobDone": false,
-          "validObject": false,
-          "photoPath": ""
-        },
-        "transition": "idle"
-      },
-      {
-        "name": "idle",
-        "type": "event",
-        "onEvents": [
-          {
-            "actions": [
-                {
-                    "name": "action-set-job-done",
-                    "actionDataFilter": {
-                        "toStateData": "${ .jobDone }"
-                    },
-                    "functionRef": {
-                        "refName": "set-job-done"
-                    }
-                }
-            ],
-            "eventRefs": [
-                "job-done"
-            ],
-            "eventDataFilter": {}
-          },
-          {
-            "actions": [
-              {
-                "name": "action-take-photo",
-                "actionDataFilter": {
-                    "fromStateData": "${ {} }",
-                    "results": "${ .photoPath }",
-                    "toStateData": "${ .photoPath }"
-                },
-                "functionRef": {
-                    "refName": "service-take-photo",
-                    "arguments": {},
-                    "invoke": "sync"
-                }
-              },
-              {
-                "name": "action-scan-photo",
-                "actionDataFilter": {
-                    "fromStateData": "${ {photoPath: .photoPath} }",
-                    "results": "${ .validObject }",
-                    "toStateData": "${ .validObject }"
-                },
-                "functionRef": {
-                    "refName": "service-scan-photo",
-                    "arguments": {
-                      "photoPath": "${ {photoPath: .photoPath} }"
-                    },
-                    "invoke": "sync"
-                }
-              }
-            ],
-            "actionMode": "sequential",
-            "eventRefs": [
-              "start-scan"
-            ],
-            "eventDataFilter": {}
-          }
-        ],
-        "transition": "validObject-or-done-switch"
-      },
-      {
-        "name": "validObject-or-done-switch",
-        "type": "switch",
-        "dataConditions": [
-          {
-            "name": "case-done",
-            "end": true,
-            "condition": "${ .jobDone }"
-          },
-          {
-            "name": "case-invalidObject",
-            "transition": {
-              "nextState": "idle",
-              "produceEvents": [
-                {
-                  "eventRef": "object-invalid"
-                }
-              ]
+        {
+            "name": "starting",
+            "type": "inject",
+            "data": {
+                "jobDone": false,
+                "validObject": false,
+                "photoPath": ""
             },
-            "condition": "${ .validObject == false }"
-          }
-        ],
-        "defaultCondition": {
-          "transition": {
-              "nextState": "idle",
-              "produceEvents": [
+            "transition": "idle"
+        },
+        {
+            "name": "idle",
+            "type": "event",
+            "onEvents": [
                 {
-                  "eventRef": "object-valid"
+                    "actions": [
+                        {
+                            "name": "action-set-job-done",
+                            "actionDataFilter": {
+                                "toStateData": "${ .jobDone }"
+                            },
+                            "functionRef": {
+                                "refName": "set-job-done"
+                            }
+                        }
+                    ],
+                    "eventRefs": [
+                        "job-done-camera-sensor"
+                    ],
+                    "eventDataFilter": {}
+                },
+                {
+                    "actions": [
+                        {
+                            "name": "action-take-photo",
+                            "actionDataFilter": {
+                                "fromStateData": "${ {} }",
+                                "results": "${ .photoPath }",
+                                "toStateData": "${ .photoPath }"
+                            },
+                            "functionRef": {
+                                "refName": "service-take-photo",
+                                "arguments": {},
+                                "invoke": "sync"
+                            }
+                        },
+                        {
+                            "name": "action-scan-photo",
+                            "actionDataFilter": {
+                                "results": "${ .validObject }",
+                                "toStateData": "${ .validObject }"
+                            },
+                            "functionRef": {
+                                "refName": "service-scan-photo",
+                                "arguments": {
+                                    "photoPath": "${ .photoPath }"
+                                },
+                                "invoke": "sync"
+                            }
+                        }
+                    ],
+                    "actionMode": "sequential",
+                    "eventRefs": [
+                        "start-scan"
+                    ],
+                    "eventDataFilter": {}
                 }
-              ]
-          }
+            ],
+            "transition": "validObject-or-done-switch"
+        },
+        {
+            "name": "validObject-or-done-switch",
+            "type": "switch",
+            "dataConditions": [
+                {
+                    "name": "case-done",
+                    "end": true,
+                    "condition": "${ .jobDone }"
+                },
+                {
+                    "name": "case-invalidObject",
+                    "transition": {
+                        "nextState": "idle",
+                        "produceEvents": [
+                            {
+                                "eventRef": "object-invalid"
+                            }
+                        ]
+                    },
+                    "condition": "${ .validObject == false }"
+                }
+            ],
+            "defaultCondition": {
+                "transition": {
+                    "nextState": "idle",
+                    "produceEvents": [
+                        {
+                            "eventRef": "object-valid"
+                        }
+                    ]
+                }
+            }
         }
-      }
     ]
-  }
+}

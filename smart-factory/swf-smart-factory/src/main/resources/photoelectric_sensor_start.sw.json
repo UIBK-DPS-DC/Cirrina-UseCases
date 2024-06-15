@@ -5,122 +5,122 @@
     "version": "1.0.0",
     "specVersion": "0.8",
     "events": [
-      {
-        "name": "start-scan",
-        "source": "sensor-start",
-        "type": "start-scan",
-        "kind": "produced"
-      },
-      {
-        "name": "job-done",
-        "source": "sensor-start",
-        "type": "job-done"
-      }
+        {
+            "name": "start-scan",
+            "source": "sensor-start",
+            "type": "start-scan",
+            "kind": "produced"
+        },
+        {
+            "name": "job-done-photoelectric-sensor-start",
+            "source": "sensor-start",
+            "type": "job-done-photoelectric-sensor-start"
+        }
     ],
     "functions": [
-      {
-        "name": "set-job-done",
-        "operation": ".jobDone = true | .jobDone",
-        "type": "expression"
-      },
-      {
-        "name": "service-beam-detection",
-        "type": "custom",
-        "operation": "rest:get:http://localhost:8000/beamDetectionStart"
-      }
+        {
+            "name": "set-job-done",
+            "operation": ".jobDone = true | .jobDone",
+            "type": "expression"
+        },
+        {
+            "name": "service-beam-detection",
+            "type": "custom",
+            "operation": "rest:post:http://localhost:8000/beamDetectionStart"
+        }
     ],
     "start": "starting",
     "states": [
-      {
-        "name": "starting",
-        "type": "inject",
-        "data": {
-          "jobDone": false,
-          "isBeamInterrupted": true
+        {
+            "name": "starting",
+            "type": "inject",
+            "data": {
+                "jobDone": false,
+                "isBeamInterrupted": true
+            },
+            "transition": "timeout-or-job-done"
         },
-        "transition": "timeout-or-job-done"
-      },
-      {
-        "name": "timeout-or-job-done",
-        "type": "event",
-        "timeouts": {
-          "eventTimeout": "PT1S"
+        {
+            "name": "timeout-or-job-done",
+            "type": "event",
+            "timeouts": {
+                "eventTimeout": "PT1S"
+            },
+            "onEvents": [
+                {
+                    "actions": [
+                        {
+                            "name": "action-set-job-done",
+                            "actionDataFilter": {
+                                "toStateData": "${ .jobDone }"
+                            },
+                            "functionRef": {
+                                "refName": "set-job-done"
+                            }
+                        }
+                    ],
+                    "eventRefs": [
+                        "job-done-photoelectric-sensor-start"
+                    ],
+                    "eventDataFilter": {}
+                }
+            ],
+            "transition": "done-switch"
         },
-        "onEvents": [
-          {
+        {
+            "name": "done-switch",
+            "type": "switch",
+            "dataConditions": [
+                {
+                    "name": "case-done",
+                    "end": true,
+                    "condition": "${ .jobDone }"
+                }
+            ],
+            "defaultCondition": {
+                "transition": "scanning"
+            }
+        },
+        {
+            "name": "scanning",
+            "type": "operation",
             "actions": [
                 {
-                    "name": "action-set-job-done",
+                    "name": "action-beam-detection",
                     "actionDataFilter": {
-                        "toStateData": "${ .jobDone }"
+                        "fromStateData": "${ {} }",
+                        "results": "${ .isBeamInterrupted }",
+                        "toStateData": "${ .isBeamInterrupted }"
                     },
                     "functionRef": {
-                        "refName": "set-job-done"
+                        "refName": "service-beam-detection",
+                        "arguments": {},
+                        "invoke": "sync"
                     }
                 }
             ],
-            "eventRefs": [
-                "job-done"
-            ],
-            "eventDataFilter": {}
-        }
-        ],
-        "transition": "done-switch"
-      },
-      {
-        "name": "done-switch",
-        "type": "switch",
-        "dataConditions": [
-            {
-                "name": "case-done",
-                "end": true,
-                "condition": "${ .jobDone }"
-            }
-        ],
-        "defaultCondition": {
-            "transition": "scanning"
-        }
-    },
-      {
-        "name": "scanning",
-        "type": "operation",
-        "actions": [
-          {
-            "name": "action-beam-detection",
-            "actionDataFilter": {
-                "fromStateData": "${ {} }",
-                "results": "${ .isBeamInterrupted }",
-                "toStateData": "${ .isBeamInterrupted }"
-            },
-            "functionRef": {
-                "refName": "service-beam-detection",
-                "arguments": {},
-                "invoke": "sync"
-            }
-          }
-        ],
-        "transition": "scanning-switch"
-      },
-      {
-        "name": "scanning-switch",
-        "type": "switch",
-        "dataConditions": [
-          {
-            "name": "case-done",
-            "transition": {
-              "nextState": "timeout-or-job-done",
-              "produceEvents": [
+            "transition": "scanning-switch"
+        },
+        {
+            "name": "scanning-switch",
+            "type": "switch",
+            "dataConditions": [
                 {
-                  "eventRef": "start-scan"
+                    "name": "case-done",
+                    "transition": {
+                        "nextState": "timeout-or-job-done",
+                        "produceEvents": [
+                            {
+                                "eventRef": "start-scan"
+                            }
+                        ]
+                    },
+                    "condition": "${ .isBeamInterrupted }"
                 }
-              ]
-            },
-            "condition": "${ .isBeamInterrupted }"
-          }
-        ],
-        "defaultCondition": {
-          "transition": "timeout-or-job-done"
+            ],
+            "defaultCondition": {
+                "transition": "timeout-or-job-done"
+            }
         }
-      }
     ]
-  }
+}

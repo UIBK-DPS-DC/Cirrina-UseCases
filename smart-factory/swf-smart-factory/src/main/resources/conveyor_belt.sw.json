@@ -33,9 +33,9 @@
             "type": "picked-up"
         },
         {
-            "name": "job-done",
+            "name": "job-done-conveyor-belt",
             "source": "belt",
-            "type": "job-done"
+            "type": "job-done-conveyor-belt"
         }
     ],
     "functions": [
@@ -55,14 +55,24 @@
             "type": "expression"
         },
         {
+            "name": "set-picked-up",
+            "operation": ".pickedUp = true | .pickedUp",
+            "type": "expression"
+        },
+        {
+            "name": "reset-picked-up",
+            "operation": ".pickedUp = false | .pickedUp",
+            "type": "expression"
+        },
+        {
             "name": "service-move-belt",
             "type": "custom",
-            "operation": "rest:get:http://localhost:8000/moveBelt"
+            "operation": "rest:post:http://localhost:8000/moveBelt"
         },
         {
             "name": "service-stop-belt",
             "type": "custom",
-            "operation": "rest:get:http://localhost:8000/stopBelt"
+            "operation": "rest:post:http://localhost:8000/stopBelt"
         }
     ],
     "states": [
@@ -71,7 +81,8 @@
             "type": "inject",
             "data": {
                 "validObject": false,
-                "jobDone": false
+                "jobDone": false,
+                "pickedUp": false
             },
             "transition": "loading-event"
         },
@@ -92,7 +103,7 @@
                         }
                     ],
                     "eventRefs": [
-                        "job-done"
+                        "job-done-conveyor-belt"
                     ],
                     "eventDataFilter": {}
                 },
@@ -181,7 +192,7 @@
                         }
                     ],
                     "eventRefs": [
-                        "job-done"
+                        "job-done-conveyor-belt"
                     ],
                     "eventDataFilter": {}
                 },
@@ -221,14 +232,14 @@
             "name": "transporting-or-done-switch",
             "type": "switch",
             "dataConditions": [
-              {
-                "name": "case-jobDone2",
-                "end": true,
-                "condition": "${ .jobDone }"
-              }
+                {
+                    "name": "case-jobDone2",
+                    "end": true,
+                    "condition": "${ .jobDone }"
+                }
             ],
             "defaultCondition": {
-              "transition": "transporting"
+                "transition": "transporting"
             }
         },
         {
@@ -248,12 +259,21 @@
                         }
                     ],
                     "eventRefs": [
-                        "job-done"
+                        "job-done-conveyor-belt"
                     ],
                     "eventDataFilter": {}
                 },
                 {
                     "actions": [
+                        {
+                            "name": "action-reset-picked-up",
+                            "actionDataFilter": {
+                                "toStateData": "${ .pickedUp }"
+                            },
+                            "functionRef": {
+                                "refName": "reset-picked-up"
+                            }
+                        },
                         {
                             "name": "action-stop-belt",
                             "actionDataFilter": {
@@ -286,29 +306,68 @@
             "name": "unloading-or-done-switch",
             "type": "switch",
             "dataConditions": [
-              {
-                "name": "case-jobDone3",
-                "end": true,
-                "condition": "${ .jobDone }"
-              }
+                {
+                    "name": "case-jobDone3",
+                    "end": true,
+                    "condition": "${ .jobDone }"
+                }
             ],
             "defaultCondition": {
-              "transition": "unloading"
+                "transition": "unloading"
             }
         },
         {
             "name": "unloading",
             "type": "event",
+            "timeouts": {
+                "eventTimeout": "PT3S"
+            },
             "onEvents": [
                 {
-                    "actions": [],
+                    "actions": [
+                        {
+                            "name": "action-set-picked-up",
+                            "actionDataFilter": {
+                                "toStateData": "${ .pickedUp }"
+                            },
+                            "functionRef": {
+                                "refName": "set-picked-up"
+                            }
+                        }
+                    ],
                     "eventRefs": [
                         "picked-up"
                     ],
                     "eventDataFilter": {}
                 }
             ],
-            "transition": "loading-event"
+            "transition": "next-iter-or-done-switch"
+        },
+        {
+            "name": "next-iter-or-done-switch",
+            "type": "switch",
+            "dataConditions": [
+                {
+                    "name": "case-jobDone4",
+                    "end": true,
+                    "condition": "${ .jobDone }"
+                },
+                {
+                    "name": "case-picked-up",
+                    "transition": "loading-event",
+                    "condition": "${ .pickedUp }"
+                }
+            ],
+            "defaultCondition": {
+                "transition": {
+                    "nextState": "unloading",
+                    "produceEvents": [
+                        {
+                            "eventRef": "do-pick-up"
+                        }
+                    ]
+                }
+            }
         }
     ]
 }

@@ -7,9 +7,9 @@
     "start": "config",
     "events": [
         {
-            "name": "job-done",
+            "name": "job-done-robotic-arm",
             "source": "belt",
-            "type": "job-done"
+            "type": "job-done-robotic-arm"
         },
         {
             "name": "do-pick-up",
@@ -48,17 +48,22 @@
         {
             "name": "service-pick-up",
             "type": "custom",
-            "operation": "rest:get:http://localhost:8000/pickUp"
+            "operation": "rest:post:http://localhost:8000/pickUp"
         },
         {
             "name": "service-assemble",
             "type": "custom",
-            "operation": "rest:get:http://localhost:8000/assemble"
+            "operation": "rest:post:http://localhost:8000/assemble"
         },
         {
             "name": "service-return-to-start",
             "type": "custom",
-            "operation": "rest:get:http://localhost:8000/returnToStart"
+            "operation": "rest:post:http://localhost:8000/returnToStart"
+        },
+        {
+            "name": "service-send-statistics",
+            "type": "custom",
+            "operation": "rest:post:http://localhost:8000/sendStatistics"
         }
     ],
     "states": [
@@ -71,10 +76,10 @@
             "stateDataFilter": {
                 "output": "{ \"partsPerProduct\": (if .partsPerProduct then .partsPerProduct else .partsPerProductDefault end) }"
             },
-            "transition": "start"
+            "transition": "starting"
         },
         {
-            "name": "start",
+            "name": "starting",
             "type": "inject",
             "data": {
                 "jobDone": false,
@@ -101,7 +106,7 @@
                         }
                     ],
                     "eventRefs": [
-                        "job-done"
+                        "job-done-robotic-arm"
                     ],
                     "eventDataFilter": {}
                 },
@@ -227,6 +232,20 @@
                 },
                 "functionRef": {
                     "refName": "increment-partsAssembled"
+                }
+              },
+              {
+                "name": "action-send-statistics",
+                "actionDataFilter": {
+                    "useResults": false
+                },
+                "functionRef": {
+                    "refName": "service-send-statistics",
+                    "arguments": {
+                        "partsAssembled": "${ .partsAssembled }",
+                        "partsPerProduct": "${ .partsPerProduct }"
+                    },
+                    "invoke": "async"
                 }
               }
             ],
