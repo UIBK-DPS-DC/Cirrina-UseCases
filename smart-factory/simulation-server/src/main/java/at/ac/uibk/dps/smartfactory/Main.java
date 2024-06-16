@@ -1,6 +1,9 @@
 package at.ac.uibk.dps.smartfactory;
 
 import at.ac.uibk.dps.smartfactory.server.SmartFactoryHttpServer;
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -16,31 +19,52 @@ public class Main {
    * @throws InterruptedException if the HTTP server was interrupted.
    */
   public static void main(String[] args) throws IOException, InterruptedException {
+    ServerArgs serverArgs = new ServerArgs();
+    JCommander jCommander = JCommander.newBuilder()
+        .addObject(serverArgs)
+        .build();
 
-    // Get port from the command line args
-    int port;
-    if (args.length == 0) {
-      port = 0;
-    } else {
-      try {
-        port = Integer.parseInt(args[0]);
-      } catch (NumberFormatException e) {
-        LOGGER.info(String.format("Invalid port: %s", args[0]));
-        System.exit(1);
-        return;
-      }
-    }
-
-    // Get whether the server should use protobuf for variables
-    boolean useProto;
-    if (args.length <= 1) {
-      useProto = true;
-    } else {
-      useProto = args[1].equals("true");
+    try {
+      jCommander.parse(args);
+    } catch (ParameterException e) {
+      LOGGER.info("Invalid parameters: " + e.getMessage());
+      jCommander.usage();
+      System.exit(1);
     }
 
     LOGGER.info("Starting Server...");
-    Thread httpServerThread = SmartFactoryHttpServer.runServer(port, useProto);
+    Thread httpServerThread = SmartFactoryHttpServer.runServer(serverArgs);
     httpServerThread.join();
+  }
+
+  public static final class ServerArgs {
+
+    @Parameter(names = {"--port", "-p"}, description = "Port number")
+    private Integer port = 0;
+
+    @Parameter(names = {"--useProto", "-up"}, description = "Use protobuf for variables")
+    private Boolean useProto = true;
+
+    @Parameter(names = {"--useDelays", "-ud"}, description = "Cause random response delays")
+    private Boolean useDelays = false;
+
+    @Parameter(names = {"--errorRate", "-e"}, description = "Smart factory specific error rate (scan object, pick up, assemble)")
+    private Float errorRate = 0F;
+
+    public int getPort() {
+      return port;
+    }
+
+    public boolean getUseProto() {
+      return useProto;
+    }
+
+    public boolean getUseDelays() {
+      return useDelays;
+    }
+
+    public float getErrorRate() {
+      return errorRate;
+    }
   }
 }

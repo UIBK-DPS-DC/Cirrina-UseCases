@@ -1,5 +1,6 @@
 package at.ac.uibk.dps.smartfactory.server;
 
+import at.ac.uibk.dps.smartfactory.Main;
 import at.ac.uibk.dps.smartfactory.object.response.Response;
 import at.ac.uibk.dps.smartfactory.object.variable.ContextVariable;
 import at.ac.uibk.dps.smartfactory.object.variable.DefaultVariableHandler;
@@ -20,11 +21,45 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
   private static final Random RANDOM = new Random(); //TODO Fixed seed for reproducibility?
 
   private static boolean detectAtStart = true;
-  private static boolean detectAtEnd = true;
+  private static boolean detectAtEnd = false;
 
-  public static final Map<String, Response> PATHS = new HashMap<>();
-  static {
-    PATHS.put(
+  private SmartFactoryHttpServer(int port, VariableHandler handler, boolean useDelays, float errorRate)
+      throws IOException {
+    super(createPaths(errorRate), port, handler, useDelays);
+  }
+
+  /**
+   * Run this HTTP server on the given port.
+   *
+   * @param args The arguments used to configure the server.
+   * @return The HTTP server thread.
+   * @throws IOException if the server could not be created.
+   */
+  public static Thread runServer(Main.ServerArgs args) throws IOException {
+    final int actualPort = args.getPort() == 0
+        ? DEFAULT_PORT
+        : args.getPort();
+
+    VariableHandler variableHandler;
+    if (args.getUseProto()) {
+      variableHandler = new ProtoVariableHandler();
+    } else {
+      variableHandler = new DefaultVariableHandler();
+    }
+
+    final var httpServer = new SmartFactoryHttpServer(actualPort, variableHandler, args.getUseDelays(), args.getErrorRate());
+
+    final var httpServerThread = new Thread(httpServer);
+    httpServerThread.start();
+
+    LOGGER.info(String.format("Server started. Listening on port %d...", actualPort));
+    return httpServerThread;
+  }
+
+  private static Map<String, Response> createPaths(float errorRate) {
+    final Map<String, Response> paths = new HashMap<>();
+
+    paths.put(
         "beamDetectionStart",
         new Response.Builder()
             .dynamicResult(in -> List.of(var("isBeamInterrupted", detectAtStart)))
@@ -32,7 +67,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
             .build()
     );
 
-    PATHS.put(
+    paths.put(
         "beamDetectionEnd",
         new Response.Builder()
             .dynamicResult(in -> List.of(var("isBeamInterrupted", detectAtEnd)))
@@ -40,7 +75,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
             .build()
     );
 
-    PATHS.put(
+    paths.put(
         "takePhoto",
         new Response.Builder()
             .staticResult(List.of(var("photoPath", "photo.png")))
@@ -48,15 +83,15 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
             .build()
     );
 
-    PATHS.put(
+    paths.put(
         "scanPhoto",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("validObject", RANDOM.nextFloat() > 0.2F)))
+            .dynamicResult(in -> List.of(var("validObject", RANDOM.nextFloat() > errorRate)))
             .delay(() -> 1000 + RANDOM.nextInt(500))
             .build()
     );
 
-    PATHS.put(
+    paths.put(
         "moveBelt",
         new Response.Builder()
             .dynamicResult(in -> {
@@ -69,7 +104,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
             .build()
     );
 
-    PATHS.put(
+    paths.put(
         "stopBelt",
         new Response.Builder()
             .dynamicResult(in -> {
@@ -82,23 +117,23 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
             .build()
     );
 
-    PATHS.put(
+    paths.put(
         "pickUp",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("pickUpSuccess", RANDOM.nextFloat() > 0.2F)))
+            .dynamicResult(in -> List.of(var("pickUpSuccess", RANDOM.nextFloat() > errorRate)))
             .delay(() -> 700 + RANDOM.nextInt(300))
             .build()
     );
 
-    PATHS.put(
+    paths.put(
         "assemble",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("assembleSuccess", RANDOM.nextFloat() > 0.2F)))
+            .dynamicResult(in -> List.of(var("assembleSuccess", RANDOM.nextFloat() > errorRate)))
             .delay(() -> 1000 + RANDOM.nextInt(500))
             .build()
     );
 
-    PATHS.put(
+    paths.put(
         "returnToStart",
         new Response.Builder()
             .emptyResult()
@@ -106,7 +141,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
             .build()
     );
 
-    PATHS.put(
+    paths.put(
         "sendSms",
         new Response.Builder()
             .emptyResult()
@@ -114,7 +149,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
             .build()
     );
 
-    PATHS.put(
+    paths.put(
         "sendMail",
         new Response.Builder()
             .emptyResult()
@@ -122,45 +157,15 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
             .build()
     );
 
-    PATHS.put(
+    paths.put(
         "sendStatistics",
         new Response.Builder()
             .emptyResult()
             .delay(() -> 50 + RANDOM.nextInt(50))
             .build()
     );
-  }
 
-  private SmartFactoryHttpServer(int port, VariableHandler handler) throws IOException {
-    super(PATHS, port, handler);
-  }
-
-  /**
-   * Run this HTTP server on the given port.
-   *
-   * @param port The port the server will listen to or 0 if the default port should be used.
-   * @return The HTTP server thread.
-   * @throws IOException if the server could not be created.
-   */
-  public static Thread runServer(int port, boolean useProto) throws IOException {
-    final int actualPort = port == 0
-        ? DEFAULT_PORT
-        : port;
-
-    VariableHandler variableHandler;
-    if (useProto) {
-      variableHandler = new ProtoVariableHandler();
-    } else {
-      variableHandler = new DefaultVariableHandler();
-    }
-
-    final var httpServer = new SmartFactoryHttpServer(actualPort, variableHandler);
-
-    final var httpServerThread = new Thread(httpServer);
-    httpServerThread.start();
-
-    LOGGER.info(String.format("Server started. Listening on port %d...", actualPort));
-    return httpServerThread;
+    return paths;
   }
 
   private static ContextVariable var(String name, Object value) {

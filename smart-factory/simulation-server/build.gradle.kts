@@ -32,6 +32,8 @@ repositories {
 }
 
 dependencies {
+    implementation("com.beust:jcommander:1.82")
+
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.1")
 
     implementation("com.google.protobuf:protobuf-java:3.25.3")

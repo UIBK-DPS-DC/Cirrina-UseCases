@@ -30,12 +30,18 @@ public class SimulationHttpServer implements Runnable {
 
   private final HttpServer server;
   private final VariableHandler variableHandler;
+  private final boolean useDelays;
 
-  public SimulationHttpServer(Map<String, Response> pathToResponseMap, int port, VariableHandler variableHandler)
-      throws IOException {
+  public SimulationHttpServer(
+      Map<String, Response> pathToResponseMap,
+      int port,
+      VariableHandler variableHandler,
+      boolean useDelays
+  ) throws IOException {
     this.pathToResponseMap = pathToResponseMap;
     this.server = HttpServer.create(new InetSocketAddress(port), 0);
     this.variableHandler = variableHandler;
+    this.useDelays = useDelays;
   }
 
   /**
@@ -59,7 +65,7 @@ public class SimulationHttpServer implements Runnable {
     pathToResponseMap.forEach(
         (path, responseData) -> server.createContext(
             "/" + path,
-            new Handler(path, responseData, variableHandler)
+            new Handler(path, responseData, variableHandler, useDelays)
         )
     );
 
@@ -74,7 +80,7 @@ public class SimulationHttpServer implements Runnable {
    * @param path The path for which this handler is responsible (Only used for logging)
    * @param responseData The responseData to handle the request.
    */
-  private record Handler(String path, Response responseData, VariableHandler variableHandler) implements HttpHandler {
+  private record Handler(String path, Response responseData, VariableHandler variableHandler, boolean useDelays) implements HttpHandler {
 
     /**
      * Handles a http exchange
@@ -106,12 +112,13 @@ public class SimulationHttpServer implements Runnable {
         // Call handler and convert response context variables into a map
         final var responseBody = new ArrayList<>(responseData.handler().onHandle(in));
 
-        /* TODO ENABLE OR REMOVE DELAY?
-        int delay = responseData.delay().get();
-        if (delay > 0) {
-          Thread.sleep(delay);
+        // If delays are enabled, sleep for an amount of ms defined by the response handler
+        if (useDelays) {
+          int delay = responseData.delayMs().get();
+          if (delay > 0) {
+            Thread.sleep(delay);
+          }
         }
-        */
 
         final var responseMap = responseBody.stream()
             .collect(Collectors.toMap(ContextVariable::name, ContextVariable::value));
