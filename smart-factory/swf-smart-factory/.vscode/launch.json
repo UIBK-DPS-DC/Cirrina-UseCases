@@ -9,6 +9,12 @@
             "type": "PowerShell",
             "request": "launch",
             "script": "mvn quarkus:dev"
+        },
+        {
+            "name": "mvn clean package",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "mvn clean package"
         }
     ]
 }

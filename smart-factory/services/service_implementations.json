@@ -6,7 +6,7 @@
             "host": "localhost",
             "port": 8000,
             "endPoint": "/stopBelt",
-            "method": "GET",
+            "method": "POST",
             "name": "stopBelt",
             "cost": 1.0,
             "local": true
@@ -17,7 +17,7 @@
             "host": "localhost",
             "port": 8000,
             "endPoint": "/moveBelt",
-            "method": "GET",
+            "method": "POST",
             "name": "moveBelt",
             "cost": 1.0,
             "local": true
@@ -28,7 +28,7 @@
             "host": "localhost",
             "port": 8000,
             "endPoint": "/sendSms",
-            "method": "GET",
+            "method": "POST",
             "name": "sendSms",
             "cost": 1.0,
             "local": true
@@ -39,7 +39,7 @@
             "host": "localhost",
             "port": 8000,
             "endPoint": "/beamDetectionStart",
-            "method": "GET",
+            "method": "POST",
             "name": "beamDetectionStart",
             "cost": 1.0,
             "local": true
@@ -50,7 +50,7 @@
             "host": "localhost",
             "port": 8000,
             "endPoint": "/sendStatistics",
-            "method": "GET",
+            "method": "POST",
             "name": "sendStatistics",
             "cost": 1.0,
             "local": true
@@ -61,7 +61,7 @@
             "host": "localhost",
             "port": 8000,
             "endPoint": "/sendMail",
-            "method": "GET",
+            "method": "POST",
             "name": "sendMail",
             "cost": 1.0,
             "local": true
@@ -72,7 +72,7 @@
             "host": "localhost",
             "port": 8000,
             "endPoint": "/scanPhoto",
-            "method": "GET",
+            "method": "POST",
             "name": "scanPhoto",
             "cost": 1.0,
             "local": true
@@ -83,7 +83,7 @@
             "host": "localhost",
             "port": 8000,
             "endPoint": "/pickUp",
-            "method": "GET",
+            "method": "POST",
             "name": "pickUp",
             "cost": 1.0,
             "local": true
@@ -94,7 +94,7 @@
             "host": "localhost",
             "port": 8000,
             "endPoint": "/beamDetectionEnd",
-            "method": "GET",
+            "method": "POST",
             "name": "beamDetectionEnd",
             "cost": 1.0,
             "local": true
@@ -105,7 +105,7 @@
             "host": "localhost",
             "port": 8000,
             "endPoint": "/takePhoto",
-            "method": "GET",
+            "method": "POST",
             "name": "takePhoto",
             "cost": 1.0,
             "local": true
@@ -116,7 +116,7 @@
             "host": "localhost",
             "port": 8000,
             "endPoint": "/assemble",
-            "method": "GET",
+            "method": "POST",
             "name": "assemble",
             "cost": 1.0,
             "local": true
@@ -127,7 +127,7 @@
             "host": "localhost",
             "port": 8000,
             "endPoint": "/returnToStart",
-            "method": "GET",
+            "method": "POST",
             "name": "returnToStart",
             "cost": 1.0,
             "local": true

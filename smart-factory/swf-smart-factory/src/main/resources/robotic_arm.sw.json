@@ -225,29 +225,29 @@
             "name": "assemble-increment",
             "type": "operation",
             "actions": [
-              {
-                "name": "action-increment",
-                "actionDataFilter": {
-                    "toStateData": "${ .partsAssembled }"
-                },
-                "functionRef": {
-                    "refName": "increment-partsAssembled"
-                }
-              },
-              {
-                "name": "action-send-statistics",
-                "actionDataFilter": {
-                    "useResults": false
-                },
-                "functionRef": {
-                    "refName": "service-send-statistics",
-                    "arguments": {
-                        "partsAssembled": "${ .partsAssembled }",
-                        "partsPerProduct": "${ .partsPerProduct }"
+                {
+                    "name": "action-increment",
+                    "actionDataFilter": {
+                        "toStateData": "${ .partsAssembled }"
                     },
-                    "invoke": "async"
+                    "functionRef": {
+                        "refName": "increment-partsAssembled"
+                    }
+                },
+                {
+                    "name": "action-send-statistics",
+                    "actionDataFilter": {
+                        "useResults": false
+                    },
+                    "functionRef": {
+                        "refName": "service-send-statistics",
+                        "arguments": {
+                            "partsAssembled": "${ .partsAssembled }",
+                            "partsPerProduct": "${ .partsPerProduct }"
+                        },
+                        "invoke": "async"
+                    }
                 }
-              }
             ],
             "transition": "product-complete-switch"
         },
@@ -269,15 +269,15 @@
             "name": "product-complete",
             "type": "operation",
             "actions": [
-              {
-                "name": "action-reset",
-                "actionDataFilter": {
-                    "toStateData": "${ .partsAssembled }"
-                },
-                "functionRef": {
-                    "refName": "reset-partsAssembled"
+                {
+                    "name": "action-reset",
+                    "actionDataFilter": {
+                        "toStateData": "${ .partsAssembled }"
+                    },
+                    "functionRef": {
+                        "refName": "reset-partsAssembled"
+                    }
                 }
-              }
             ],
             "transition": {
                 "nextState": "return",

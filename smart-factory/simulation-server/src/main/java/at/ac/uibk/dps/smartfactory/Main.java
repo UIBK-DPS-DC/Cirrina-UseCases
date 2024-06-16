@@ -32,6 +32,7 @@ public class Main {
       System.exit(1);
     }
 
+    LOGGER.info("Arguments: %s".formatted(serverArgs.toString()));
     LOGGER.info("Starting Server...");
     Thread httpServerThread = SmartFactoryHttpServer.runServer(serverArgs);
     httpServerThread.join();
@@ -42,7 +43,7 @@ public class Main {
     @Parameter(names = {"--port", "-p"}, description = "Port number")
     private Integer port = 0;
 
-    @Parameter(names = {"--useProto", "-up"}, description = "Use protobuf for variables")
+    @Parameter(names = {"--useProto", "-up"}, description = "Use protobuf for variables", arity = 1)
     private Boolean useProto = true;
 
     @Parameter(names = {"--useDelays", "-ud"}, description = "Cause random response delays")
@@ -65,6 +66,17 @@ public class Main {
 
     public float getErrorRate() {
       return errorRate;
+    }
+
+    @Override
+    public String toString() {
+      return "PORT: %s, PROTO: %s, DELAYS: %s, ERROR_RATE: %f"
+          .formatted(
+              port == 0 ? "DEFAULT" : port.toString(),
+              useProto.toString(),
+              useDelays.toString(),
+              errorRate
+          );
     }
   }
 }
