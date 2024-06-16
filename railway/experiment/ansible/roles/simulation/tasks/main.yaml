@@ -17,8 +17,8 @@
     name: simulation
     image: "marlonetheredgeuibk/cirrina-examples-railway-simulate-sensors:develop"
     state: started
-    restart: true
-    restart_policy: always
+    recreate: true
+    force_kill: true
     pull: true
     env:
       OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"

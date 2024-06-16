@@ -17,8 +17,9 @@
     name: zookeeper
     image: zookeeper:latest
     state: started
-    restart: true
-    restart_policy: always
+    recreate: true
+    force_kill: true
+    pull: true
     ports:
       - "2181:2181"
       - "2888:2888"
