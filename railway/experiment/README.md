@@ -24,49 +24,36 @@ pip install --user ansible
 ### Step 2: Request Resources
 
 Request the necessary resources on Grid'5000 following your experiment requirements. To request a total of 16 nodes spread across 5 sites
-(Grenoble, Nantes, Sophia, Rennes, Nancy), we utilize [oargrid]():
+(Grenoble, Nantes, Sophia, Rennes, Nancy), we utilize [Funk]():
 
 ```bash
-oargridsub -w '2:00:00' grenoble:rdef="/nodes=3",nantes:rdef="/nodes=3",sophia:rdef="/nodes=3",rennes:rdef="/nodes=3",nancy:rdef="/nodes=4"
+funk --no-oargrid -m free -r grenoble:3,nantes:3,sophia:3,rennes:3,nancy:4 -w 4:00:00 -o "-t deploy"
 ```
 
 Where the reservation time needs to be adjusted per the requirements of the experiment.
 
-In case the reservation cannot be made now, the time at which the reservation could be made can be found using [funk]():
+We acquire the list of assigned hosts using the `get_hosts.py` script:
 
 ```bash
-funk -m free -r grenoble:3,nantes:3,sophia:3,rennes:3,nancy:4 -w 2:00:00
+python python get_hosts.py grenoble,nantes,sophia,rennes,nancy > machines.txt
 ```
-
-We acquire the list of reserved nodes through:
-
-```bash
-oargridstat -w -l 73314 > ~/machines (&& sort -u ~/machines)
-```
-
-The resulting file may contain duplicate or empty lines.
 
 ### Step 3: Install Environment using Kadeploy
 
 The environment for the experiment, based on Ubuntu 22.04, is installed on the allocated nodes using Kadeploy. Execute the following command:
 
 ```bash
-kadeploy3 ubuntu2204-min -k
+kadeploy3 -M -f machines.txt ubuntu2204-min -k
 ```
 
-The `-k` option ensures that kadeploy copies the SSH public keys from the frontend account to the root account on each allocated node.
+The `-k` option ensures that kadeploy copies the SSH public keys from the frontend account to the root account on each allocated node. The `-M`
+option performs a multi-site deploy. With `-f` we can specify the generated machines list.
 
 ### Step 4: Configure Inventory
 
-To configure Ansible properly, create an inventory file reflecting the nodes allocated to your experiment. You can view the available nodes
-using the `oarstat` command:
-
-```bash
-oarstat -u -f
-```
-
-A script _generate_config.py_ is provided that generates _inventory/hosts_ and _job/job\*.json_ based on a _machines.json_ file. The machines JSON
-file needs to be populated with the reserved nodes.
+The `generate_config.py` script reads the `machines.json` file, which should be updated to reflect the assigned hosts across different sites.
+Running the `generate_config.py` script with an appropriate `machines.json` file will result in an Ansible inventory hosts file that reflects
+the required configuration for this experiment. The script also generates the required Cirrina job files.
 
 ### Step 5: Configure using Ansible
 
@@ -74,6 +61,29 @@ Utilize Ansible to configure the allocated nodes with the necessary software and
 
 ```bash
 ansible-playbook -i inventory/hosts playbook.yml
+```
+
+### Step 6: Create jobs
+
+The job files need to be submitted to a ZooKeeper server to ensure that the Cirrina runtimes perform the state machine instances. A valid ZooKeeper
+host needs to be passed to the `create_jobs.py` script upon execution.
+
+```bash
+python create_jobs.py --host dahu-3.grenoble.grid5000.fr
+```
+
+### Step 7: Download the InfluxDB bucket
+
+The InfluxDB bucket can be backed up for further analysis:
+
+```bash
+./influx backup -b bucket -t bzO10KmR8x ~/bucket_$(date '+%Y-%m-%d_%H-%M')
+```
+
+And be restored as follows:
+
+```bash
+influx restore -o org -t bzO10KmR8x bucket_file
 ```
 
 ## NATS

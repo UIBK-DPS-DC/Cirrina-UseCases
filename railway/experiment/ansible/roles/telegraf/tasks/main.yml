@@ -33,8 +33,8 @@
     name: telegraf
     image: telegraf:latest
     state: started
-    restart: true
-    restart_policy: always
+    recreate: true
+    force_kill: true
     pull: true
     ports:
       - "4317:4317"

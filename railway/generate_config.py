@@ -160,115 +160,129 @@ def write_hosts_config(sites: List[Site]):
 def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
     global_job_description = {}
 
-    with open("csml/railway.csml") as file:
-        global_job_description["collaborativeStateMachine"] = json.load(file)
-
     global_job_description["stateMachineName"] = "crossing"
     global_job_description["localData"] = {}
     global_job_description["bindEventInstanceIds"] = []
 
     i = 0
-    for site in sites:
-        for host in site.runtimes:
-            job_description = global_job_description.copy()
 
-            job_description["serviceImplementations"] = [
-                {
-                    "name": "gateUp",
-                    "type": "HTTP",
-                    "cost": 0.0,
-                    "local": True,
-                    "scheme": "http",
-                    "host": host,
-                    "port": 8001,
-                    "endPoint": "/gate/up",
-                    "method": "POST",
-                },
-                {
-                    "name": "gateDown",
-                    "type": "HTTP",
-                    "cost": 0.0,
-                    "local": True,
-                    "scheme": "http",
-                    "host": host,
-                    "port": 8001,
-                    "endPoint": "/gate/down",
-                    "method": "POST",
-                },
-                {
-                    "name": "lightOn",
-                    "type": "HTTP",
-                    "cost": 0.0,
-                    "local": True,
-                    "scheme": "http",
-                    "host": host,
-                    "port": 8002,
-                    "endPoint": "/light/on",
-                    "method": "POST",
-                },
-                {
-                    "name": "lightOff",
-                    "type": "HTTP",
-                    "cost": 0.0,
-                    "local": True,
-                    "scheme": "http",
-                    "host": host,
-                    "port": 8002,
-                    "endPoint": "/light/off",
-                    "method": "POST",
-                },
-                {
-                    "name": "gateUp",
-                    "type": "HTTP",
-                    "cost": 0.0,
-                    "local": False,
-                    "scheme": "http",
-                    "host": site.remote_services,
-                    "port": 8001,
-                    "endPoint": "/gate/up",
-                    "method": "POST",
-                },
-                {
-                    "name": "gateDown",
-                    "type": "HTTP",
-                    "cost": 0.0,
-                    "local": False,
-                    "scheme": "http",
-                    "host": site.remote_services,
-                    "port": 8001,
-                    "endPoint": "/gate/down",
-                    "method": "POST",
-                },
-                {
-                    "name": "lightOn",
-                    "type": "HTTP",
-                    "cost": 0.0,
-                    "local": False,
-                    "scheme": "http",
-                    "host": site.remote_services,
-                    "port": 8002,
-                    "endPoint": "/light/on",
-                    "method": "POST",
-                },
-                {
-                    "name": "lightOff",
-                    "type": "HTTP",
-                    "cost": 0.0,
-                    "local": False,
-                    "scheme": "http",
-                    "host": site.remote_services,
-                    "port": 8002,
-                    "endPoint": "/light/off",
-                    "method": "POST",
-                },
-            ]
+    ONE_MIN = 60000
 
-            job_description["runtimeName"] = runtimes[host]
+    for start_time, end_time, path in zip(
+        [ONE_MIN, ONE_MIN + ONE_MIN * 15 + ONE_MIN],
+        [ONE_MIN + ONE_MIN * 15, ONE_MIN + ONE_MIN * 15 + ONE_MIN + ONE_MIN * 15],
+        ["csml/railway.remote.csml", "csml/railway.local.csml"],
+    ):
+        desc = global_job_description.copy()
 
-            with open(f"job/job{i}.json", "w") as file:
-                json.dump(job_description, file, indent=4)
+        with open(path) as file:
+            desc["collaborativeStateMachine"] = json.load(file)
 
-            i += 1
+        desc["startTime"] = start_time
+        desc["endTime"] = end_time
+
+        for site in sites:
+            for host in site.runtimes:
+                for _ in range(0, 1):
+                    job_description = desc.copy()
+
+                    job_description["serviceImplementations"] = [
+                        {
+                            "name": "gateUp",
+                            "type": "HTTP",
+                            "cost": 0.0,
+                            "local": True,
+                            "scheme": "http",
+                            "host": host,
+                            "port": 8001,
+                            "endPoint": "/gate/up",
+                            "method": "POST",
+                        },
+                        {
+                            "name": "gateDown",
+                            "type": "HTTP",
+                            "cost": 0.0,
+                            "local": True,
+                            "scheme": "http",
+                            "host": host,
+                            "port": 8001,
+                            "endPoint": "/gate/down",
+                            "method": "POST",
+                        },
+                        {
+                            "name": "lightOn",
+                            "type": "HTTP",
+                            "cost": 0.0,
+                            "local": True,
+                            "scheme": "http",
+                            "host": host,
+                            "port": 8002,
+                            "endPoint": "/light/on",
+                            "method": "POST",
+                        },
+                        {
+                            "name": "lightOff",
+                            "type": "HTTP",
+                            "cost": 0.0,
+                            "local": True,
+                            "scheme": "http",
+                            "host": host,
+                            "port": 8002,
+                            "endPoint": "/light/off",
+                            "method": "POST",
+                        },
+                        {
+                            "name": "gateUp",
+                            "type": "HTTP",
+                            "cost": 0.0,
+                            "local": False,
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8001,
+                            "endPoint": "/gate/up",
+                            "method": "POST",
+                        },
+                        {
+                            "name": "gateDown",
+                            "type": "HTTP",
+                            "cost": 0.0,
+                            "local": False,
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8001,
+                            "endPoint": "/gate/down",
+                            "method": "POST",
+                        },
+                        {
+                            "name": "lightOn",
+                            "type": "HTTP",
+                            "cost": 0.0,
+                            "local": False,
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8002,
+                            "endPoint": "/light/on",
+                            "method": "POST",
+                        },
+                        {
+                            "name": "lightOff",
+                            "type": "HTTP",
+                            "cost": 0.0,
+                            "local": False,
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8002,
+                            "endPoint": "/light/off",
+                            "method": "POST",
+                        },
+                    ]
+
+                    job_description["runtimeName"] = runtimes[host]
+
+                    with open(f"job/job{i}.json", "w") as file:
+                        json.dump(job_description, file, indent=4)
+
+                    i += 1
 
 
 if __name__ == "__main__":
