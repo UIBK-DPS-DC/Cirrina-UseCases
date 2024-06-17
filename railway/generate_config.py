@@ -168,10 +168,11 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
 
     ONE_MIN = 60000
 
-    for start_time, end_time, path in zip(
+    for start_time, end_time, path, is_local in zip(
         [ONE_MIN, ONE_MIN + ONE_MIN * 15 + ONE_MIN],
         [ONE_MIN + ONE_MIN * 15, ONE_MIN + ONE_MIN * 15 + ONE_MIN + ONE_MIN * 15],
         ["csml/railway.remote.csml", "csml/railway.local.csml"],
+        [False, True],
     ):
         desc = global_job_description.copy()
 
@@ -186,96 +187,106 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                 for _ in range(0, 1):
                     job_description = desc.copy()
 
-                    job_description["serviceImplementations"] = [
-                        {
-                            "name": "gateUp",
-                            "type": "HTTP",
-                            "cost": 0.0,
-                            "local": True,
-                            "scheme": "http",
-                            "host": host,
-                            "port": 8001,
-                            "endPoint": "/gate/up",
-                            "method": "POST",
-                        },
-                        {
-                            "name": "gateDown",
-                            "type": "HTTP",
-                            "cost": 0.0,
-                            "local": True,
-                            "scheme": "http",
-                            "host": host,
-                            "port": 8001,
-                            "endPoint": "/gate/down",
-                            "method": "POST",
-                        },
-                        {
-                            "name": "lightOn",
-                            "type": "HTTP",
-                            "cost": 0.0,
-                            "local": True,
-                            "scheme": "http",
-                            "host": host,
-                            "port": 8002,
-                            "endPoint": "/light/on",
-                            "method": "POST",
-                        },
-                        {
-                            "name": "lightOff",
-                            "type": "HTTP",
-                            "cost": 0.0,
-                            "local": True,
-                            "scheme": "http",
-                            "host": host,
-                            "port": 8002,
-                            "endPoint": "/light/off",
-                            "method": "POST",
-                        },
-                        {
-                            "name": "gateUp",
-                            "type": "HTTP",
-                            "cost": 0.0,
-                            "local": False,
-                            "scheme": "http",
-                            "host": site.remote_services,
-                            "port": 8001,
-                            "endPoint": "/gate/up",
-                            "method": "POST",
-                        },
-                        {
-                            "name": "gateDown",
-                            "type": "HTTP",
-                            "cost": 0.0,
-                            "local": False,
-                            "scheme": "http",
-                            "host": site.remote_services,
-                            "port": 8001,
-                            "endPoint": "/gate/down",
-                            "method": "POST",
-                        },
-                        {
-                            "name": "lightOn",
-                            "type": "HTTP",
-                            "cost": 0.0,
-                            "local": False,
-                            "scheme": "http",
-                            "host": site.remote_services,
-                            "port": 8002,
-                            "endPoint": "/light/on",
-                            "method": "POST",
-                        },
-                        {
-                            "name": "lightOff",
-                            "type": "HTTP",
-                            "cost": 0.0,
-                            "local": False,
-                            "scheme": "http",
-                            "host": site.remote_services,
-                            "port": 8002,
-                            "endPoint": "/light/off",
-                            "method": "POST",
-                        },
-                    ]
+                    job_description["serviceImplementations"] = []
+
+                    if is_local:
+                        job_description["serviceImplementations"].extend(
+                            [
+                                {
+                                    "name": "gateUp",
+                                    "type": "HTTP",
+                                    "cost": 0.0,
+                                    "local": True,
+                                    "scheme": "http",
+                                    "host": host,
+                                    "port": 8001,
+                                    "endPoint": "/gate/up",
+                                    "method": "POST",
+                                },
+                                {
+                                    "name": "gateDown",
+                                    "type": "HTTP",
+                                    "cost": 0.0,
+                                    "local": True,
+                                    "scheme": "http",
+                                    "host": host,
+                                    "port": 8001,
+                                    "endPoint": "/gate/down",
+                                    "method": "POST",
+                                },
+                                {
+                                    "name": "lightOn",
+                                    "type": "HTTP",
+                                    "cost": 0.0,
+                                    "local": True,
+                                    "scheme": "http",
+                                    "host": host,
+                                    "port": 8002,
+                                    "endPoint": "/light/on",
+                                    "method": "POST",
+                                },
+                                {
+                                    "name": "lightOff",
+                                    "type": "HTTP",
+                                    "cost": 0.0,
+                                    "local": True,
+                                    "scheme": "http",
+                                    "host": host,
+                                    "port": 8002,
+                                    "endPoint": "/light/off",
+                                    "method": "POST",
+                                },
+                            ]
+                        )
+                    else:
+                        job_description["serviceImplementations"].extend(
+                            [
+                                {
+                                    "name": "gateUp",
+                                    "type": "HTTP",
+                                    "cost": 0.0,
+                                    "local": False,
+                                    "scheme": "http",
+                                    "host": site.remote_services,
+                                    "port": 8001,
+                                    "endPoint": "/gate/up",
+                                    "method": "POST",
+                                },
+                                {
+                                    "name": "gateDown",
+                                    "type": "HTTP",
+                                    "cost": 0.0,
+                                    "local": False,
+                                    "scheme": "http",
+                                    "host": site.remote_services,
+                                    "port": 8001,
+                                    "endPoint": "/gate/down",
+                                    "method": "POST",
+                                },
+                                {
+                                    "name": "lightOn",
+                                    "type": "HTTP",
+                                    "cost": 0.0,
+                                    "local": False,
+                                    "scheme": "http",
+                                    "host": site.remote_services,
+                                    "port": 8002,
+                                    "endPoint": "/light/on",
+                                    "method": "POST",
+                                },
+                                {
+                                    "name": "lightOff",
+                                    "type": "HTTP",
+                                    "cost": 0.0,
+                                    "local": False,
+                                    "scheme": "http",
+                                    "host": site.remote_services,
+                                    "port": 8002,
+                                    "endPoint": "/light/off",
+                                    "method": "POST",
+                                },
+                            ]
+                        )
 
                     job_description["runtimeName"] = runtimes[host]
 
