@@ -22,7 +22,7 @@
     pull: true
     env:
       OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
-      METRICS_INTERVAL: "10000"
+      METRICS_INTERVAL: "1000"
       NATS_URL: "{{ hostvars[inventory_hostname]['NATS_URL'] }}"
   become: true
   register: simulation_container
