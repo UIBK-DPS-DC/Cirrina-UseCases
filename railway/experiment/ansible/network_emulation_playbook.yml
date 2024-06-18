@@ -1,0 +1,18 @@
+- name: Simulating latency
+  hosts: all
+  vars:
+    latency_ms: 10
+    network_interface: eno1
+  tasks:
+    - name: Install tc
+      yum:
+        name: tc
+        state: present
+      become: true
+
+    - name: Introducing latency
+      shell: "{{item}}"
+      with_items:
+        - "/usr/sbin/tc qdisc add dev eno1 root netem delay {{latency_ms}}ms"
+      become: true
+      when: not remove_qdisc
