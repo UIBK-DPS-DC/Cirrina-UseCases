@@ -174,7 +174,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str], is_local: bool):
 
     for site in sites:
         for host in site.runtimes:
-            for _ in range(0, 1):
+            for _ in range(0, 5):
                 job_description = global_job_description.copy()
 
                 job_description["serviceImplementations"] = []
