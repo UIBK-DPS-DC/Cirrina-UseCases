@@ -64,7 +64,7 @@ if __name__ == "__main__":
         print(f"Successfully read service descriptions file: {services_file.name}")
 
     # Creates a job description for a provided state machine
-    def create_job_description(state_machine_name: str) -> dict:
+    def create_job_description(state_machine_name: str, runtime_name: str) -> dict:
         return {
             "serviceImplementations": services["serviceImplementations"],
             "collaborativeStateMachine": csm,
@@ -75,7 +75,7 @@ if __name__ == "__main__":
                 else {}
             ),
             "bindEventInstanceIds": [],
-            "runtimeName": "runtime"
+            "runtimeName": runtime_name
         }
 
     # Create the KazooClient using the provided host
@@ -98,7 +98,10 @@ if __name__ == "__main__":
                     zk.delete(node_path)
 
                 # Get the job description for the current state machine
-                job_description: dict = create_job_description(sm_name)
+                job_description: dict = create_job_description(
+                    sm_name, 
+                    "runtime" if i == 0 else f"runtime{i+1}"
+                )
                 job_description_bytes: bytes = json.dumps(job_description).encode(
                     "utf-8"
                 )
