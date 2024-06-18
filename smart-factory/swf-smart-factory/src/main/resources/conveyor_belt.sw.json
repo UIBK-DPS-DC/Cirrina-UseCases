@@ -320,7 +320,7 @@
             "name": "unloading",
             "type": "event",
             "timeouts": {
-                "eventTimeout": "PT3S"
+                "eventTimeout": "PT1S"
             },
             "onEvents": [
                 {

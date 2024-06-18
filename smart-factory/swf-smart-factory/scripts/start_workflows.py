@@ -18,10 +18,10 @@ INSTANCES = 1
 
 WORKFLOW_INPUT = {
     "job_control": {
-        "totalProducts": 20
+        "totalProducts": 300
     },
     "robotic_arm": {
-        "partsPerProduct": 4
+        "partsPerProduct": 10
     }
 }
 

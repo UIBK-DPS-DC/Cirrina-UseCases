@@ -44,7 +44,7 @@
             "name": "timeout-or-job-done",
             "type": "event",
             "timeouts": {
-                "eventTimeout": "PT1S"
+                "eventTimeout": "PT0.4S"
             },
             "onEvents": [
                 {

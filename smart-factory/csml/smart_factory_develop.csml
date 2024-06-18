@@ -285,7 +285,7 @@
                         {
                             "name": "roboticArmSystem.triggerPickup",
                             "type": "timeout",
-                            "delay": "3000",
+                            "delay": "1000",
                             "action": {
                                 "type": "raise",
                                 "event": {
@@ -571,7 +571,7 @@
                                 {
                                     "name": "startTriggerBeamDetection",
                                     "type": "timeout",
-                                    "delay": "1000",
+                                    "delay": "400",
                                     "action": {
                                         "type": "raise",
                                         "event": {
@@ -634,7 +634,7 @@
                                 {
                                     "name": "endTriggerBeamDetection",
                                     "type": "timeout",
-                                    "delay": "1000",
+                                    "delay": "400",
                                     "action": {
                                         "type": "raise",
                                         "event": {

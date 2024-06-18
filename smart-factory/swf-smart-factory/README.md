@@ -79,11 +79,12 @@ where:
 `ce-kogitobusinesskey` can be replaced with `ce-kogitoprocrefid` (the instance id of the target workflow) if the workflow has no business key.
 
 
-## Known Problems and Limitations
+## Problems and Limitations
 
-**Some of these problems might only apply to the `999-SNAPSHOT` version of Sonataflow (June 2024).**
+**Some of the following problems might only apply to the `999-SNAPSHOT` version of Sonataflow (June 2024).**
 
-- Quarkus 3+ is only supported in the latest snapshot version. Stable versions require Quarkus 2.
+- The business key functionality requires the latest `999-SNAPSHOT` version to function correctly in combination with CloudEvents (`ce-kogitobusinesskey` has no effect in previous versions). Additionally, Quarkus 3+ is only supported in the latest snapshot versions. Stable versions require Quarkus 2.
+<br>**SOLUTION**: We use version `999-SNAPSHOT` instead of a stable version.
 - The Sonataflow Dev UI extension requires dependencies which do not support the `999-SNAPSHOT` version of Sonataflow and can thus currently not be used. 
 <br>**SOLUTION**: Without the Dev UI, starting workflows or retrieving workflow information can be done by invoking the respective POST or GET requests manually.
 - Business keys are not passed to sub-workflows (`subFlow`). This means that sub-workflows can hardly be used on an event-based basis.
@@ -92,3 +93,4 @@ where:
 - When invoking HTTP requests through functions of type `custom` and operation `rest:post:<url>`, the entries `Port: null` and `Host: null` are always added to the JSON payload.
 - During startup Quarkus logs warnings of the form `Unrecognized configuration key ...`. These configuration keys are in fact recognized and application startup might fail if they are not provided.
 - In case a workflow throws an unhandled exception, the entire application enters an error state and it is often required to restart the quarkus application.
+- Too many produced CloudEvents may cause the error `SRMSG00034: Insufficient downstream requests to emit item` and consecutively crash the runtime. This will already happen when the runtime needs to handle around 10 events per second (e.g. setting the event rate of both photoelectric sensors to 200ms or lower).
