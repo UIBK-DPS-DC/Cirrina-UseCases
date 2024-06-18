@@ -21,6 +21,7 @@
     force_kill: true
     pull: true
     env:
+      TZ: "Europe/Paris"
       OTEL_METRIC_EXPORT_INTERVAL: "1000"
       OTEL_EXPORTER_OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
     command: >

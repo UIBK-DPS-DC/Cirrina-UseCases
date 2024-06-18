@@ -23,6 +23,7 @@
     ports:
       - "8001:8000"
     env:
+      TZ: "Europe/Paris"
       OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
       METRICS_INTERVAL: "1000"
   become: true
@@ -39,6 +40,7 @@
     ports:
       - "8002:8000"
     env:
+      TZ: "Europe/Paris"
       OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
       METRICS_INTERVAL: "1000"
   become: true

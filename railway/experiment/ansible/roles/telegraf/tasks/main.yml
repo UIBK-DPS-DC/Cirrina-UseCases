@@ -40,5 +40,7 @@
       - "4317:4317"
     volumes:
       - /etc/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    env:
+      TZ: "Europe/Paris"
   become: true
   register: telegraf_container

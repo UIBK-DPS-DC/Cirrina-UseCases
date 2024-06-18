@@ -42,6 +42,7 @@
       - "/var/lib/influxdb2:/var/lib/influxdb2"
       - "/etc/influxdb2:/etc/influxdb2"
     env:
+      TZ: "Europe/Paris"
       DOCKER_INFLUXDB_INIT_MODE: "setup"
       DOCKER_INFLUXDB_INIT_USERNAME: "admin"
       DOCKER_INFLUXDB_INIT_PASSWORD: "adminadmin"
