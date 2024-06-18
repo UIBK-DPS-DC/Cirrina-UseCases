@@ -5,6 +5,7 @@
 - Usage
 - Problems and limitations
 - Feature comparison SWF/Sonataflow and Cirrina
+- Deployment
 
 # Usage
 
@@ -111,7 +112,7 @@ where:
 - The business key functionality requires the latest `999-SNAPSHOT` version to function correctly in combination with CloudEvents (`ce-kogitobusinesskey` has no effect in previous versions). Additionally, Quarkus 3+ (Java 17+) is only supported in the latest snapshot versions. Stable versions require Quarkus 2 as well as Java 11.
 <br>**SOLUTION**: We use version `999-SNAPSHOT` instead of a stable version.
 - Produced CloudEvents can only be consumed **once** by a single workflow.
-<br>**SOLUTION**: If multiple workflows need to consume an event, sending it multiple times (preferably different events) is the only solution as of right now. See state `jobDone` in `job_control.sw.json` for an example.
+<br>**SOLUTION**: If multiple workflows need to consume an event, sending it multiple times (preferably different events) is the only preferred solution as of right now. See state `jobDone` in `job_control.sw.json` for an example.
 - The Sonataflow Dev UI extension requires dependencies which do not support the `999-SNAPSHOT` version of Sonataflow and can thus currently not be used. 
 <br>**SOLUTION**: Without the Dev UI, starting workflows or retrieving workflow information can be done by invoking the respective POST or GET requests manually.
 - Business keys are not passed to sub-workflows (`subFlow`). This means that sub-workflows can hardly be used on an event-based basis.
@@ -139,4 +140,8 @@ where:
 |  | Inject state: Inject static data into the workflow state data. | "Assign/Create" actions: Can be used in various ways to inject static data. |
 |  | Parallel state: Parallel execution of branches in the workflow (set of states). Additionally sub-workflows can be used for parallelization. | Nested state machines: Parallel execution of state machines. |
 |  | For-each state: Executes a set of states in parallel or sequentially for each element of a data array. | / |
-|  | Sleep state: After entering this state the workflow instance waits for a specified duration until it moves to the next state.<br>`timeouts` property: Can be defined within all states (except inject) or within the workflow itself. End state execution or workflow execution. State timeouts allow transitions to the next state if the timeout happens which can be used to e.g. skip an event within event states. | "After" actions: Perform actions after a specified timeout. |
+|  | Sleep state: After entering this state the workflow instance waits for a specified duration until it moves to the next state.<br>`timeouts` property: Can be defined within all states (except inject) or within the workflow itself. End state execution or workflow execution. State timeouts allow transitions to the next state as soon as the timeout triggers which can be used to e.g. skip an event within event states. | "After" actions: Perform actions after a specified timeout. |
+
+# Deployment
+
+TODO

@@ -20,8 +20,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
 
   private static final Random RANDOM = new Random(); //TODO Fixed seed for reproducibility?
 
-  private static boolean detectAtStart = true;
-  private static boolean detectAtEnd = false;
+  private static final BeltSensors SENSORS = new BeltSensors();
 
   private SmartFactoryHttpServer(int port, VariableHandler handler, boolean useDelays, float errorRate)
       throws IOException {
@@ -62,7 +61,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     paths.put(
         "beamDetectionStart",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("isBeamInterrupted", detectAtStart)))
+            .dynamicResult(in -> List.of(var("isBeamInterrupted", SENSORS.detectAtStart())))
             .delay(() -> 100 + RANDOM.nextInt(50))
             .build()
     );
@@ -70,7 +69,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     paths.put(
         "beamDetectionEnd",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("isBeamInterrupted", detectAtEnd)))
+            .dynamicResult(in -> List.of(var("isBeamInterrupted", SENSORS.detectAtEnd())))
             .delay(() -> 100 + RANDOM.nextInt(50))
             .build()
     );
@@ -96,8 +95,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
         new Response.Builder()
             .dynamicResult(in -> {
               // The conveyor belt starts to move -> detect the object at the end of the belt (allow pickup)
-              detectAtStart = false;
-              detectAtEnd = true;
+              SENSORS.setDetectAtEnd();
               return List.of();
             })
             .delay(() -> 50 + RANDOM.nextInt(50))
@@ -109,8 +107,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
         new Response.Builder()
             .dynamicResult(in -> {
               // The conveyor belt stops -> detect the next object at the start of the belt
-              detectAtStart = true;
-              detectAtEnd = false;
+              SENSORS.setDetectAtStart();
               return List.of();
             })
             .delay(() -> 50 + RANDOM.nextInt(50))
@@ -170,5 +167,29 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
 
   private static ContextVariable var(String name, Object value) {
     return new ContextVariable(name, value);
+  }
+
+  private static class BeltSensors {
+
+    private boolean objectAtStart = true;
+    private boolean objectAtEnd = false;
+
+    boolean detectAtStart() {
+      return objectAtStart;
+    }
+
+    boolean detectAtEnd() {
+      return objectAtEnd;
+    }
+
+    void setDetectAtStart() {
+      objectAtStart = true;
+      objectAtEnd = false;
+    }
+
+    void setDetectAtEnd() {
+      objectAtStart = false;
+      objectAtEnd = true;
+    }
   }
 }
