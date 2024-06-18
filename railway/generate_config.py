@@ -169,8 +169,8 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
     ONE_MIN = 60000
 
     for start_time, end_time, path, is_local in zip(
-        [ONE_MIN, ONE_MIN + ONE_MIN * 15 + ONE_MIN],
-        [ONE_MIN + ONE_MIN * 15, ONE_MIN + ONE_MIN * 15 + ONE_MIN + ONE_MIN * 15],
+        [ONE_MIN, ONE_MIN + ONE_MIN * 120 + ONE_MIN],
+        [ONE_MIN + ONE_MIN * 120, ONE_MIN + ONE_MIN * 120 + ONE_MIN + ONE_MIN * 120],
         ["csml/railway.remote.csml", "csml/railway.local.csml"],
         [False, True],
     ):
