@@ -1,21 +1,3 @@
-# Docker
-- name: Install Docker
-  hosts: all
-  tasks:
-    - name: Install
-      apt:
-        name: docker.io
-        state: present
-        update_cache: true
-      become: true
-
-    - name: Ensure Docker is started and enabled
-      service:
-        name: docker
-        state: started
-        enabled: true
-      become: true
-
 # NATS Cluster
 - name: Setup NATS cluster
   hosts: nats_servers
