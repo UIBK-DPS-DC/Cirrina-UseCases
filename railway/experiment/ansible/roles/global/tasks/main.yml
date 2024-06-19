@@ -1,17 +1,3 @@
-- name: Install Docker
-  apt:
-    name: docker.io
-    state: present
-    update_cache: true
-  become: true
-
-- name: Ensure Docker is started and enabled
-  service:
-    name: docker
-    state: started
-    enabled: true
-  become: true
-
 # InfluxDB
 - name: Create InfluxDB data directory
   file:
@@ -102,7 +88,7 @@
       TZ: "Europe/Paris"
       OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
       START_INTERVAL_IN_SECONDS: "0.1"
-      END_INTERVAL_IN_SECONDS: "0.01"
+      END_INTERVAL_IN_SECONDS: "0.001"
       METRICS_INTERVAL: "1000"
       NATS_URL: "{{ hostvars[inventory_hostname]['NATS_URL'] }}"
   become: true

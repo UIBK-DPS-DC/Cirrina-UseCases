@@ -1,17 +1,3 @@
-- name: Install Docker
-  apt:
-    name: docker.io
-    state: present
-    update_cache: true
-  become: true
-
-- name: Ensure Docker is started and enabled
-  service:
-    name: docker
-    state: started
-    enabled: true
-  become: true
-
 - name: Create NATS configuration directory
   file:
     path: /etc/nats
