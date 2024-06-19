@@ -33,9 +33,6 @@
                   "actions": [
                     {
                       "reference": "doGateUp"
-                    },
-                    {
-                      "reference": "writeData"
                     }
                   ]
                 },
@@ -53,9 +50,6 @@
                   "actions": [
                     {
                       "reference": "doGateDown"
-                    },
-                    {
-                      "reference": "writeData"
                     }
                   ]
                 },
@@ -78,14 +72,6 @@
               "type": "invoke",
               "serviceType": "gateDown",
               "isLocal": false
-            },
-            {
-              "name": "writeData",
-              "type": "assign",
-              "variable": {
-                "name": "persistentDataVariable",
-                "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
-              }
             }
           ]
         },
@@ -109,9 +95,6 @@
                   "actions": [
                     {
                       "reference": "doLightOff"
-                    },
-                    {
-                      "reference": "writeData"
                     }
                   ]
                 },
@@ -129,9 +112,6 @@
                   "actions": [
                     {
                       "reference": "doLightOn"
-                    },
-                    {
-                      "reference": "writeData"
                     }
                   ]
                 },
@@ -154,20 +134,17 @@
               "type": "invoke",
               "serviceType": "lightOff",
               "isLocal": false
-            },
-            {
-              "name": "writeData",
-              "type": "assign",
-              "variable": {
-                "name": "persistentDataVariable",
-                "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
-              }
             }
           ]
         },
         {
           "name": "away",
           "initial": true,
+          "entry": [
+            {
+              "reference": "writeData"
+            }
+          ],
           "on": [
             {
               "event": "sensor",
@@ -198,6 +175,11 @@
         },
         {
           "name": "approach",
+          "entry": [
+            {
+              "reference": "writeData"
+            }
+          ],
           "on": [
             {
               "event": "sensor",
@@ -228,6 +210,11 @@
         },
         {
           "name": "close",
+          "entry": [
+            {
+              "reference": "writeData"
+            }
+          ],
           "on": [
             {
               "event": "sensor",
@@ -258,6 +245,11 @@
         },
         {
           "name": "present",
+          "entry": [
+            {
+              "reference": "writeData"
+            }
+          ],
           "on": [
             {
               "event": "sensor",
@@ -288,6 +280,11 @@
         },
         {
           "name": "leaving",
+          "entry": [
+            {
+              "reference": "writeData"
+            }
+          ],
           "on": [
             {
               "event": "sensor",
@@ -318,6 +315,11 @@
         },
         {
           "name": "left",
+          "entry": [
+            {
+              "reference": "writeData"
+            }
+          ],
           "on": [
             {
               "event": "sensor",
@@ -378,6 +380,14 @@
           "event": {
             "name": "lightOff",
             "channel": "internal"
+          }
+        },
+        {
+          "name": "writeData",
+          "type": "assign",
+          "variable": {
+            "name": "persistentDataVariable",
+            "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
           }
         }
       ]
