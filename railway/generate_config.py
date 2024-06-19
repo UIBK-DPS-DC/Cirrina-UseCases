@@ -130,25 +130,11 @@ def write_hosts_config(sites: List[Site]):
             i += 1
 
     # InfluxDB
-    config.add_section("influxdb_servers")
-
-    config.set("influxdb_servers", f"influxdb0 ansible_host={global_host}")
-
-    # Telegraf
-    config.add_section("telegraf_servers")
-
-    config.set("telegraf_servers", f"telegraf0 ansible_host={global_host}")
-
-    config.add_section("telegraf_servers:vars")
-
-    config.set("telegraf_servers:vars", f"influxdb_url=http://{global_host}:8086/")
-
-    # Simulation
-    config.add_section("simulation_servers")
+    config.add_section("global_servers")
 
     config.set(
-        "simulation_servers",
-        f"simulation0 ansible_host={global_host} NATS_URL=nats://{sites[-1].nats}:4222/ OTLP_ENDPOINT=http://{global_host}:4317/",
+        "global_servers",
+        f"global0 ansible_host={global_host} INFLUXDB_URL=http://{global_host}:8086/ NATS_URL=nats://{sites[-1].nats}:4222/ OTLP_ENDPOINT=http://{global_host}:4317/",
     )
 
     # Write configuration
