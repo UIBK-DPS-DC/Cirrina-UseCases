@@ -110,7 +110,9 @@
                         "refName": "service-send-statistics",
                         "arguments": {
                             "productsCompleted": "${ .productsCompleted }",
-                            "totalProducts": "${ .totalProducts }"
+                            "totalProducts": "${ .totalProducts }",
+                            "partsAssembled": "-1",
+                            "partsPerProduct": "-1"
                         },
                         "invoke": "async"
                     }

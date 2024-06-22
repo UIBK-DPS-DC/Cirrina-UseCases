@@ -242,6 +242,8 @@
                     "functionRef": {
                         "refName": "service-send-statistics",
                         "arguments": {
+                            "productsCompleted": "-1",
+                            "totalProducts": "-1",
                             "partsAssembled": "${ .partsAssembled }",
                             "partsPerProduct": "${ .partsPerProduct }"
                         },

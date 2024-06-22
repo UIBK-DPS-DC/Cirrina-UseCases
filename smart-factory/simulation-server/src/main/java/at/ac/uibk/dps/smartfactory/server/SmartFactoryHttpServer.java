@@ -7,8 +7,14 @@ import at.ac.uibk.dps.smartfactory.object.variable.DefaultVariableHandler;
 import at.ac.uibk.dps.smartfactory.object.variable.ProtoVariableHandler;
 import at.ac.uibk.dps.smartfactory.object.variable.VariableHandler;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * HTTP server for smart factory service simulation.
@@ -46,7 +52,8 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
       variableHandler = new DefaultVariableHandler();
     }
 
-    final var httpServer = new SmartFactoryHttpServer(actualPort, variableHandler, args.getUseDelays(), args.getErrorRate());
+    final var httpServer = new SmartFactoryHttpServer(
+        actualPort, variableHandler, args.getUseDelays(), args.getErrorRate());
 
     final var httpServerThread = new Thread(httpServer);
     httpServerThread.start();
@@ -157,12 +164,42 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     paths.put(
         "sendStatistics",
         new Response.Builder()
-            .emptyResult()
+            .dynamicResult(in -> {
+                logData(in);
+                return List.of();
+            })
             .delay(() -> 50 + RANDOM.nextInt(50))
             .build()
     );
 
     return paths;
+  }
+
+  private static void logData(Map<?,?> in) {
+    final var tmpDir = System.getProperty("java.io.tmpdir");
+    final var tmpFilePath = Paths.get(tmpDir, "simulation-log.csv");
+
+    try {
+      if (!Files.exists(tmpFilePath)) {
+        Files.createFile(tmpFilePath);
+        Files.writeString(tmpFilePath, listToCsv(in.keySet()), StandardOpenOption.APPEND);
+      }
+
+      Files.writeString(tmpFilePath, listToCsv(in.values()), StandardOpenOption.APPEND);
+
+      LOGGER.info("Stored to log: %s".formatted(tmpFilePath.toString()));
+    } catch (IOException e) {
+      LOGGER.severe("Failed writing to log: %s".formatted(e.getMessage()));
+    }
+  }
+
+  private static String listToCsv(Collection<?> values) {
+    final String line = values.stream()
+        .filter(Objects::nonNull)
+        .map(value -> value.toString().replace('\n', ' '))
+        .collect(Collectors.joining(","));
+
+    return "%d,%s\n".formatted(System.currentTimeMillis(), line);
   }
 
   private static ContextVariable var(String name, Object value) {

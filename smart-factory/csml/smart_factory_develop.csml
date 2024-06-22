@@ -715,16 +715,6 @@
                             "target": "jobDone"
                         }
                     ],
-                    "exit": [
-                        {
-                            "type": "assign",
-                            "variable": {
-                                "name": "msg",
-                                "value": "$msg"
-                            }
-
-                        }
-                    ],
                     "always": [
                         {
                             "target": "jobDone",
