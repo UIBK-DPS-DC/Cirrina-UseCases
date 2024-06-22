@@ -20,7 +20,14 @@
     - Easily invoke HTTP requests from the VSCode editor (See [`probe.http`](src/test/resources/probe.http))
 
 ---
-- Services: A running instance of [`simulation-server`](../simulation-server/README.md) listening on port 8000.<br>
+- Services: 
+    - A running instance of [`CSM-Service-MockCamera`](../services/CSM-Service-MockCamera/README.md) listening on port 8001.
+    - A running instance of [`CSM-Service-ObjectDetection`](../services/CSM-Service-ObjectDetection/README.md) listening on port 8000.
+    - Services must be run with the environment variable `PROTO=false`<br>i.e.
+    ```sh
+    PROTO=false docker-compose up
+    ```
+
 URLs and ports are currently hardcoded in the `<workflow>.sw.json` files and must be adjusted there.
 
 
@@ -38,6 +45,38 @@ quarkus dev
 
 - The Quarkus application listens on port 8080
 - The Developer UI is accessible at http://localhost:8080/q/dev
+
+## Build and run 
+
+Build and run jar locally:
+
+```sh
+mvn clean package
+java -jar target/quarkus-app/quarkus-run.jar
+```
+
+## Docker deployment
+
+Build docker image:
+
+```sh
+mvn clean package
+docker build -f src/main/docker/Dockerfile.jvm -t <name> .
+```
+
+Run the container:
+
+```sh
+docker run -i --rm -p 8080:8080 <name>
+```
+
+## Docker Compose deployment
+
+Run with Docker Compose:
+
+```sh
+docker-compose up
+```
 
 ## Script to start workflows
 
@@ -137,9 +176,7 @@ where:
 ## Feature limitations
 
 - Produced CloudEvents can only be consumed **once** by a single workflow.
-<br>**SOLUTION**: If multiple workflows need to consume an event, sending it multiple times (preferably different events) is the only preferred solution as of right now. See state `jobDone` in `job_control.sw.json` for an example.
-- CloudEvents can only be produced right before a transition or when a workflow ends. It is not possible to produce events conditionally while the workflow resides in a state. It is also not possible to produce internal events (events consumed by the workflow itself).
-<br>**SOLUTION**: To conditionally produce events an additional state of type `switch` can be used which may contain cases to either produce events or do not produce events.
+<br>**SOLUTION**: If multiple workflows need to consume an event, sending it multiple times (preferably different events) is the only solution we found as of right now. See state `jobDone` in `job_control.sw.json` for an example.
 - States of type `event` can consume multiple event types, but they do not allow conditional transitions based on which event was consumed.
 <br>**SOLUTION**: The `actions` construct in an `onEvents` definition can be used to conditionally assign workflow data based on which event was consumed. This can then be combined with an additional `switch` state which performs conditional transitions based on the assigned workflow data.
 - The first state of a workflow (state defined in `start`) can not be targeted by any other transitions. It can thus only be executed once per workflow instance. Usually it makes sense to start a workflow with a state of type `inject` which adds some initial variables and is never entered again during the execution of the workflow.
@@ -179,7 +216,3 @@ where:
 |  | Parallel state: Parallel execution of branches in the workflow (set of states). Additionally sub-workflows can be used for parallelization. | Nested state machines: Parallel execution of state machines. |
 |  | For-each state: Executes a set of states in parallel or sequentially for each element of a data array. | / |
 |  | Sleep state: After entering this state the workflow instance waits for a specified duration until it moves to the next state.<br>`timeouts` property: Can be defined within all states (except inject) or within the workflow itself. End state execution or workflow execution. State timeouts allow transitions to the next state as soon as the timeout triggers which can be used to e.g. skip an event within event states. | "After" actions: Perform actions after a specified timeout. |
-
-# Deployment
-
-TODO
