@@ -193,7 +193,13 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
       }
 
       String line = listToCsvLine(in.values());
-      line = "%d,%s,%f\n".formatted(System.currentTimeMillis(), line, errorDeterminer.errorChance());
+      line = String.format(
+          Locale.US, // US to ensure "." is used for floats instead of ","
+          "%d,%s,%.3f\n",
+          System.currentTimeMillis(),
+          line,
+          errorDeterminer.errorChance()
+      );
       Files.writeString(tmpFilePath, line, StandardOpenOption.APPEND);
 
       LOGGER.info("Stored to log: %s".formatted(tmpFilePath.toString()));
