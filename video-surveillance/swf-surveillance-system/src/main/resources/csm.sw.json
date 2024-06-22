@@ -1,0 +1,32 @@
+{
+  "id": "wCSM",
+  "version": "0.1",
+  "specVersion": "0.8",
+  "name": "CSM Workflow",
+  "description": "This workflow invokes other workflows and acts as an orchestrator for the CSM.",
+  "start": "sInvokeWorkflows",
+  "states": [
+    {
+      "name": "sInvokeWorkflows",
+      "type": "operation",
+      "actionMode": "parallel",
+      "actions": [
+        {
+          "name": "Invoke Hello World Workflow",
+          "subFlowRef": {
+            "workflowId": "wCamera",
+            "version": "latest"
+          }
+        },
+        {
+          "name": "Invoke Camera Workflow",
+          "subFlowRef": {
+            "workflowId": "wCamera",
+            "version": "latest"
+          }
+        }
+      ],
+      "end": true
+    }
+  ]
+}
