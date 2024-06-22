@@ -1,5 +1,6 @@
 package at.ac.uibk.dps.smartfactory;
 
+import at.ac.uibk.dps.smartfactory.object.error.ErrorStrategy;
 import at.ac.uibk.dps.smartfactory.server.SmartFactoryHttpServer;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -46,11 +47,11 @@ public class Main {
     @Parameter(names = {"--useProto", "-up"}, description = "Use protobuf for variables", arity = 1)
     private Boolean useProto = true;
 
-    @Parameter(names = {"--useDelays", "-ud"}, description = "Cause random response delays", arity = 1)
+    @Parameter(names = {"--useDelays", "-ud"}, description = "Cause response delays", arity = 1)
     private Boolean useDelays = false;
 
-    @Parameter(names = {"--errorRate", "-e"}, description = "Smart factory specific error rate (scan object, pick up, assemble)")
-    private Float errorRate = 0F;
+    @Parameter(names = {"--errorStrategy", "-e"}, description = "Error strategy used for scan, pickup and assemble results")
+    private ErrorStrategy errorStrategy = ErrorStrategy.NO_ERRORS;
 
     public int getPort() {
       return port;
@@ -64,18 +65,18 @@ public class Main {
       return useDelays;
     }
 
-    public float getErrorRate() {
-      return errorRate;
+    public ErrorStrategy getErrorStrategy() {
+      return errorStrategy;
     }
 
     @Override
     public String toString() {
-      return "PORT: %s, PROTO: %s, DELAYS: %s, ERROR_RATE: %f"
+      return "PORT: %s, PROTO: %s, DELAYS: %s, ERROR_STRATEGY: %s"
           .formatted(
               port == 0 ? "DEFAULT" : port.toString(),
               useProto.toString(),
               useDelays.toString(),
-              errorRate
+              errorStrategy.toString()
           );
     }
   }

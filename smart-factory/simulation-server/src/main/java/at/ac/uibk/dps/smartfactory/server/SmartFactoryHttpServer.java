@@ -1,14 +1,14 @@
 package at.ac.uibk.dps.smartfactory.server;
 
 import at.ac.uibk.dps.smartfactory.Main;
+import at.ac.uibk.dps.smartfactory.object.error.ErrorDeterminer;
+import at.ac.uibk.dps.smartfactory.object.error.ErrorStrategy;
 import at.ac.uibk.dps.smartfactory.object.response.Response;
 import at.ac.uibk.dps.smartfactory.object.variable.ContextVariable;
 import at.ac.uibk.dps.smartfactory.object.variable.DefaultVariableHandler;
 import at.ac.uibk.dps.smartfactory.object.variable.ProtoVariableHandler;
 import at.ac.uibk.dps.smartfactory.object.variable.VariableHandler;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,9 +28,9 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
 
   private static final BeltSensors SENSORS = new BeltSensors();
 
-  private SmartFactoryHttpServer(int port, VariableHandler handler, boolean useDelays, float errorRate)
+  private SmartFactoryHttpServer(int port, VariableHandler handler, boolean useDelays, ErrorStrategy errorStrategy)
       throws IOException {
-    super(createPaths(errorRate), port, handler, useDelays);
+    super(createPaths(errorStrategy), port, handler, useDelays);
   }
 
   /**
@@ -53,7 +53,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     }
 
     final var httpServer = new SmartFactoryHttpServer(
-        actualPort, variableHandler, args.getUseDelays(), args.getErrorRate());
+        actualPort, variableHandler, args.getUseDelays(), args.getErrorStrategy());
 
     final var httpServerThread = new Thread(httpServer);
     httpServerThread.start();
@@ -62,8 +62,12 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     return httpServerThread;
   }
 
-  private static Map<String, Response> createPaths(float errorRate) {
+  private static Map<String, Response> createPaths(ErrorStrategy errorStrategy) {
     final Map<String, Response> paths = new HashMap<>();
+
+    final ErrorDeterminer errorDeterminerScan = errorStrategy.getErrorDeterminer();
+    final ErrorDeterminer errorDeterminerPickup = errorStrategy.getErrorDeterminer();
+    final ErrorDeterminer errorDeterminerAssemble = errorStrategy.getErrorDeterminer();
 
     paths.put(
         "beamDetectionStart",
@@ -92,7 +96,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     paths.put(
         "scanPhoto",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("validObject", RANDOM.nextFloat() > errorRate)))
+            .dynamicResult(in -> List.of(var("validObject", errorDeterminerScan.isError(RANDOM))))
             .delay(() -> 1000 + RANDOM.nextInt(500))
             .build()
     );
@@ -124,7 +128,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     paths.put(
         "pickUp",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("pickUpSuccess", RANDOM.nextFloat() > errorRate)))
+            .dynamicResult(in -> List.of(var("pickUpSuccess", errorDeterminerPickup.isError(RANDOM))))
             .delay(() -> 700 + RANDOM.nextInt(300))
             .build()
     );
@@ -132,7 +136,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     paths.put(
         "assemble",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("assembleSuccess", RANDOM.nextFloat() > errorRate)))
+            .dynamicResult(in -> List.of(var("assembleSuccess", errorDeterminerAssemble.isError(RANDOM))))
             .delay(() -> 1000 + RANDOM.nextInt(500))
             .build()
     );

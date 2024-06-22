@@ -23,7 +23,7 @@ ARG VERSION="smart_factory-1.0-SNAPSHOT"
 # Define default environment variables
 ENV PROTO="true"
 ENV DELAYS="false"
-ENV ERROR_RATE="0"
+ENV ERROR_STRATEGY="NO_ERRORS"
 
 # Copy the application distribution ZIP from the build stage
 COPY --from=build /usr/src/simulation-server/build/distributions/${VERSION}.zip /tmp/${VERSION}.zip
@@ -37,4 +37,4 @@ RUN unzip /tmp/${VERSION}.zip -d /usr/bin \
 WORKDIR /usr/bin/simulation-server
 
 # Use shell form ENTRYPOINT to execute the application
-ENTRYPOINT /usr/bin/simulation-server/bin/smart_factory --useProto $PROTO --useDelays $DELAYS --errorRate $ERROR_RATE
+ENTRYPOINT /usr/bin/simulation-server/bin/smart_factory --useProto $PROTO --useDelays $DELAYS --errorStrategy $ERROR_STRATEGY
