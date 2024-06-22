@@ -2,6 +2,9 @@ package at.ac.uibk.dps.smartfactory.object.error;
 
 import java.util.function.Supplier;
 
+/**
+ * Different error strategies which construct corresponding {@link ErrorDeterminer}s.
+ */
 public enum ErrorStrategy {
 
   NO_ERRORS(() -> ErrorDeterminer.NO_ERRORS),

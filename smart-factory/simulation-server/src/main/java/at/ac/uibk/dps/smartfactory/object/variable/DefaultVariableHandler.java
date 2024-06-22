@@ -10,7 +10,7 @@ public class DefaultVariableHandler implements VariableHandler {
   @Override
   public byte[] toBytes(Map<String, Object> variables) {
     try {
-      return  new ObjectMapper().writeValueAsBytes(variables);
+      return new ObjectMapper().writeValueAsBytes(variables);
     } catch (JsonProcessingException e) {
       throw new RuntimeException("Could not convert output map: %s".formatted(e.getMessage()));
     }

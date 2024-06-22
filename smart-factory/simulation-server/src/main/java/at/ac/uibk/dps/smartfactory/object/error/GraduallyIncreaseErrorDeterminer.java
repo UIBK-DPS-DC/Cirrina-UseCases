@@ -2,6 +2,10 @@ package at.ac.uibk.dps.smartfactory.object.error;
 
 import java.util.Random;
 
+/**
+ * Starts with a 0% error rate and increases gradually for each invocation until a certain
+ * error rate is reached.
+ */
 public class GraduallyIncreaseErrorDeterminer implements ErrorDeterminer {
 
   private static final float START_CHANCE = 0F;
@@ -17,5 +21,10 @@ public class GraduallyIncreaseErrorDeterminer implements ErrorDeterminer {
       errorChance = Math.min(MAX_CHANCE, errorChance + CHANCE_INCREASE);
     }
     return isError;
+  }
+
+  @Override
+  public float errorChance() {
+    return errorChance;
   }
 }

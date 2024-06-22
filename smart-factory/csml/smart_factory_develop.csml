@@ -692,14 +692,6 @@
             "name": "messageProcessor",
             // Process messages
             "abstract": true,
-            "localContext": {
-                "variables": [
-                    {
-                        "name": "msg",
-                        "value": "''"
-                    }
-                ]
-            },
             "states": [
                 {
                     "name": "idle",
@@ -756,7 +748,7 @@
                             "input": [
                                 {
                                     "name": "smsText",
-                                    "value": "msg"
+                                    "value": "$msg"
                                 }
                             ]
                         }
@@ -786,7 +778,7 @@
                             "input": [
                                 {
                                     "name": "mailBody",
-                                    "value": "msg"
+                                    "value": "$msg"
                                 }
                             ]
                         }
@@ -814,7 +806,7 @@
                             // Add message to the log.
                             "variable": {
                                 "name": "log",
-                                "value": "var newLog = log; newLog.add(msg); newLog"
+                                "value": "var newLog = log; newLog.add($msg); newLog"
                             }
                         }
                     ],
@@ -915,7 +907,7 @@
                         {
                             "name": "triggerRetry",
                             "type": "timeout",
-                            "delay": "10000",
+                            "delay": "1000",
                             "action": {
                                 "type": "raise",
                                 "event": {
@@ -1157,10 +1149,6 @@
                         {
                             "name": "jobDone",
                             "value": "jobDone"
-                        },
-                        {
-                            "name": "log",
-                            "value": "log"
                         }
                     ]
                 }

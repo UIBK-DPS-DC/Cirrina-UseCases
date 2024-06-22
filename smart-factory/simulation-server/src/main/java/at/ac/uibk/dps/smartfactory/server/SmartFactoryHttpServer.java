@@ -96,7 +96,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     paths.put(
         "scanPhoto",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("validObject", errorDeterminerScan.isError(RANDOM))))
+            .dynamicResult(in -> List.of(var("validObject", !errorDeterminerScan.isError(RANDOM))))
             .delay(() -> 1000 + RANDOM.nextInt(500))
             .build()
     );
@@ -128,7 +128,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     paths.put(
         "pickUp",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("pickUpSuccess", errorDeterminerPickup.isError(RANDOM))))
+            .dynamicResult(in -> List.of(var("pickUpSuccess", !errorDeterminerPickup.isError(RANDOM))))
             .delay(() -> 700 + RANDOM.nextInt(300))
             .build()
     );
@@ -136,7 +136,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     paths.put(
         "assemble",
         new Response.Builder()
-            .dynamicResult(in -> List.of(var("assembleSuccess", errorDeterminerAssemble.isError(RANDOM))))
+            .dynamicResult(in -> List.of(var("assembleSuccess", !errorDeterminerAssemble.isError(RANDOM))))
             .delay(() -> 1000 + RANDOM.nextInt(500))
             .build()
     );
@@ -169,7 +169,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
         "sendStatistics",
         new Response.Builder()
             .dynamicResult(in -> {
-                logData(in);
+                logData(in, errorDeterminerScan);
                 return List.of();
             })
             .delay(() -> 50 + RANDOM.nextInt(50))
@@ -179,17 +179,22 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     return paths;
   }
 
-  private static void logData(Map<?,?> in) {
+  private static void logData(Map<?,?> in, ErrorDeterminer errorDeterminer) {
     final var tmpDir = System.getProperty("java.io.tmpdir");
     final var tmpFilePath = Paths.get(tmpDir, "simulation-log.csv");
 
     try {
       if (!Files.exists(tmpFilePath)) {
         Files.createFile(tmpFilePath);
-        Files.writeString(tmpFilePath, listToCsv(in.keySet()), StandardOpenOption.APPEND);
+
+        String header = listToCsvLine(in.keySet());
+        header = "%s,%s,%s\n".formatted("timestamp", header, "errorChance");
+        Files.writeString(tmpFilePath, header, StandardOpenOption.APPEND);
       }
 
-      Files.writeString(tmpFilePath, listToCsv(in.values()), StandardOpenOption.APPEND);
+      String line = listToCsvLine(in.values());
+      line = "%d,%s,%f\n".formatted(System.currentTimeMillis(), line, errorDeterminer.errorChance());
+      Files.writeString(tmpFilePath, line, StandardOpenOption.APPEND);
 
       LOGGER.info("Stored to log: %s".formatted(tmpFilePath.toString()));
     } catch (IOException e) {
@@ -197,13 +202,11 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     }
   }
 
-  private static String listToCsv(Collection<?> values) {
-    final String line = values.stream()
+  private static String listToCsvLine(Collection<?> values) {
+    return values.stream()
         .filter(Objects::nonNull)
-        .map(value -> value.toString().replace('\n', ' '))
+        .map(value -> value.toString().replace('\n', ' ').trim())
         .collect(Collectors.joining(","));
-
-    return "%d,%s\n".formatted(System.currentTimeMillis(), line);
   }
 
   private static ContextVariable var(String name, Object value) {
