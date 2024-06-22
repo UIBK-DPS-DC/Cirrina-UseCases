@@ -152,7 +152,12 @@ public class TestLocal {
             .from(services.toArray(new ServiceImplementationDescription[0]))
             .build();
 
-        return new ServiceImplementationSelector(servicesMap);
+        return new ServiceImplementationSelector(servicesMap) {
+            @Override
+            public Optional<ServiceImplementation> select(String name, boolean local) {
+                return Optional.empty();
+            }
+        };
     }
 
     private static OfflineRuntime getSharedRuntime(Context persistentContext,
@@ -178,6 +183,6 @@ public class TestLocal {
         // Subscribe to global.*
         eventHandler.subscribe(NatsEventHandler.GLOBAL_SOURCE, "*");
 
-        return new OfflineRuntime(eventHandler, persistentContext);
+        return new OfflineRuntime("runtime", eventHandler, persistentContext);
     }
 }

@@ -41,13 +41,13 @@ quarkus dev
 
 ## Script to start workflows
 
-To run all workflows and effectively execute the use case the python script [`start_workflows.py`](scripts/start_workflows.py) can be executed as follows:
+To run all workflows and effectively execute the use case the python script [`start_workflows.py`](scripts/start_workflows.py) can be executed:
 
 ```sh
 python scripts/start_workflows.py
 ```
 
-Inputs and URLs are currently hardcoded in the script. Ensure that both the quarkus application and the simulation server are running before executing the script.
+Inputs and URLs are currently hardcoded in the script (TODO create a more general script?). Ensure that both the quarkus application and the simulation server are running before executing the script.
 
 ## Manually interact with the Quarkus application
 
@@ -78,6 +78,33 @@ By workflow id and business key:
 GET http://localhost:8080/<workflow_id>?businessKey=<business_key>
 ```
 
+### Query data index
+
+**REQUIRES `quarkus.kogito.devservices.enabled=true`**
+
+The data index stores information about all workflows (start, end, states entered/left, current state, etc.) and can be useful to collect more information about a running workflow. The data index can be queried using GraphQL manually or by using the UI at http://localhost:8180/graphql.
+
+By default, the data index is in-memory but this can be changed through extensions.
+
+```http
+GET http://localhost:8180/<workflow_instance_id>/tasks
+
+{
+  "query": "{ 
+    ProcessInstances(where: { id: { equal: \"{<workflow_instance_id>}\" } }) {
+        id
+        processId
+        processName
+        start
+        end
+        state
+    }
+  }"
+}
+```
+
+Adjust the query
+
 ### Manually send CloudEvents
 
 ```http
@@ -107,22 +134,33 @@ where:
 
 # Problems and limitations
 
+## Feature limitations
+
+- Produced CloudEvents can only be consumed **once** by a single workflow.
+<br>**SOLUTION**: If multiple workflows need to consume an event, sending it multiple times (preferably different events) is the only preferred solution as of right now. See state `jobDone` in `job_control.sw.json` for an example.
+- CloudEvents can only be produced right before a transition or when a workflow ends. It is not possible to produce events conditionally while the workflow resides in a state. It is also not possible to produce internal events (events consumed by the workflow itself).
+<br>**SOLUTION**: To conditionally produce events an additional state of type `switch` can be used which may contain cases to either produce events or do not produce events.
+- States of type `event` can consume multiple event types, but they do not allow conditional transitions based on which event was consumed.
+<br>**SOLUTION**: The `actions` construct in an `onEvents` definition can be used to conditionally assign workflow data based on which event was consumed. This can then be combined with an additional `switch` state which performs conditional transitions based on the assigned workflow data.
+- The first state of a workflow (state defined in `start`) can not be targeted by any other transitions. It can thus only be executed once per workflow instance. Usually it makes sense to start a workflow with a state of type `inject` which adds some initial variables and is never entered again during the execution of the workflow.
+
+## Sonataflow related
+
 **Some of the following problems might only apply to the `999-SNAPSHOT` version of Sonataflow (June 2024).**
 
 - The business key functionality requires the latest `999-SNAPSHOT` version to function correctly in combination with CloudEvents (`ce-kogitobusinesskey` has no effect in previous versions). Additionally, Quarkus 3+ (Java 17+) is only supported in the latest snapshot versions. Stable versions require Quarkus 2 as well as Java 11.
 <br>**SOLUTION**: We use version `999-SNAPSHOT` instead of a stable version.
-- Produced CloudEvents can only be consumed **once** by a single workflow.
-<br>**SOLUTION**: If multiple workflows need to consume an event, sending it multiple times (preferably different events) is the only preferred solution as of right now. See state `jobDone` in `job_control.sw.json` for an example.
 - The Sonataflow Dev UI extension requires dependencies which do not support the `999-SNAPSHOT` version of Sonataflow and can thus currently not be used. 
 <br>**SOLUTION**: Without the Dev UI, starting workflows or retrieving workflow information can be done by invoking the respective POST or GET requests manually.
-- Business keys are not passed to sub-workflows (`subFlow`). This means that sub-workflows can hardly be used on an event-based basis.
-- After invoking HTTP requests through functions of type `rest`, all values in the JSON responses are always `null`. This causes functions of type `rest` to be unusable if the service output is necessary. Additionally, the application might randomly throw a fatal exception during startup or when starting a workflow if a function of type `rest` is used.
+- Business keys are not propagated to sub-workflows (`subFlow`) when the parent workflow has a business key. This means that sub-workflows can hardly be used on an event-based basis. There is an open GitHub issue regarding this problem so it might be fixed already.
+- After invoking HTTP requests through functions of type `rest`, all values in the JSON responses are always `null`. This causes functions of type `rest` to be unusable if the service output is necessary. Additionally, the application might randomly throw a fatal exception (`specs/services.json not found`) during startup or when starting a workflow if a function of type `rest` is used.
 <br>**SOLUTION**: You may use type `custom` and operation `rest:<method>:<url>` instead, see the workflow json files for examples.
 - When invoking HTTP requests through functions of type `custom` and operation `rest:post:<url>`, the entries `Port: null` and `Host: null` are always added to the JSON payload.
 - During startup Quarkus logs warnings of the form `Unrecognized configuration key ...`. These configuration keys are in fact recognized and application startup might fail if they are not provided.
-- In case a workflow throws an unhandled exception, the entire application enters an error state and it is often required to restart the quarkus application.
-- Too many produced CloudEvents may cause the error `SRMSG00034: Insufficient downstream requests to emit item` and consecutively crash the runtime. This will already happen when the runtime needs to handle around 10 events per second (e.g. setting the event rate of both photoelectric sensors to 200ms or lower).
-- The sonataflow data index docker image might be unavailable on startup, producing the error message `manifest for apache/incubator-kie-kogito-data-index-ephemeral:main not found: manifest unknown: manifest unknown`. We did not find a workaround except for waiting until it is available again.
+- In case a workflow throws an unhandled exception (e.g. HTTP error during service invocation), the entire application enters an error state and it is often required to restart the quarkus application.
+- Too many produced CloudEvents may cause the error `SRMSG00034: Insufficient downstream requests to emit item` and consecutively crash the runtime. This will already happen when the runtime needs to handle around 10 events per second (e.g. by setting the event rate of both photoelectric sensors to 200ms or lower).
+- The sonataflow data index docker image might be unavailable on startup, producing the error message `manifest for apache/incubator-kie-kogito-data-index-ephemeral:main not found: manifest unknown: manifest unknown`.
+<br>**SOLUTION**: Temporary add/uncomment `quarkus.kogito.devservices.enabled=false` in `application.properties`. Keep in mind that this disables the default in-memory data index (graphql endpoint).
 
 # Feature comparison SWF/Sonataflow and Cirrina
 

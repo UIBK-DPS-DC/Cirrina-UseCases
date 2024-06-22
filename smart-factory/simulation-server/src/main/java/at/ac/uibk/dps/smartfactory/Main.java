@@ -46,7 +46,7 @@ public class Main {
     @Parameter(names = {"--useProto", "-up"}, description = "Use protobuf for variables", arity = 1)
     private Boolean useProto = true;
 
-    @Parameter(names = {"--useDelays", "-ud"}, description = "Cause random response delays")
+    @Parameter(names = {"--useDelays", "-ud"}, description = "Cause random response delays", arity = 1)
     private Boolean useDelays = false;
 
     @Parameter(names = {"--errorRate", "-e"}, description = "Smart factory specific error rate (scan object, pick up, assemble)")

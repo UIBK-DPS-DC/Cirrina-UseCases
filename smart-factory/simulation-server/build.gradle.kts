@@ -9,6 +9,10 @@ plugins {
 group = "at.ac.uibk.dps.smartfactory"
 version = "1.0-SNAPSHOT"
 
+application {
+    mainClass = "at.ac.uibk.dps.smartfactory.Main"
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)

@@ -1,0 +1,12 @@
+services:
+  simulation-server:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    environment:
+      - "PROTO=${PROTO:-true}"
+      - "DELAYS=${DELAYS:-false}"
+      - "ERROR_RATE=${ERROR_RATE:-0}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

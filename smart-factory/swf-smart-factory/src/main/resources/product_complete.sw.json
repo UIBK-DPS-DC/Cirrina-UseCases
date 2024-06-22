@@ -1,7 +1,7 @@
 {
     "id": "product_complete",
-    "name": "product complete",
-    "description": "Produce product-complete event",
+    "name": "product complete test",
+    "description": "Produce product-complete event test - ONLY FOR TESTING",
     "version": "1.0.0",
     "specVersion": "0.8",
     "events": [
