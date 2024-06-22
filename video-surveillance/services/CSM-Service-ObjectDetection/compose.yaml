@@ -11,6 +11,8 @@ services:
   server:
     build:
       context: .
+    environment:
+      - "PROTO=${PROTO:-true}"
     ports:
       - 8000:8000
 

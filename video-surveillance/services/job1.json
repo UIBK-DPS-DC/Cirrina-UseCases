@@ -1,0 +1,350 @@
+{
+    "serviceImplementations": [
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8001,
+            "endPoint": "/capture",
+            "method": "POST",
+            "name": "camera.capture",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/process",
+            "method": "POST",
+            "name": "personDetection.detect",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8000,
+            "endPoint": "/process",
+            "method": "POST",
+            "name": "faceDetection.detect",
+            "cost": 1.0,
+            "local": true
+        }
+    ],
+    "collaborativeStateMachine": {
+        version: '0.1',
+        name: 'Surveillance System',
+        stateMachines: [
+          {
+            name: 'camera',
+            localContext: {
+              variables: [
+                {
+                  name: 'camera_image',
+                  value: '""'
+                }
+              ]
+            },
+            states: [
+              {
+                name: 'idle',
+                initial: true,
+                on: [
+                  {
+                    target: 'idle',
+                    event: 'event_capture',
+                    actions: [
+                      {
+                        type: 'invoke',
+                        serviceType: 'camera.capture',
+                        isLocal: true,
+                        input: [
+                          {
+                            name: 'video_number',
+                            value: '1'
+                          },
+                          {
+                            name: 'delay',
+                            value: '30'
+                          }
+                        ],
+                        output: [
+                          {
+                            reference: 'camera_image'
+                          }
+                        ],
+                        done: [
+                          {
+                            name: 'event_checkIfPersonsInImage',
+                            channel: 'internal'
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    target: 'notifyPersonDetector',
+                    event: 'event_checkIfPersonsInImage'
+                  }
+                ],
+                after: [
+                  {
+                    type: 'timeout',
+                    name: 'captureTimeout',
+                    delay: '5000',
+                    action: {
+                      type: 'raise',
+                      event: {
+                        name: 'event_capture',
+                        channel: 'internal'
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                name: 'notifyPersonDetector',
+                entry: [
+                  {
+                    type: 'raise',
+                    event: {
+                      name: 'external_event_checkIfPersonsInImage',
+                      data: [
+                        {
+                          name: 'personDetection_input',
+                          value: 'camera_image'
+                        }
+                      ],
+                      channel: 'external'
+                    }
+                  }
+                ],
+                always: [
+                  {
+                    target: 'idle'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            name: 'personDetector',
+            localContext: {
+              variables: [
+                {
+                  name: 'personDetection_image',
+                  value: '""'
+                },
+                {
+                  name: 'personDetection_detected_persons',
+                  value: 'false'
+                }
+              ]
+            },
+            states: [
+              {
+                name: 'idle',
+                initial: true,
+                on: [
+                  {
+                    target: 'idle',
+                    event: 'external_event_checkIfPersonsInImage',
+                    actions: [
+                      {
+                        type: 'assign',
+                        variable: {
+                          name: 'personDetection_image',
+                          value: '$personDetection_input'
+                        }
+                      },
+                      {
+                        type: 'invoke',
+                        serviceType: 'personDetection.detect',
+                        isLocal: true,
+                        input: [
+                          {
+                            name: 'image',
+                            value: 'personDetection_image'
+                          }
+                        ],
+                        output: [
+                          {
+                            reference: 'personDetection_detected_persons'
+                          }
+                        ],
+                        done: [
+                          {
+                            name: 'event_decideIfPersonsDetected',
+                            channel: 'internal'
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    target: 'decide',
+                    event: 'event_decideIfPersonsDetected'
+                  }
+                ]
+              },
+              {
+                name: 'decide',
+                always: [
+                  {
+                    target: 'foundPersons',
+                    guards: [
+                      {
+                        expression: "personDetection_detected_persons"
+                      }
+                    ]
+                  },
+                  {
+                    target: 'idle',
+                    guards: [
+                      {
+                        expression: "!personDetection_detected_persons"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                name: 'foundPersons',
+                entry: [
+                  {
+                    type: 'raise',
+                    event: {
+                      name: 'external_event_personDetected',
+                      data: [
+                        {
+                          name: 'faceDetection_input',
+                          value: 'personDetection_image'
+                        }
+                      ],
+                      channel: 'external'
+                    }
+                  }
+                ],
+                always: [
+                  {
+                    target: 'idle'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            name: 'surveillanceSystem',
+            localContext: {
+              variables: [
+                {
+                  name: 'faceDetection_image',
+                  value: '""'
+                },
+                {
+                  name: 'personDetection_detected_persons', // TODO: replace this when using lambda
+                  value: '""'
+                }
+              ]
+            },
+            states: [
+              {
+                name: 'idle',
+                initial: true,
+                on: [
+                  {
+                    target: 'idle',
+                    event: 'external_event_personDetected',
+                    actions: [
+                      {
+                        type: 'assign',
+                        variable: {
+                          name: 'faceDetection_image',
+                          value: '$faceDetection_input'
+                        }
+                      },
+                      {
+                        type: 'invoke',
+                        serviceType: 'faceDetection.detect',
+                        input: [
+                          {
+                            name: 'image',
+                            value: 'faceDetection_image'
+                          }
+                        ],
+                        output: [
+                          {
+                            reference: 'personDetection_detected_persons' // TODO: replace this when using lambda
+                          }
+                        ],
+                        done: [
+                          {
+                            name: 'event_decideIfPersonIsWhiteListed',
+                            channel: 'internal'
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    target: 'decide',
+                    event: 'event_decideIfPersonIsWhiteListed'
+                  }
+                ]
+              },
+              {
+                name: 'decide',
+                always: [
+                  {
+                    target: 'notifySecurity',
+                    guards: [
+                      {
+                        expression: 'personDetection_detected_persons' // TODO: replace this when using lambda
+                      }
+                    ]
+                  },
+                  {
+                    target: 'idle',
+                    guards: [
+                      {
+                        expression: '!personDetection_detected_persons' // TODO: replace this when using lambda
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                name: 'notifySecurity',
+                entry: [
+                  {
+                    type: 'raise',
+                    event: {
+                      name: 'global_event_alarm',
+                      data: [
+                        {
+                          name: 'faceDetection_image',
+                          value: 'faceDetection_image'
+                        }
+                      ],
+                      channel: 'global'
+                    }
+                  }
+                ],
+                always: [
+                  {
+                    target: 'idle'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+    "stateMachineName": "camera",
+    "localData": {},
+    "bindEventInstanceIds": [],
+    "runtimeName": "runtime"
+}

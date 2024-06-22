@@ -1,75 +1,95 @@
 {
-  "id": "wCamera",
-  "version": "0.1",
-  "specVersion": "0.8",
-  "name": "Camera Workflow",
-  "description": "Workflow description",
-  "start": "sSleep",
-  "functions": [
-    {
-      "name": "iCameraCapture",
-      "operation": "specs/services.json#serviceCameraCapture",
-      "type": "rest"
-    }
-  ],
-  "events": [
-    {
-      "name": "eCheckIfPersonsInImage",
-      "source": "http://localhost:8080",
-      "type": "externalEventCheckIfPersonsInImage",
-      "kind": "produced"
-    }
-  ],
-  "states": [
-    {
-      "name": "sStartState",
-      "type": "inject",
-      "data": {
-        "terminateCondition": false
-      },
-      "transition": "sSleep",
-      "end": false
-    },
-    {
-      "name": "continue-switch",
-      "type": "switch",
-      "dataConditions": [
+    "id": "camera",
+    "name": "Camera",
+    "description": "Workflow",
+    "version": "1.0.0",
+    "specVersion": "0.8",
+    "events": [
         {
-          "name": "cTerminate",
-          "end": true,
-          "condition": "${ .terminateCondition }"
+            "name": "check-persons-in-image",
+            "source": "camera",
+            "type": "check-persons-in-image",
+            "kind": "produced"
         }
-      ],
-      "defaultCondition": {
-        "transition": "sSleep"
-      }
-    },
-    {
-      "name": "sSleep",
-      "type": "sleep",
-      "duration": "PT10S",
-      "transition": "sInvokeCameraCapture"
-    },
-    {
-      "name": "sInvokeCameraCapture",
-      "type": "operation",
-      "actions": [
+    ],
+    "functions": [
         {
-          "name": "aInvokeCameraCapture",
-          "functionRef": {
-            "refName": "iCameraCapture"
-          }
+            "name": "service-capture",
+            "type": "custom",
+            "operation": "rest:post:http://172.23.240.1:8001/capture"
         }
-      ],
-      "transition": {
-        "nextState": "sStartState",
-        "produceEvents": [
-          {
-            "eventRef": "eCheckIfPersonsInImage"
-          }
-        ]
-      },
-      "end": false
-    }
-  ]
+    ],
+    "start": "start",
+    "states": [
+        {
+            "name": "start",
+            "type": "inject",
+            "data": {
+                "cameraImage": null
+            },
+            "transition": "capture-wait"
+        },
+        {
+            "name": "capture-wait",
+            "type": "sleep",
+            "duration": "PT0.2S",
+            "transition": "capture-invoke"
+        },
+        {
+            "name": "capture-invoke",
+            "type": "operation",
+            "timeouts": {
+                "actionExecTimeout": "PT30S"
+            },
+            "actions": [
+                {
+                    "name": "action-capture",
+                    "actionDataFilter": {
+                        "fromStateData": "${ {} }",
+                        "results": "${ .camera_image }",
+                        "toStateData": "${ .cameraImage }"
+                    },
+                    "functionRef": {
+                        "refName": "service-capture",
+                        "arguments": {
+                            "video_number": "1",
+                            "delay": "30"
+                        },
+                        "invoke": "sync"
+                    }
+                }
+            ],
+            "transition": "capture-switch"
+        },
+        {
+            "name": "capture-switch",
+            "type": "switch",
+            "dataConditions": [
+                {
+                    "name": "case-no-image",
+                    "end": true,
+                    "condition": "${ .cameraImage == null }"
+                }
+            ],
+            "defaultCondition": {
+                "transition": {
+                    "nextState": "reset",
+                    "produceEvents": [
+                        {
+                            "eventRef": "check-persons-in-image",
+                            "data": "${ {cameraImage: .cameraImage} }"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "reset",
+            "type": "inject",
+            "data": {
+                "cameraImage": null
+            },
+            "transition": "capture-wait"
+        }
+    ]
 }

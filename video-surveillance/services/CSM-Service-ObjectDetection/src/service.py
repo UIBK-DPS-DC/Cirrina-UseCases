@@ -1,15 +1,21 @@
 import json
+import os
+import random
+import base64
+
 from fastapi import FastAPI, Request, HTTPException, Response
 from pydantic import BaseModel
-from typing import List
 import numpy as np
 import cv2
-import random
 import ContextVariable_pb2
 
 import uvicorn
 
 app = FastAPI()
+
+# Decide whether protobuf should be used (optional environment variable)
+proto = "PROTO" not in os.environ \
+    or os.environ["PROTO"].lower() in ["true", "t", "1"]
 
 # Constants and configurations
 INPUT_WIDTH = 640
@@ -78,19 +84,27 @@ def mock_detect(image: np.ndarray):
 
 @app.post("/process")
 async def process_image(request: Request):
-    # Read the raw protobuf request body
-    body = await request.body()
+    if proto:
+        # Read the raw request body
+        body = await request.body()
 
-    # Parse the protobuf message
-    context_variables = ContextVariable_pb2.ContextVariables()
-    context_variables.ParseFromString(body)
+        # Parse the protobuf message
+        context_variables = ContextVariable_pb2.ContextVariables()
+        context_variables.ParseFromString(body)
 
-    # Extract the image from the protobuf message
-    image_bytes = None
-    for context_variable in context_variables.data:
-        if context_variable.name == "image":
-            image_bytes = context_variable.value.bytes
-            break
+        # Extract the image from the protobuf message
+        image_bytes = None
+        for context_variable in context_variables.data:
+            if context_variable.name == "image":
+                image_bytes = context_variable.value.bytes
+                break
+    else:
+        # Parse the request variables
+        context_variables = await request.json()
+
+        # Get the image from the request json
+        if "image" in context_variables:
+            image_bytes = base64.b64decode(context_variables["image"].encode("utf-8"))
 
     if image_bytes is None:
         raise HTTPException(status_code=400, detail="No image provided in the request")
@@ -140,22 +154,30 @@ async def process_image(request: Request):
         d for d in detections if d["class_name"] == "person" and d["confidence"] > 0.5
     ]
 
-    # Create response protobuf message
-    response_context_variables = ContextVariable_pb2.ContextVariables()
-    detections_context_variable = ContextVariable_pb2.ContextVariable(
-        name="personDetection_detected_persons",
-        value=ContextVariable_pb2.Value(bool=len(detected_persons) > 0),
-    )
-    response_context_variables.data.append(detections_context_variable)
+    if proto:
+        # Create response protobuf message
+        response_context_variables = ContextVariable_pb2.ContextVariables()
+        detections_context_variable = ContextVariable_pb2.ContextVariable(
+            name="personDetection_detected_persons",
+            value=ContextVariable_pb2.Value(bool=len(detected_persons) > 0),
+        )
+        response_context_variables.data.append(detections_context_variable)
+
+        # Serialize the response to protobuf format
+        response = response_context_variables.SerializeToString()
+        media_type = "application/x-protobuf"
+    else:
+        response = json.dumps({
+            "personDetection_detected_persons": len(detected_persons) > 0
+        })
+        media_type = "application/json"
 
     print(f"Detected {len(detected_persons)} persons out of {len(detections)} objects.")
 
-    # Serialize the response to protobuf format
-    serialized_response = response_context_variables.SerializeToString()
-
     # Return the protobuf response
-    return Response(content=serialized_response, media_type="application/x-protobuf")
+    return Response(content=response, media_type=media_type)
 
 
 if __name__ == "__main__":
+    print(f"Protobuf: {proto}")
     uvicorn.run(app, host="0.0.0.0", port=8000)

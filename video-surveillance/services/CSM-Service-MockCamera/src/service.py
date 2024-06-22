@@ -1,8 +1,11 @@
-import cv2
+import base64
+import json
 import hashlib
 import os
-import uvicorn
 import time
+
+import cv2
+import uvicorn
 import numpy as np
 from fastapi import FastAPI, HTTPException, Request, Response
 import ContextVariable_pb2
@@ -20,6 +23,9 @@ VIDEOS_CAPTURES = {
 }
 app = FastAPI()
 
+# Decide whether protobuf should be used (optional environment variable)
+proto = "PROTO" not in os.environ \
+    or os.environ["PROTO"].lower() in ["true", "t", "1"]
 
 def get_frame_number() -> int:
     return round(int(time.time()) * FPS)
@@ -41,25 +47,35 @@ def log_hash(data: bytes, a: float, b: float, delay: str):
 async def capture(request: Request):
     a = time.time()
 
-    # Read the raw protobuf request body
-    body = await request.body()
-
-    # Parse the protobuf message
-    context_variables = ContextVariable_pb2.ContextVariables()
-    context_variables.ParseFromString(body)
-
-    # Extract specific values
     video_number = None
     delay = None
 
-    for context_variable in context_variables.data:
-        context_variable_dict = MessageToDict(context_variable)
+    if proto:
+        # Read the raw request body
+        body = await request.body()
 
-        # Check for video_number and delay
-        if context_variable_dict["name"] == "video_number":
-            video_number = context_variable_dict["value"].get("integer")
-        elif context_variable_dict["name"] == "delay":
-            delay = context_variable_dict["value"].get("integer")
+        # Parse the protobuf message
+        context_variables = ContextVariable_pb2.ContextVariables()
+        context_variables.ParseFromString(body)
+
+        # Extract specific values
+        for context_variable in context_variables.data:
+            context_variable_dict = MessageToDict(context_variable)
+
+            # Check for video_number and delay
+            if context_variable_dict["name"] == "video_number":
+                video_number = context_variable_dict["value"].get("integer")
+            elif context_variable_dict["name"] == "delay":
+                delay = context_variable_dict["value"].get("integer")
+    else:
+        # Parse the request variables
+        context_variables = await request.json()
+
+        # Get context variables from the request json
+        if "video_number" in context_variables:
+            video_number = int(context_variables["video_number"])
+        if "delay" in context_variables:
+            delay = int(context_variables["delay"])
 
     if video_number not in VIDEOS_CAPTURES:
         raise HTTPException(
@@ -98,23 +114,33 @@ async def capture(request: Request):
 
     buffer_bytes = buffer.tobytes()
 
-    # Create response protobuf message
-    response_context_variables = ContextVariable_pb2.ContextVariables()
-    image_context_variable = ContextVariable_pb2.ContextVariable(
-        name="camera_image", value=ContextVariable_pb2.Value(bytes=buffer_bytes)
-    )
-    response_context_variables.data.append(image_context_variable)
+    if proto:
+        # Create response protobuf message
+        response_context_variables = ContextVariable_pb2.ContextVariables()
+        image_context_variable = ContextVariable_pb2.ContextVariable(
+            name="camera_image", value=ContextVariable_pb2.Value(bytes=buffer_bytes)
+        )
+        response_context_variables.data.append(image_context_variable)
 
-    # Serialize the response to protobuf format
-    serialized_response = response_context_variables.SerializeToString()
+        # Serialize the response to protobuf format
+        response = response_context_variables.SerializeToString()
+        media_type = "application/x-protobuf"
+    else:
+        buffer_base64 = base64.b64encode(buffer_bytes).decode('utf-8')
+
+        response = json.dumps({
+            "camera_image": buffer_base64
+        })
+        media_type = "application/json"
 
     b = time.time()
 
     log_hash(buffer_bytes, a, b, delay)
 
     # Return the protobuf response
-    return Response(content=serialized_response, media_type="application/x-protobuf")
+    return Response(content=response, media_type=media_type)
 
 
 if __name__ == "__main__":
+    print(f"Protobuf: {proto}")
     uvicorn.run(app, host="0.0.0.0", port=8001)

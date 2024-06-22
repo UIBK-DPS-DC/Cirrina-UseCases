@@ -1,0 +1,136 @@
+{
+    "id": "face_detector",
+    "name": "Face Detector",
+    "description": "Workflow",
+    "version": "1.0.0",
+    "specVersion": "0.8",
+    "events": [
+        {
+            "name": "check-faces-in-image",
+            "source": "face_detector",
+            "type": "check-faces-in-image"
+        },
+        {
+            "name": "alarm",
+            "source": "face_detector",
+            "type": "alarm",
+            "kind": "produced"
+        }
+    ],
+    "functions": [
+        {
+            "name": "increment-facesDetected",
+            "operation": ".facesDetected += 1 | .facesDetected",
+            "type": "expression"
+        },
+        {
+            "name": "print-info",
+            "operation": "sysout:INFO",
+            "type": "custom"
+        },
+        {
+            "name": "service-detect",
+            "type": "custom",
+            "operation": "rest:post:http://localhost:8000/process"
+        }
+    ],
+    "start": "start",
+    "states": [
+        {
+            "name": "start",
+            "type": "inject",
+            "data": {
+                "faceDetectionImage": null,
+                "detected": null,
+                "facesDetected": 0
+            },
+            "transition": "check-faces-event"
+        },
+        {
+            "name": "check-faces-event",
+            "type": "event",
+            "onEvents": [
+                {
+                    "actions": [
+                        {
+                            "name": "action-detect",
+                            "actionDataFilter": {
+                                "results": "${ .personDetection_detected_persons }",
+                                "toStateData": "${ .detected }"
+                            },
+                            "functionRef": {
+                                "refName": "service-detect",
+                                "arguments": {
+                                    "image": "${ .faceDetectionImage }"
+                                },
+                                "invoke": "sync"
+                            }
+                        }
+                    ],
+                    "eventRefs": [
+                        "check-faces-in-image"
+                    ],
+                    "eventDataFilter": {
+                        "data": "${ .personDetectionImage }",
+                        "toStateData": "${ .faceDetectionImage }"
+                    }
+                }
+            ],
+            "transition": "check-faces-switch"
+        },
+        {
+            "name": "check-faces-switch",
+            "type": "switch",
+            "dataConditions": [
+                {
+                    "name": "case-errored-detection",
+                    "end": true,
+                    "condition": "${ .detected == null }"
+                },
+                {
+                    "name": "case-no-faces",
+                    "transition": "check-faces-event",
+                    "condition": "${ .detected == false }"
+                }
+            ],
+            "defaultCondition": {
+                "transition": {
+                    "nextState": "alarm-operation",
+                    "produceEvents": [
+                        {
+                            "eventRef": "alarm",
+                            "data": "${ {personDetectionImage: .faceDetectionImage} }"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "alarm-operation",
+            "type": "operation",
+            "actions": [
+                {
+                    "name": "action-increment",
+                    "actionDataFilter": {
+                        "toStateData": "${ .facesDetected }"
+                    },
+                    "functionRef": {
+                        "refName": "increment-facesDetected"
+                    }
+                },
+                {
+                    "name": "action-print",
+                    "actionDataFilter": {},
+                    "functionRef": {
+                        "refName": "print-info",
+                        "arguments": {
+                            "message": "\"Detected faces. Detections: \\( .facesDetected )\""
+                        }
+                    }
+                }
+            ],
+            "actionMode": "sequential",
+            "transition": "check-faces-event"
+        }
+    ]
+}

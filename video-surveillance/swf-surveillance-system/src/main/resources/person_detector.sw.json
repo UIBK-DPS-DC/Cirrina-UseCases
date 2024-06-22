@@ -1,0 +1,98 @@
+{
+    "id": "person_detector",
+    "name": "Person Detector",
+    "description": "Workflow",
+    "version": "1.0.0",
+    "specVersion": "0.8",
+    "events": [
+        {
+            "name": "check-persons-in-image",
+            "source": "person_detector",
+            "type": "check-persons-in-image"
+        },
+        {
+            "name": "check-faces-in-image",
+            "source": "person_detector",
+            "type": "check-faces-in-image",
+            "kind": "produced"
+        }
+    ],
+    "functions": [
+        {
+            "name": "service-detect",
+            "type": "custom",
+            "operation": "rest:post:http://172.23.240.1:8000/process"
+        }
+    ],
+    "start": "start",
+    "states": [
+        {
+            "name": "start",
+            "type": "inject",
+            "data": {
+                "personDetectionImage": "",
+                "detected": null
+            },
+            "transition": "check-persons-event"
+        },
+        {
+            "name": "check-persons-event",
+            "type": "event",
+            "onEvents": [
+                {
+                    "actions": [
+                        {
+                            "name": "action-detect",
+                            "actionDataFilter": {
+                                "results": "${ .personDetection_detected_persons }",
+                                "toStateData": "${ .detected }"
+                            },
+                            "functionRef": {
+                                "refName": "service-detect",
+                                "arguments": {
+                                    "image": "${ .personDetectionImage }"
+                                },
+                                "invoke": "sync"
+                            }
+                        }
+                    ],
+                    "eventRefs": [
+                        "check-persons-in-image"
+                    ],
+                    "eventDataFilter": {
+                        "data": "${ .cameraImage }",
+                        "toStateData": "${ .personDetectionImage }"
+                    }
+                }
+            ],
+            "transition": "check-persons-switch"
+        },
+        {
+            "name": "check-persons-switch",
+            "type": "switch",
+            "dataConditions": [
+                {
+                    "name": "case-errored-detection",
+                    "end": true,
+                    "condition": "${ .detected == null }"
+                },
+                {
+                    "name": "case-no-persons",
+                    "transition": "check-persons-event",
+                    "condition": "${ .detected == false }"
+                }
+            ],
+            "defaultCondition": {
+                "transition": {
+                    "nextState": "check-persons-event",
+                    "produceEvents": [
+                        {
+                            "eventRef": "check-faces-in-image",
+                            "data": "${ {personDetectionImage: .personDetectionImage} }"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
