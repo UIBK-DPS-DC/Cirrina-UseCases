@@ -15,7 +15,7 @@ where OPTIONS:
   Possible Values: [NO_ERRORS, RANDOM_ERRORS_LOW, RANDOM_ERRORS_HIGH, GRADUALLY_INCREASE, SUDDEN_PEAK]
 --port, -p
   Port number
-  Default: 0
+  Default: 8000
 --useDelays, -ud
   Cause response delays
   Default: false
