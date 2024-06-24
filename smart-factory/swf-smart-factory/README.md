@@ -21,12 +21,7 @@
 
 ---
 - Services: 
-    - A running instance of [`CSM-Service-MockCamera`](../services/CSM-Service-MockCamera/README.md) listening on port 8001.
-    - A running instance of [`CSM-Service-ObjectDetection`](../services/CSM-Service-ObjectDetection/README.md) listening on port 8000.
-    - Services must be run with the environment variable `PROTO=false`<br>i.e.
-    ```sh
-    PROTO=false docker-compose up
-    ```
+    - A running instance of [`simulation-server`](../simulation-server/README.md) listening on port 8000.
 
 URLs and ports are currently hardcoded in the `<workflow>.sw.json` files and must be adjusted there.
 
