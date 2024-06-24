@@ -21,7 +21,8 @@
     force_kill: true
     pull: true
     env:
-      OTEL_EXPORTER_OTLP_METRICS_TIMEOUT: "10000"
+      TZ: "Europe/Paris"
+      OTEL_METRIC_EXPORT_INTERVAL: "1000"
       OTEL_EXPORTER_OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
     command: >
       --nats-persistent-context-url {{ hostvars[inventory_hostname]['NATS_PERSISTENT_CONTEXT_URL'] }}

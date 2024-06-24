@@ -84,7 +84,7 @@
               "type": "assign",
               "variable": {
                 "name": "localDataVariable",
-                "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
+                "value": "utility:genRandPayload([0, 8, 32, 256, 512, 1024, 4096, 8192])"
               }
             }
           ]
@@ -160,7 +160,7 @@
               "type": "assign",
               "variable": {
                 "name": "localDataVariable",
-                "value": "utility:genRandPayload([1024, 1024 * 10, 1024 * 100, 1024 * 1000])"
+                "value": "utility:genRandPayload([0, 8, 32, 256, 512, 1024, 4096, 8192])"
               }
             }
           ]

@@ -43,6 +43,8 @@
     volumes:
       - /etc/nats/nats-cluster.conf:/etc/nats/nats.conf
     command: -js -c /etc/nats/nats.conf
+    env:
+      TZ: "Europe/Paris"
   become: true
   register: nats_container
 

@@ -12,34 +12,19 @@
     enabled: true
   become: true
 
-- name: Run gate service in Docker
+- name: Run services in Docker
   docker_container:
-    name: gate
-    image: "marlonetheredgeuibk/cirrina-examples-railway-gate:develop"
+    name: services
+    image: "marlonetheredgeuibk/cirrina-examples-railway-services:develop"
     state: started
     recreate: true
     force_kill: true
     pull: true
     ports:
-      - "8001:8000"
+      - "8000:8000"
     env:
+      TZ: "Europe/Paris"
       OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
-      METRICS_INTERVAL: "10000"
+      METRICS_INTERVAL: "1000"
   become: true
-  register: gate_container
-
-- name: Run light service in Docker
-  docker_container:
-    name: light
-    image: "marlonetheredgeuibk/cirrina-examples-railway-light:develop"
-    state: started
-    recreate: true
-    force_kill: true
-    pull: true
-    ports:
-      - "8002:8000"
-    env:
-      OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
-      METRICS_INTERVAL: "10000"
-  become: true
-  register: light_container
+  register: services_container

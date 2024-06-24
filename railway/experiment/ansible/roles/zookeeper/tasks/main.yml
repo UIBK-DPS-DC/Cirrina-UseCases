@@ -26,6 +26,7 @@
       - "3888:3888"
       - "8080:8080"
     env:
+      TZ: "Europe/Paris"
       ZOO_MY_ID: "{{ zookeeper_my_id }}"
       ZOO_SERVERS: "{{ zookeeper_servers }}"
       ZOO_4LW_COMMANDS_WHITELIST: "*"
