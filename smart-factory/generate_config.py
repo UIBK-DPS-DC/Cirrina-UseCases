@@ -10,7 +10,7 @@ MACHINES_JSON = "machines.json"
 
 LOCAL_DATA = {
     "jobControlSystem": {
-        "totalProducts": 300
+        "totalProducts": 100
     },
     "roboticArmSystem": {
         "partsPerProduct": 10
