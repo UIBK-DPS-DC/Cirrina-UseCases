@@ -20,7 +20,6 @@
     "stateMachines": [
         {
             "name": "jobControlSystem",
-
             "localContext": {
                 "variables": [
                     {
@@ -32,7 +31,6 @@
             "states": [
                 {
                     "name": "starting",
-
                     "initial": true,
                     "entry": [
                         {
@@ -80,7 +78,6 @@
                 },
                 {
                     "name": "running",
-
                     "initial": false,
                     "on": [
                         {
@@ -115,7 +112,6 @@
                 },
                 {
                     "name": "jobDone",
-
                     "initial": false,
                     "terminal": true,
                     "entry": [
@@ -152,7 +148,6 @@
         },
         {
             "name": "conveyorBeltSystem",
-
             "localContext": {
                 "variables": [
                     {
@@ -195,7 +190,6 @@
                 },
                 {
                     "name": "error",
-
                     "initial": false,
                     "entry": [
                         {
@@ -225,19 +219,16 @@
                 },
                 {
                     "name": "transporting",
-
                     "initial": false,
                     "entry": [
                         {
                             "type": "invoke",
-
                             "serviceType": "moveBelt"
                         }
                     ],
                     "exit": [
                         {
                             "type": "invoke",
-
                             "serviceType": "stopBelt"
                         }
                     ],
@@ -263,7 +254,6 @@
                 },
                 {
                     "name": "unloading",
-
                     "initial": false,
                     "entry": [
                         {
@@ -319,13 +309,11 @@
                 },
                 {
                     "name": "jobDone",
-
                     "initial": false,
                     "terminal": true
                 },
                 {
                     "name": "cameraSensorSystem",
-
                     "localContext": {
                         "variables": [
                             {
@@ -341,7 +329,6 @@
                     "states": [
                         {
                             "name": "idle",
-
                             "initial": true,
                             "on": [
                                 {
@@ -366,12 +353,10 @@
                         },
                         {
                             "name": "scanning",
-
                             "initial": false,
                             "entry": [
                                 {
                                     "type": "invoke",
-
                                     "serviceType": "takePhoto",
                                     "output": [
                                         {
@@ -381,7 +366,6 @@
                                 },
                                 {
                                     "type": "invoke",
-
                                     "serviceType": "scanPhoto",
                                     "input": [
                                         {
@@ -418,7 +402,6 @@
                                     "actions": [
                                         {
                                             "type": "match",
-
                                             "value": "validObject",
                                             "cases": [
                                                 {
@@ -451,7 +434,6 @@
                 },
                 {
                     "name": "photoelectricSensor",
-
                     "abstract": true,
                     "localContext": {
                         "variables": [
@@ -464,7 +446,6 @@
                     "states": [
                         {
                             "name": "idle",
-
                             "initial": true,
                             "virtual": true,
                             "on": [
@@ -481,7 +462,6 @@
                         },
                         {
                             "name": "detecting",
-
                             "initial": false,
                             "virtual": true,
                             "on": [
@@ -499,7 +479,6 @@
                         },
                         {
                             "name": "detected",
-
                             "initial": false,
                             "entry": [
                                 {
@@ -541,7 +520,6 @@
                 },
                 {
                     "name": "photoelectricSensorStart",
-
                     "extends": "photoelectricSensor",
                     "states": [
                         {
@@ -563,11 +541,9 @@
                         },
                         {
                             "name": "detecting",
-
                             "entry": [
                                 {
                                     "type": "invoke",
-
                                     "serviceType": "beamDetectionStart",
                                     "output": [
                                         {
@@ -604,7 +580,6 @@
                 },
                 {
                     "name": "photoelectricSensorEnd",
-
                     "extends": "photoelectricSensor",
                     "states": [
                         {
@@ -626,11 +601,9 @@
                         },
                         {
                             "name": "detecting",
-
                             "entry": [
                                 {
                                     "type": "invoke",
-
                                     "serviceType": "beamDetectionEnd",
                                     "output": [
                                         {
@@ -655,7 +628,6 @@
                     ],
                     "actions": [
                         {
-
                             "name": "action.onDetected",
                             "type": "raise",
                             "event": {
@@ -669,7 +641,6 @@
         },
         {
             "name": "messageProcessor",
-
             "abstract": true,
             "states": [
                 {
@@ -702,7 +673,6 @@
         },
         {
             "name": "smsProcessor",
-
             "extends": "messageProcessor",
             "states": [
                 {
@@ -732,12 +702,10 @@
         },
         {
             "name": "eMailProcessor",
-
             "extends": "messageProcessor",
             "states": [
                 {
                     "name": "process",
-
                     "initial": false,
                     "entry": [
                         {
@@ -762,7 +730,6 @@
         },
         {
             "name": "logProcessor",
-
             "extends": "messageProcessor",
             "states": [
                 {
@@ -789,7 +756,6 @@
         },
         {
             "name": "roboticArmSystem",
-
             "localContext": {
                 "variables": [
                     {
@@ -817,7 +783,6 @@
             "states": [
                 {
                     "name": "idle",
-
                     "initial": true,
                     "on": [
                         {
@@ -847,7 +812,6 @@
                 },
                 {
                     "name": "error",
-
                     "initial": false,
                     "entry": [
                         {
@@ -912,7 +876,6 @@
                         },
                         {
                             "type": "match",
-
                             "value": "pickUpSuccess",
                             "cases": [
                                 {
@@ -964,7 +927,6 @@
                     "entry": [
                         {
                             "type": "invoke",
-
                             "serviceType": "assemble",
                             "output": [
                                 {
@@ -974,7 +936,6 @@
                         },
                         {
                             "type": "match",
-
                             "value": "assembleSuccess",
                             "cases": [
                                 {
@@ -1067,7 +1028,6 @@
                 },
                 {
                     "name": "jobDone",
-
                     "initial": false,
                     "terminal": true
                 }
@@ -1075,7 +1035,6 @@
         },
         {
             "name": "monitoringSystem",
-
             "localContext": {
                 "variables": [
                     {
@@ -1092,7 +1051,6 @@
                 {
                     "name": "aSendStatistics",
                     "type": "invoke",
-
                     "serviceType": "sendStatistics",
                     "input": [
                         {
@@ -1117,7 +1075,6 @@
             "states": [
                 {
                     "name": "monitoring",
-
                     "initial": true,
                     "on": [
                         {
@@ -1174,7 +1131,6 @@
                 },
                 {
                     "name": "jobDone",
-
                     "initial": false,
                     "terminal": true,
                     "entry": [

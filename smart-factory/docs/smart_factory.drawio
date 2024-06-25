@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-05-07T14:23:36.191Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" etag="HLcQV9SaEg-2JEwVbIbX" version="24.3.1" type="device">
+<mxfile host="app.diagrams.net" modified="2024-06-25T20:33:54.700Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36" etag="laVqd8lQWwPmBHtmR-e1" version="24.6.2" type="device">
   <diagram name="Seite-1" id="qgN4DIuqkcKPxwxcaXtQ">
-    <mxGraphModel dx="4569" dy="2624" grid="0" gridSize="14" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="4320" dy="2503" grid="0" gridSize="14" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -58,7 +58,7 @@
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="P7GP2XHDYyyQ6Vhsqxj1-45" target="P7GP2XHDYyyQ6Vhsqxj1-26" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-1" value="Loading" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-1" value="Loading&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;exit: raise eScanned&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="80" y="120" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="iC87KrBTf_4nL3Mp_Ujt-2" target="P7GP2XHDYyyQ6Vhsqxj1-26" edge="1">
@@ -141,7 +141,7 @@
         <mxCell id="iC87KrBTf_4nL3Mp_Ujt-18" value="ePickedUp : &lt;br&gt;-&amp;gt; assign $isUnloading=false" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="371.5" y="-30" width="155" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-28" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;INVOKE ACTIONS&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;moveBelt&lt;/b&gt;: &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;Informs the conveyor belt to start moving&lt;br&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;stopBelt&lt;/b&gt;: &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;Informs the conveyor belt to stop moving&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;_______________________________________________________________________________________________&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;takePhoto&lt;/b&gt;: &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;Signals the conveyor belt camera to take a photo (object is at the start of the conveyor belt)&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;I&lt;/span&gt;n &quot;done&quot;, sets the local context variable $photoPath to the path of the image ($out)&lt;br&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;scanPhoto&lt;/b&gt;:&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;Takes a photo path parameter and then uses computer vision techniques to check the object &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;displayed on the photo for validity and/or correctness.&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;In &quot;done&quot;, sets a local context boolean flag $validObject to whether the object is expected ($out)&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;______________________________________________________________________________________________&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;b&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;beamDetection&lt;/b&gt;:&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;Checks whether the photoelectric sensor found an object or not (i.e. the light beam is interrupted).&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;In &quot;done&quot;, sets a flag $isBeamInterrupted to whether the beam is interrupted or not ($out)&amp;nbsp;&lt;br&gt;&lt;br&gt;&lt;/div&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-28" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;INVOKE ACTIONS&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;moveBelt&lt;/b&gt;: &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;Informs the conveyor belt to start moving&lt;br&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;stopBelt&lt;/b&gt;: &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;Informs the conveyor belt to stop moving&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;_______________________________________________________________________________________________&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;takePhoto&lt;/b&gt;: &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;Signals the conveyor belt camera to take a photo (object is at the start of the conveyor belt)&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;I&lt;/span&gt;n &quot;done&quot;, sets the local context variable $photoPath to the path of the image&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;scanPhoto&lt;/b&gt;:&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;Takes a photo path parameter and then uses computer vision techniques to check the object &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;displayed on the photo for validity and/or correctness.&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;In &quot;done&quot;, sets a local context boolean flag $validObject to whether the object is expected&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;______________________________________________________________________________________________&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;b&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;beamDetection&lt;/b&gt;:&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;Checks whether the photoelectric sensor found an object or not (i.e. the light beam is interrupted).&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;In &quot;done&quot;, sets a flag $isBeamInterrupted to whether the beam is interrupted or not&lt;br&gt;&lt;br&gt;&lt;/div&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="944" width="580" height="280" as="geometry" />
         </mxCell>
         <mxCell id="iC87KrBTf_4nL3Mp_Ujt-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" parent="1" edge="1">
@@ -149,34 +149,31 @@
             <mxPoint x="217" y="485" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-59" value="Photoelectric Sensor System" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="309" y="793" width="176" height="30" as="geometry" />
+        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-59" value="Photoelectric Sensor System&lt;div style=&quot;font-size: 11px;&quot;&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px; text-align: left;&quot;&gt;guard.allowDetection: !isUnloading&lt;/span&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;action.onDetected: raise eNoOp&lt;/font&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="308.5" y="787" width="182.5" height="65" as="geometry" />
         </mxCell>
-        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-78" value="Camera System" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="159.5" y="455.5" width="125.5" height="30" as="geometry" />
+        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-78" value="Camera System&lt;div style=&quot;font-size: 8px;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;validObject = false&lt;/font&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="159.5" y="455.5" width="125.5" height="55.5" as="geometry" />
         </mxCell>
-        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-81" value="Conveyor Belt System" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="-125" y="-52" width="176" height="30" as="geometry" />
+        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-81" value="Conveyor Belt System&lt;div style=&quot;font-size: 10px;&quot;&gt;&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;isScanning = false&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;isUnloading = false&lt;/div&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="-125" y="-52" width="176" height="74" as="geometry" />
         </mxCell>
         <mxCell id="iC87KrBTf_4nL3Mp_Ujt-120" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="iC87KrBTf_4nL3Mp_Ujt-83" target="iC87KrBTf_4nL3Mp_Ujt-57" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="iC87KrBTf_4nL3Mp_Ujt-83" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;" parent="1" vertex="1">
-          <mxGeometry x="-70" y="1263" width="810" height="470" as="geometry" />
+          <mxGeometry x="-70" y="1263" width="817" height="470" as="geometry" />
         </mxCell>
-        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-92" value="Photoelectric Sensor System (Belt Start)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="-60" y="1263" width="250" height="30" as="geometry" />
+        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-92" value="Photoelectric Sensor System (Belt Start)&lt;div style=&quot;font-size: 11px;&quot;&gt;&lt;span style=&quot;font-size: 10px; text-align: left;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 10px; text-align: left;&quot;&gt;guard.allowDetection:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-size: 10px;&quot;&gt;!isUnloading &amp;amp;&amp;amp; !isScanning&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;action.onDetected: raise eStartScan&lt;/font&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="-60" y="1263" width="250" height="67" as="geometry" />
         </mxCell>
         <mxCell id="iC87KrBTf_4nL3Mp_Ujt-121" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="iC87KrBTf_4nL3Mp_Ujt-111" target="iC87KrBTf_4nL3Mp_Ujt-57" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="iC87KrBTf_4nL3Mp_Ujt-111" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;" parent="1" vertex="1">
-          <mxGeometry x="760" y="1263" width="830" height="470" as="geometry" />
+          <mxGeometry x="760" y="1263" width="840" height="470" as="geometry" />
         </mxCell>
-        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-119" value="Photoelectric Sensor System (Belt End)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="760" y="1263" width="250" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-124" value="Scanning&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry: invoke takePhoto, invoke scanPhoto($photoPath), assign $validObject=$out, invoke&amp;nbsp;eCheckValidObject&lt;br&gt;exit: assign $isScanning=false&lt;br&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+        <mxCell id="iC87KrBTf_4nL3Mp_Ujt-124" value="Scanning&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry: invoke takePhoto, invoke scanPhoto($photoPath) (output $validObject) (done eCheckValidObject)&lt;br&gt;exit: assign $isScanning=false&lt;br&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="471" y="600.5" width="496" height="66.5" as="geometry" />
         </mxCell>
         <mxCell id="Nu2D_vE6oqNDNyLhwKVZ-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="iC87KrBTf_4nL3Mp_Ujt-125" target="iC87KrBTf_4nL3Mp_Ujt-127" edge="1">
@@ -191,7 +188,7 @@
         <mxCell id="iC87KrBTf_4nL3Mp_Ujt-127" value="eStartScan: -&amp;gt; assign $isScanning=true" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="255" y="618.5" width="180" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="Y43TJXsY-5Alh3OPnLsb-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="iC87KrBTf_4nL3Mp_Ujt-131" target="iC87KrBTf_4nL3Mp_Ujt-125">
+        <mxCell id="Y43TJXsY-5Alh3OPnLsb-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="iC87KrBTf_4nL3Mp_Ujt-131" target="iC87KrBTf_4nL3Mp_Ujt-125" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="iC87KrBTf_4nL3Mp_Ujt-131" value="&lt;span style=&quot;&quot;&gt;eCheckValidObject&amp;nbsp;&lt;/span&gt;: -&amp;gt; match $validObject (true -&amp;gt; raise eObjectValid, false -&amp;gt; raise eObjectInvalid)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
@@ -206,11 +203,11 @@
         <mxCell id="uP3DF6buhUJnaP9XYQKi-94" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="uP3DF6buhUJnaP9XYQKi-95" target="uP3DF6buhUJnaP9XYQKi-104" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="uP3DF6buhUJnaP9XYQKi-95" value="Idle" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+        <mxCell id="uP3DF6buhUJnaP9XYQKi-95" value="&lt;font color=&quot;#808080&quot;&gt;Idle&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
           <mxGeometry x="159.5" y="1393" width="190" height="70" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-96" value="&lt;font size=&quot;1&quot;&gt;timeout : -&amp;gt; raise eBeamDetection&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#999999;" parent="1" vertex="1">
-          <mxGeometry x="105.5" y="1333" width="305" height="20" as="geometry" />
+          <mxGeometry x="169" y="1333" width="172" height="20" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-97" value="" style="endArrow=none;html=1;rounded=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" source="uP3DF6buhUJnaP9XYQKi-95" target="uP3DF6buhUJnaP9XYQKi-96" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -230,19 +227,19 @@
         <mxCell id="uP3DF6buhUJnaP9XYQKi-100" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" source="uP3DF6buhUJnaP9XYQKi-102" target="uP3DF6buhUJnaP9XYQKi-109" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="uP3DF6buhUJnaP9XYQKi-102" value="Detecting&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry:&amp;nbsp;invoke beamDetection,&lt;br&gt;assign isBeamInterrupted=$out,&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;raise&amp;nbsp;eCheckBeamDetection&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#999999;" parent="1" vertex="1">
+        <mxCell id="uP3DF6buhUJnaP9XYQKi-102" value="Detecting&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry:&amp;nbsp;invoke beamDetectionStart&lt;br&gt;(output $isBeamInterrupted),&lt;br&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;(done eCheckBeamDetection)&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="160.5" y="1583" width="190" height="70" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-103" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="uP3DF6buhUJnaP9XYQKi-104" target="uP3DF6buhUJnaP9XYQKi-102" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="uP3DF6buhUJnaP9XYQKi-104" value="eBeamDetection :&amp;nbsp;!$isScanning &amp;amp;&amp;amp; !isUnloading -&amp;gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
+        <mxCell id="uP3DF6buhUJnaP9XYQKi-104" value="eBeamDetection : guard.allowDetection -&amp;gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#808080;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="135.5" y="1502" width="240" height="30" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-105" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.896;entryY=0.941;entryDx=0;entryDy=0;endArrow=none;endFill=0;entryPerimeter=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#999999;" parent="1" source="uP3DF6buhUJnaP9XYQKi-106" target="uP3DF6buhUJnaP9XYQKi-108" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="uP3DF6buhUJnaP9XYQKi-106" value="Detected&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry: raise eStartScan&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+        <mxCell id="uP3DF6buhUJnaP9XYQKi-106" value="Detected&lt;div&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;entry: action.onDetected&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#808080;" parent="1" vertex="1">
           <mxGeometry x="545" y="1583" width="190" height="70" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-107" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#999999;" parent="1" source="uP3DF6buhUJnaP9XYQKi-108" target="uP3DF6buhUJnaP9XYQKi-95" edge="1">
@@ -276,7 +273,7 @@
           <mxGeometry x="992.5" y="1393" width="190" height="70" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-132" value="&lt;font size=&quot;1&quot;&gt;timeout : -&amp;gt; raise eBeamDetection&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#999999;" parent="1" vertex="1">
-          <mxGeometry x="938.5" y="1333" width="305" height="20" as="geometry" />
+          <mxGeometry x="1004" y="1333" width="172" height="20" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-133" value="" style="endArrow=none;html=1;rounded=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" source="uP3DF6buhUJnaP9XYQKi-131" target="uP3DF6buhUJnaP9XYQKi-132" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -296,7 +293,7 @@
         <mxCell id="uP3DF6buhUJnaP9XYQKi-136" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" source="uP3DF6buhUJnaP9XYQKi-138" target="uP3DF6buhUJnaP9XYQKi-145" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="uP3DF6buhUJnaP9XYQKi-138" value="Detecting&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry:&amp;nbsp;invoke beamDetection,&lt;br&gt;assign isBeamInterrupted=$out,&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;raise&amp;nbsp;eCheckBeamDetection&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#999999;" parent="1" vertex="1">
+        <mxCell id="uP3DF6buhUJnaP9XYQKi-138" value="Detecting&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry:&amp;nbsp;invoke beamDetectionEnd&lt;br&gt;(output $isBeamInterrupted),&lt;br&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;(done eCheckBeamDetection)&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="993.5" y="1583" width="190" height="70" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-139" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" source="uP3DF6buhUJnaP9XYQKi-140" target="uP3DF6buhUJnaP9XYQKi-138" edge="1">
@@ -308,7 +305,7 @@
         <mxCell id="uP3DF6buhUJnaP9XYQKi-141" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.896;entryY=0.941;entryDx=0;entryDy=0;endArrow=none;endFill=0;entryPerimeter=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#999999;" parent="1" source="uP3DF6buhUJnaP9XYQKi-142" target="uP3DF6buhUJnaP9XYQKi-144" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="uP3DF6buhUJnaP9XYQKi-142" value="Detected&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry: raise eStartUnload&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+        <mxCell id="uP3DF6buhUJnaP9XYQKi-142" value="Detected&lt;div&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;entry: action.onDetected&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#808080;" parent="1" vertex="1">
           <mxGeometry x="1378" y="1583" width="190" height="70" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-143" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" source="uP3DF6buhUJnaP9XYQKi-144" target="uP3DF6buhUJnaP9XYQKi-131" edge="1">
@@ -338,11 +335,11 @@
         <mxCell id="uP3DF6buhUJnaP9XYQKi-185" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="uP3DF6buhUJnaP9XYQKi-186" target="uP3DF6buhUJnaP9XYQKi-195" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="uP3DF6buhUJnaP9XYQKi-186" value="&lt;font color=&quot;#ff8000&quot;&gt;&amp;lt;&amp;lt;virtual&amp;gt;&amp;gt;&lt;/font&gt;&lt;br&gt;Idle" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+        <mxCell id="uP3DF6buhUJnaP9XYQKi-186" value="Idle" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="550.5" y="903" width="190" height="70" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-187" value="&lt;font size=&quot;1&quot;&gt;timeout : -&amp;gt; raise eBeamDetection&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
-          <mxGeometry x="496.5" y="843" width="305" height="20" as="geometry" />
+          <mxGeometry x="560" y="843" width="177" height="20" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-188" value="" style="endArrow=none;html=1;rounded=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="uP3DF6buhUJnaP9XYQKi-186" target="uP3DF6buhUJnaP9XYQKi-187" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -362,8 +359,8 @@
         <mxCell id="uP3DF6buhUJnaP9XYQKi-191" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="uP3DF6buhUJnaP9XYQKi-193" target="uP3DF6buhUJnaP9XYQKi-200" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="uP3DF6buhUJnaP9XYQKi-193" value="Detecting&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry:&amp;nbsp;invoke beamDetection,&lt;br&gt;assign isBeamInterrupted=$out,&lt;br&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;raise&amp;nbsp;eCheckBeamDetection&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
-          <mxGeometry x="551.5" y="1093" width="190" height="70" as="geometry" />
+        <mxCell id="uP3DF6buhUJnaP9XYQKi-193" value="&lt;div&gt;&lt;span style=&quot;color: rgb(255, 128, 0);&quot;&gt;&amp;lt;&amp;lt;virtual&amp;gt;&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;/div&gt;Detecting" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="551.5" y="1087" width="190" height="82" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-194" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="uP3DF6buhUJnaP9XYQKi-195" target="uP3DF6buhUJnaP9XYQKi-193" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -374,7 +371,7 @@
         <mxCell id="uP3DF6buhUJnaP9XYQKi-196" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.896;entryY=0.941;entryDx=0;entryDy=0;endArrow=none;endFill=0;entryPerimeter=0;" parent="1" source="uP3DF6buhUJnaP9XYQKi-197" target="uP3DF6buhUJnaP9XYQKi-199" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="uP3DF6buhUJnaP9XYQKi-197" value="&lt;font color=&quot;#ff8000&quot;&gt;&amp;lt;&amp;lt;virtual&amp;gt;&amp;gt;&lt;/font&gt;&lt;br&gt;Detected" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+        <mxCell id="uP3DF6buhUJnaP9XYQKi-197" value="Detected&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry: action.onDetected&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="936" y="1093" width="190" height="70" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-198" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="uP3DF6buhUJnaP9XYQKi-199" target="uP3DF6buhUJnaP9XYQKi-186" edge="1">
@@ -395,7 +392,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" parent="1" source="uP3DF6buhUJnaP9XYQKi-202" target="uP3DF6buhUJnaP9XYQKi-186" edge="1">
+        <mxCell id="GzhKV_rsiCZbYQmUiyYR-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="uP3DF6buhUJnaP9XYQKi-202" target="uP3DF6buhUJnaP9XYQKi-186">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="uP3DF6buhUJnaP9XYQKi-202" value="&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;eCheckBeamDetection&amp;nbsp;&lt;/span&gt;: !$isBeamInterrupted -&amp;gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
@@ -450,7 +447,7 @@
         <mxCell id="uP3DF6buhUJnaP9XYQKi-213" value="SMS Processor" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="-518" y="334" width="100" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="uP3DF6buhUJnaP9XYQKi-216" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eProcessMessage : -&amp;gt;&amp;nbsp;assign msg=$event_data&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#666666;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
+        <mxCell id="uP3DF6buhUJnaP9XYQKi-216" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;span style=&quot;&quot;&gt;eProcessMessage : -&amp;gt;&lt;/span&gt;&lt;br style=&quot;&quot;&gt;&lt;span style=&quot;&quot;&gt;(input $msg)&lt;/span&gt;&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#808080;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="-508" y="491" width="140" height="40" as="geometry" />
         </mxCell>
         <mxCell id="DFq_301YZumUgOEqKcx1-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="uP3DF6buhUJnaP9XYQKi-219" target="uP3DF6buhUJnaP9XYQKi-211" edge="1">
@@ -522,12 +519,12 @@
         <mxCell id="DFq_301YZumUgOEqKcx1-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="DFq_301YZumUgOEqKcx1-6" target="DFq_301YZumUgOEqKcx1-14" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="THzzsAqaE4qmmOZxCd68-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;exitX=0.68;exitY=0.982;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" target="DFq_301YZumUgOEqKcx1-22" edge="1" source="DFq_301YZumUgOEqKcx1-6">
+        <mxCell id="THzzsAqaE4qmmOZxCd68-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;exitX=0.68;exitY=0.982;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="DFq_301YZumUgOEqKcx1-6" target="DFq_301YZumUgOEqKcx1-22" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="-625" y="1202" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="DFq_301YZumUgOEqKcx1-6" value="Pickup&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry: invoke pickUp, assign pickUpSuccess=$out,&amp;nbsp;raise eCheckPickUpSuccess&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+        <mxCell id="DFq_301YZumUgOEqKcx1-6" value="Pickup&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry: invoke pickUp (output $pickUpSuccess), raise eCheckPickUpSuccess&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="-784" y="1141" width="249" height="60" as="geometry" />
         </mxCell>
         <mxCell id="DFq_301YZumUgOEqKcx1-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" target="DFq_301YZumUgOEqKcx1-16" edge="1">
@@ -541,7 +538,7 @@
         <mxCell id="THzzsAqaE4qmmOZxCd68-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="DFq_301YZumUgOEqKcx1-8" target="DFq_301YZumUgOEqKcx1-27" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="DFq_301YZumUgOEqKcx1-8" value="Assemble&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry: invoke assemble,&amp;nbsp;&lt;/font&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;assign assembleSuccess=$out, raise&amp;nbsp;eCheckAssembleSuccess&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+        <mxCell id="DFq_301YZumUgOEqKcx1-8" value="Assemble&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry: invoke assemble (output $&lt;/font&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;assembleSuccess), raise&amp;nbsp;eCheckAssembleSuccess&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="-440" y="1310" width="259" height="60" as="geometry" />
         </mxCell>
         <mxCell id="DFq_301YZumUgOEqKcx1-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="DFq_301YZumUgOEqKcx1-10" target="DFq_301YZumUgOEqKcx1-18" edge="1">
@@ -608,13 +605,13 @@
         <mxCell id="DFq_301YZumUgOEqKcx1-21" value="Error&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry:&amp;nbsp;&lt;/font&gt;&lt;font style=&quot;border-color: var(--border-color); font-size: 10px;&quot;&gt;raise eProcessMessage(&quot;Fatal robotic arm failure: &quot; + $errorMsg)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="-820" y="1311" width="198" height="62" as="geometry" />
         </mxCell>
-        <mxCell id="DFq_301YZumUgOEqKcx1-22" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eCheckPickupSuccess&amp;nbsp;: !$pickUpSuccess -&amp;gt;&lt;br&gt;assign errorMsg=&quot;Pickup failed&quot;&lt;br&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
+        <mxCell id="DFq_301YZumUgOEqKcx1-22" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eCheckPickupSuccess&amp;nbsp;: !$pickUpSuccess -&amp;gt;&lt;br&gt;assign $errorMsg=&quot;Pickup failed&quot;&lt;br&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="-670" y="1236" width="221" height="30" as="geometry" />
         </mxCell>
         <mxCell id="THzzsAqaE4qmmOZxCd68-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" parent="1" source="DFq_301YZumUgOEqKcx1-27" target="DFq_301YZumUgOEqKcx1-21" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="DFq_301YZumUgOEqKcx1-27" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eCheckAssembleSuccess : !$assembleSuccess -&amp;gt;&lt;br&gt;assign errorMsg=&quot;Assemble failed&quot;&lt;br&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
+        <mxCell id="DFq_301YZumUgOEqKcx1-27" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eCheckAssembleSuccess : !$assembleSuccess -&amp;gt;&lt;br&gt;assign $errorMsg=&quot;Assemble failed&quot;&lt;br&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="-610" y="1382" width="228" height="30" as="geometry" />
         </mxCell>
         <mxCell id="DFq_301YZumUgOEqKcx1-28" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eRetry : !$pickUpSuccess&amp;nbsp;-&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
@@ -623,8 +620,8 @@
         <mxCell id="DFq_301YZumUgOEqKcx1-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.38;entryY=0.014;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="DFq_301YZumUgOEqKcx1-28" target="DFq_301YZumUgOEqKcx1-10" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="DFq_301YZumUgOEqKcx1-30" value="Robotic Arm System" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="-1150" y="1102" width="176" height="30" as="geometry" />
+        <mxCell id="DFq_301YZumUgOEqKcx1-30" value="Robotic Arm System&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;&lt;div&gt;pickUpSuccess = true&lt;/div&gt;&lt;div&gt;assembleSuccess = true&lt;/div&gt;&lt;div&gt;partsAssembled = 0&lt;/div&gt;&lt;div&gt;partsPerProduct = 1&lt;/div&gt;&lt;div&gt;errorMsg = &#39;&#39;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="-1139" y="1098" width="176" height="97" as="geometry" />
         </mxCell>
         <mxCell id="DFq_301YZumUgOEqKcx1-31" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;INVOKE ACTIONS&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;pickUp&lt;/b&gt;: &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Informs the robotic arm to pick up an object from the belt.&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;In &quot;done&quot;, sets a local context boolean flag $pickUpSuccess to whether the pickup succeeded or not&lt;br&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;assemble&lt;/b&gt;: &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Informs the robotic arm to assemble its held object (i.e. attaching it to the end product).&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;In &quot;done&quot;, sets a local context boolean flag $assembleSuccess to whether the assembly succeeded or not&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;b&gt;returnToStart&lt;/b&gt;:&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Informs the robotic arm to return to its start position such that it can process the next object.&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="-981" y="1666" width="582" height="141" as="geometry" />
@@ -641,11 +638,11 @@
         <mxCell id="DFq_301YZumUgOEqKcx1-36" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;: !$pickUpSuccess -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="-890" y="1212" width="130" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="DFq_301YZumUgOEqKcx1-40" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eProcessMessage : -&amp;gt;&amp;nbsp;assign msg=$event_data&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#666666;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
+        <mxCell id="DFq_301YZumUgOEqKcx1-40" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;span style=&quot;&quot;&gt;eProcessMessage : -&amp;gt;&lt;/span&gt;&lt;br style=&quot;&quot;&gt;&lt;span style=&quot;&quot;&gt;(input $msg)&lt;/span&gt;&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#808080;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="-508" y="820" width="140" height="41" as="geometry" />
         </mxCell>
-        <mxCell id="DFq_301YZumUgOEqKcx1-46" value="Monitoring System" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="423.5" y="-605" width="120" height="30" as="geometry" />
+        <mxCell id="DFq_301YZumUgOEqKcx1-46" value="&amp;nbsp; Monitoring System&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 3px;&quot;&gt;&amp;nbsp;&amp;nbsp;&lt;br&gt;&lt;/font&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&amp;nbsp; nScans = 0&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&amp;nbsp; nAssemblies = 0&lt;/font&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="405.5" y="-603" width="120" height="68" as="geometry" />
         </mxCell>
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" parent="1" source="DFq_301YZumUgOEqKcx1-47" target="P7GP2XHDYyyQ6Vhsqxj1-23" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -656,7 +653,7 @@
         <mxCell id="DFq_301YZumUgOEqKcx1-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="DFq_301YZumUgOEqKcx1-49" target="DFq_301YZumUgOEqKcx1-47" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="DFq_301YZumUgOEqKcx1-49" value="eStartScan : -&amp;gt; assign nScans=$nScans+1,&lt;br&gt;raise eSendStatistics" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
+        <mxCell id="DFq_301YZumUgOEqKcx1-49" value="eScanned : -&amp;gt; assign nScans=$nScans+1,&lt;br&gt;raise eSendStatistics" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="503.25" y="-547" width="200" height="33" as="geometry" />
         </mxCell>
         <mxCell id="DFq_301YZumUgOEqKcx1-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="DFq_301YZumUgOEqKcx1-50" target="DFq_301YZumUgOEqKcx1-47" edge="1">
@@ -668,13 +665,13 @@
         <mxCell id="DFq_301YZumUgOEqKcx1-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.89;entryY=0.968;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" parent="1" source="DFq_301YZumUgOEqKcx1-47" target="DFq_301YZumUgOEqKcx1-49" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="DFq_301YZumUgOEqKcx1-58" value="eSendStatistics : -&amp;gt; invoke sendStatistics(&lt;br&gt;$nScans, $nAssemblies, $productsCompleted, $jobDone, $log)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
+        <mxCell id="DFq_301YZumUgOEqKcx1-58" value="eSendStatistics : -&amp;gt; invoke sendStatistics(&lt;br&gt;$nScans, $nAssemblies, $productsCompleted, $jobDone)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="593.5" y="-374" width="240" height="50" as="geometry" />
         </mxCell>
         <mxCell id="uL-jef1z7FYZ36_xx8KP-1" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;INVOKE ACTIONS&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;sendSms&lt;/b&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;: &lt;/span&gt;&lt;span style=&quot;background-color: initial; white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;S&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;end a given message to some employee(s) via SMS&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;sendMail&lt;/b&gt;: &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Send a given message to some employee(s) via Mail&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="-1008" y="321" width="380" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="j3Z4FJRsEmh2POE5tJ5F-2" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eProcessMessage&amp;nbsp;: -&amp;gt;&amp;nbsp;assign msg=$event_data&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
+        <mxCell id="j3Z4FJRsEmh2POE5tJ5F-2" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eProcessMessage : -&amp;gt;&lt;br&gt;(input $msg)&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="-611" y="126" width="140" height="40" as="geometry" />
         </mxCell>
         <mxCell id="30ddjxK1WnBO7Tu_VV0P-2" value="&lt;font style=&quot;font-weight: normal;&quot; color=&quot;#ff8000&quot;&gt;&amp;lt;&amp;lt;abstract&amp;gt;&amp;gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
@@ -715,7 +712,7 @@
         <mxCell id="30ddjxK1WnBO7Tu_VV0P-9" value="Log Processor" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="-969.5" y="661" width="105" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="30ddjxK1WnBO7Tu_VV0P-10" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eProcessMessage : -&amp;gt;&amp;nbsp;assign msg=$event_data&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#666666;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
+        <mxCell id="30ddjxK1WnBO7Tu_VV0P-10" value="&lt;span style=&quot;&quot;&gt;eProcessMessage : -&amp;gt;&lt;/span&gt;&lt;br style=&quot;&quot;&gt;&lt;span style=&quot;&quot;&gt;(input $msg)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#808080;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="-959.5" y="818" width="140" height="40" as="geometry" />
         </mxCell>
         <mxCell id="30ddjxK1WnBO7Tu_VV0P-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="30ddjxK1WnBO7Tu_VV0P-12" target="30ddjxK1WnBO7Tu_VV0P-6" edge="1">
@@ -723,9 +720,6 @@
         </mxCell>
         <mxCell id="30ddjxK1WnBO7Tu_VV0P-12" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;&amp;nbsp;: -&amp;gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="-802.5" y="799" width="31" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="THzzsAqaE4qmmOZxCd68-1" value="Persistent variable:&lt;br style=&quot;font-size: 9px;&quot;&gt;log = []" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=9;" parent="1" vertex="1">
-          <mxGeometry x="-767" y="671" width="126" height="30" as="geometry" />
         </mxCell>
         <mxCell id="THzzsAqaE4qmmOZxCd68-2" value="&lt;font size=&quot;1&quot;&gt;timeout : -&amp;gt; raise eRetry&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
           <mxGeometry x="-800" y="1252" width="119.5" height="20" as="geometry" />
@@ -755,7 +749,7 @@
         <mxCell id="THzzsAqaE4qmmOZxCd68-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="THzzsAqaE4qmmOZxCd68-20" target="THzzsAqaE4qmmOZxCd68-19" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="THzzsAqaE4qmmOZxCd68-20" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;: $jobDone -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
+        <mxCell id="THzzsAqaE4qmmOZxCd68-20" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eJobDone : -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="-1078" y="1325" width="97" height="30" as="geometry" />
         </mxCell>
         <mxCell id="THzzsAqaE4qmmOZxCd68-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.611;exitY=0.117;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitPerimeter=0;" parent="1" source="THzzsAqaE4qmmOZxCd68-26" target="iC87KrBTf_4nL3Mp_Ujt-3" edge="1">
@@ -765,22 +759,22 @@
           <mxGeometry x="690.5" y="205" width="211.5" height="20" as="geometry" />
         </mxCell>
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-2" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=none;" parent="1" vertex="1">
-          <mxGeometry x="-706" y="-477" width="953" height="308" as="geometry" />
+          <mxGeometry x="-787" y="-477" width="1083" height="308" as="geometry" />
         </mxCell>
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="P7GP2XHDYyyQ6Vhsqxj1-10" target="P7GP2XHDYyyQ6Vhsqxj1-8" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-3" value="Starting&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry: assign $jobDone=false&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="-676" y="-380" width="220" height="60" as="geometry" />
+        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-3" value="Starting&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;entry:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;match&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-size: 10px;&quot;&gt;($productsCompleted &amp;gt;= $totalProducts || $jobDone)&lt;/span&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;true: -&amp;gt;&amp;nbsp;assign $productsCompleted=0,&lt;/span&gt;&lt;/div&gt;&lt;/font&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;assign $jobDone=false,&lt;/span&gt;&lt;/div&gt;&lt;/span&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;raise eProcessMessage(&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-size: 10px;&quot;&gt;Job started. Producing &#39; + $totalProducts + &#39; products.&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;&quot;)&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="-768" y="-404" width="321" height="109" as="geometry" />
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-5" value="Job Control System" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="-706" y="-477" width="156" height="30" as="geometry" />
+        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-5" value="Job Control System&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;totalProducts = 1&lt;/font&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="-787.5" y="-473" width="156" height="41" as="geometry" />
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-7" value="Persistent variable:&lt;br style=&quot;font-size: 9px;&quot;&gt;jobDone = false&lt;br&gt;productsCompleted = 0" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=9;" parent="1" vertex="1">
-          <mxGeometry x="111" y="-471" width="126" height="36" as="geometry" />
+        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-7" value="Persistent variables:&lt;br style=&quot;font-size: 9px;&quot;&gt;jobDone = false&lt;br&gt;productsCompleted = 0&lt;div&gt;log = []&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="166" y="-539" width="126" height="36" as="geometry" />
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-8" value="JobDone&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry: raise eProcessMessage(&quot;Job done!&quot;),&lt;br&gt;assign $jobDone=true, &lt;br&gt;raise eJobDone&lt;br&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
-          <mxGeometry x="35" y="-390" width="205" height="81" as="geometry" />
+        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-8" value="JobDone&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;&amp;nbsp; entry: raise eProcessMessage(&quot;Job done!&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;&amp;nbsp;Produced &#39;&amp;nbsp; &amp;nbsp;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt; &lt;/span&gt;&amp;nbsp;+ $totalProducts + &#39; products.&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: initial;&quot;&gt;&quot;),&lt;/span&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;&amp;nbsp;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&amp;nbsp; &amp;nbsp; assign $jobDone=true,&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&amp;nbsp; &amp;nbsp; raise eJobDone&lt;/span&gt;&lt;/div&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="35" y="-390" width="254" height="81" as="geometry" />
         </mxCell>
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;endArrow=none;endFill=0;" parent="1" source="P7GP2XHDYyyQ6Vhsqxj1-12" target="P7GP2XHDYyyQ6Vhsqxj1-10" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -788,8 +782,8 @@
             <mxPoint x="-6" y="-350" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-10" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;: $productsCompleted &amp;gt;= $totalProducts -&amp;gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
-          <mxGeometry x="-120" y="-370" width="126" height="41" as="geometry" />
+        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-10" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;eCheckJobDone : $productsCompleted &amp;gt;= $totalProducts -&amp;gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="-120" y="-370" width="126" height="46" as="geometry" />
         </mxCell>
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;endArrow=none;endFill=0;" parent="1" source="P7GP2XHDYyyQ6Vhsqxj1-3" target="P7GP2XHDYyyQ6Vhsqxj1-12" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -803,8 +797,8 @@
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-14" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;: -&amp;gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="-396" y="-365" width="42" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-15" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eProductComplete : -&amp;gt; assign $productsCompleted = $productsCompleted + 1&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
-          <mxGeometry x="-411" y="-281" width="360" height="28" as="geometry" />
+        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-15" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eProductComplete : -&amp;gt; assign $productsCompleted = $productsCompleted + 1, raise eCheckJobDone&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="-411" y="-281" width="360" height="35" as="geometry" />
         </mxCell>
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.38;entryY=0.033;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" parent="1" source="P7GP2XHDYyyQ6Vhsqxj1-12" target="P7GP2XHDYyyQ6Vhsqxj1-15" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -812,10 +806,10 @@
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.616;entryY=0.006;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;endArrow=none;endFill=0;" parent="1" source="P7GP2XHDYyyQ6Vhsqxj1-12" target="P7GP2XHDYyyQ6Vhsqxj1-15" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-23" value="JobDone&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry:&amp;nbsp;invoke sendStatistics(&lt;br style=&quot;border-color: var(--border-color); color: rgb(51, 51, 51);&quot;&gt;&lt;span style=&quot;color: rgb(51, 51, 51);&quot;&gt;$nScans, $nAssemblies, $productsCompleted, $jobDone, $log)&lt;br&gt;&lt;/span&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-23" value="JobDone&lt;br&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;entry:&amp;nbsp;invoke sendStatistics(&lt;br style=&quot;border-color: var(--border-color); color: rgb(51, 51, 51);&quot;&gt;&lt;span style=&quot;color: rgb(51, 51, 51);&quot;&gt;$nScans, $nAssemblies, $productsCompleted, $jobDone)&lt;br&gt;&lt;/span&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
           <mxGeometry x="913.5" y="-477" width="190" height="84" as="geometry" />
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-25" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;: $jobDone -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
+        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-25" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eJobDone : -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="798.5" y="-447" width="83" height="30" as="geometry" />
         </mxCell>
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-26" value="JobDone" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
@@ -848,7 +842,7 @@
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-47" value="Completed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
           <mxGeometry x="-440" y="126" width="112" height="44" as="geometry" />
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-49" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;: $jobDone -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-49" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eJobDone :&amp;nbsp; -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="-448" y="66" width="118" height="30" as="geometry" />
         </mxCell>
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#808080;" parent="1" target="P7GP2XHDYyyQ6Vhsqxj1-51" edge="1">
@@ -859,7 +853,7 @@
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-51" value="Completed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#808080;" parent="1" vertex="1">
           <mxGeometry x="-312" y="477" width="112" height="44" as="geometry" />
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-52" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;: $jobDone -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#808080;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-52" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eJobDone : -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#808080;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="-320" y="417" width="118" height="30" as="geometry" />
         </mxCell>
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#808080;" parent="1" target="P7GP2XHDYyyQ6Vhsqxj1-54" edge="1">
@@ -870,7 +864,7 @@
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-54" value="Completed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#808080;" parent="1" vertex="1">
           <mxGeometry x="-312" y="799" width="112" height="44" as="geometry" />
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-55" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;: $jobDone -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#808080;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-55" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eJobDone&amp;nbsp; : -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#808080;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="-320" y="739" width="118" height="30" as="geometry" />
         </mxCell>
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#808080;" parent="1" target="P7GP2XHDYyyQ6Vhsqxj1-57" edge="1">
@@ -881,38 +875,41 @@
         <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-57" value="Completed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#808080;" parent="1" vertex="1">
           <mxGeometry x="-763.5" y="799" width="112" height="44" as="geometry" />
         </mxCell>
-        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-58" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;: $jobDone -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#808080;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="P7GP2XHDYyyQ6Vhsqxj1-58" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;eJobDone : -&amp;gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#808080;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="-771.5" y="739" width="118" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="znr-L6lU3DvC48HwCK1a-1" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;INVOKE ACTIONS&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;sendStatistics&lt;/b&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;: &lt;/span&gt;&lt;span style=&quot;background-color: initial; white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Send quantitative information (amount of scans, assemblies and products &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;completed) to some service for monitoring purposes. Visualization through&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;a simple dashboard web app.&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+        <mxCell id="znr-L6lU3DvC48HwCK1a-1" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;b&gt;INVOKE ACTIONS&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;sendStatistics&lt;/b&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;: &lt;/span&gt;&lt;span style=&quot;background-color: initial; white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Send quantitative information (amount of scans, assemblies and products &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/span&gt;completed) to some service for monitoring purposes.&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="515.5" y="-279" width="462" height="90" as="geometry" />
         </mxCell>
         <mxCell id="gC29a7QGK7GFJ13fGUQ_-3" value="Controls jobs and handles job progress (Increases a persistent counter for each completed product),&amp;nbsp;&lt;div&gt;Stops a job after a specified amount of products was created.&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="-575" y="-157" width="649" height="37" as="geometry" />
+          <mxGeometry x="-787.5" y="-151" width="649" height="37" as="geometry" />
         </mxCell>
-        <mxCell id="gC29a7QGK7GFJ13fGUQ_-5" value="Monitors object detection scans, completed assemblies and products produced.&amp;nbsp;&lt;div&gt;Sends these information to some web service which visualizes the data in a dashboard.&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
+        <mxCell id="gC29a7QGK7GFJ13fGUQ_-5" value="Monitors object detection scans, completed assemblies and products produced.&amp;nbsp;&lt;div&gt;Sends these information somewhere.&amp;nbsp;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="403.5" y="-157" width="717.5" height="47" as="geometry" />
         </mxCell>
-        <mxCell id="gC29a7QGK7GFJ13fGUQ_-6" value="Controls the conveyor belt (move belt and stop belt). &lt;br style=&quot;font-size: 14px;&quot;&gt;Waits for a signal from the Camera Sensor System (object validity) and sends a signal to the Robotic Arm (pickup object)&amp;nbsp;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="101" y="346" width="778" height="30" as="geometry" />
+        <mxCell id="gC29a7QGK7GFJ13fGUQ_-6" value="Controls the conveyor belt (move belt and stop belt). &lt;br style=&quot;font-size: 14px;&quot;&gt;Waits for a signal from the Camera Sensor System (object detection) and sends a signal to the Robotic Arm (pickup object)&amp;nbsp;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="75" y="348" width="778" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="gC29a7QGK7GFJ13fGUQ_-7" value="Controls the camera placed at the start of the belt (take photos) but also does object detection on pictures taken (-&amp;gt; edge).&lt;div style=&quot;font-size: 14px;&quot;&gt;Waits for a signal from the Photoelectric sensor (object is at the start of the belt) and signals the Conveyor belt (move belt)&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="139" y="707" width="781" height="30" as="geometry" />
+        <mxCell id="gC29a7QGK7GFJ13fGUQ_-7" value="Controls the camera placed at the start of the belt but also does object detection on pictures taken (-&amp;gt; edge).&lt;div style=&quot;font-size: 14px;&quot;&gt;Waits for an event from the Photoelectric sensor (object is at the start of the belt) and signals the Conveyor belt (move belt)&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="158" y="707" width="781" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="gC29a7QGK7GFJ13fGUQ_-8" value="Detects objects at the start and end of the conveyor belt.&lt;div style=&quot;font-size: 14px;&quot;&gt;Signals the&amp;nbsp;&lt;span style=&quot;background-color: initial; font-size: 14px;&quot;&gt;Camera System (start of the belt) to scan the object or&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-size: 14px;&quot;&gt;Conveyor Belt (end of the belt) to stop the belt and call the robotic arm to pickup the object.&lt;br&gt;TODO: Virtual states could be replaced through overriding named actions and guards.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="149.5" y="1744" width="996.5" height="73" as="geometry" />
+        <mxCell id="gC29a7QGK7GFJ13fGUQ_-8" value="Detects objects at the start and end of the conveyor belt.&lt;div style=&quot;font-size: 14px;&quot;&gt;Sends an event to the&amp;nbsp;&lt;span style=&quot;background-color: initial; font-size: 14px;&quot;&gt;Camera System (start of the belt) to scan the object or&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-size: 14px;&quot;&gt;Conveyor Belt (end of the belt) to stop the belt and inform the robotic arm to pickup the object.&lt;br&gt;&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="-38" y="1742" width="1135" height="73" as="geometry" />
         </mxCell>
-        <mxCell id="gC29a7QGK7GFJ13fGUQ_-12" value="Controls the robotic arm (pickup objects, drop/assemble objects, return arm to its starting position)&lt;div&gt;Waits for a signal from the Conveyor Belt to pickup an object and sends a signal to the Conveyor Belt so it can process the next object after pickup. Also signals the Job Control System to increase the product counter.&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="-1073" y="1579" width="852" height="54" as="geometry" />
+        <mxCell id="gC29a7QGK7GFJ13fGUQ_-12" value="Controls the robotic arm (pickup objects, drop/assemble objects, return arm to its starting position)&lt;div&gt;Waits for an event from the Conveyor Belt to pickup an object and sends an event to the Conveyor Belt so it can process the next object after pickup. Also sends an event to the Job Control System to increase the product counter.&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="-1073" y="1584" width="852" height="54" as="geometry" />
         </mxCell>
         <mxCell id="gC29a7QGK7GFJ13fGUQ_-13" value="Process various messages (e.g. errors, job information)&lt;div&gt;Multiple implementations: SMS, EMail and store to persistent log.&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="-829.25" y="1000" width="480" height="54" as="geometry" />
+          <mxGeometry x="-974" y="990" width="480" height="54" as="geometry" />
         </mxCell>
         <mxCell id="H_dHGH7Cf3wk0kIzrJ9C-1" value="Use Case: Smart Factory" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=30;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="-298" y="-788" width="1117" height="48" as="geometry" />
         </mxCell>
-        <mxCell id="Y43TJXsY-5Alh3OPnLsb-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.913;entryY=-0.003;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" edge="1" parent="1" source="iC87KrBTf_4nL3Mp_Ujt-131" target="iC87KrBTf_4nL3Mp_Ujt-124">
+        <mxCell id="Y43TJXsY-5Alh3OPnLsb-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.913;entryY=-0.003;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" parent="1" source="iC87KrBTf_4nL3Mp_Ujt-131" target="iC87KrBTf_4nL3Mp_Ujt-124" edge="1">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GzhKV_rsiCZbYQmUiyYR-5" value="Photoelectric Sensor System (Belt Start)&lt;div style=&quot;font-size: 11px;&quot;&gt;&lt;span style=&quot;background-color: initial; font-size: 10px; text-align: left;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left; font-size: 11px;&quot;&gt;&lt;span style=&quot;background-color: initial; font-size: 10px;&quot;&gt;guard.allowDetection:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-size: 10px;&quot;&gt;!isUnloading&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;action.onDetected: raise eStartUnload&lt;/font&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="778" y="1270" width="250" height="67" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
