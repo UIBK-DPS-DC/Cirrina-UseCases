@@ -12,19 +12,15 @@
     enabled: true
   become: true
 
-- name: Run services in Docker
+- name: Run Sonataflow
   docker_container:
-    name: services
-    image: "lellson/cirrina-examples-smart-factory-simulation:develop"
+    name: sonataflow
+    image: "lellson/swf-sonataflow-smart-factory:develop"
     state: started
     recreate: true
     force_kill: true
     pull: true
     ports:
-      - "8000:8000"
-    env:
-      PROTO: "{{ hostvars[inventory_hostname]['PROTO'] }}"
-      DELAYS: false
-      ERROR_STRATEGY: "NO_ERRORS"
+      - "8080:8080"
   become: true
-  register: services_container
+  register: sonataflow_container

@@ -88,22 +88,3 @@
       TZ: "Europe/Paris"
   become: true
   register: telegraf_container
-
-# Simulation
-- name: Run simulation script in Docker
-  docker_container:
-    name: simulation
-    image: "marlonetheredgeuibk/cirrina-examples-railway-simulate-sensors:develop"
-    state: started
-    recreate: true
-    force_kill: true
-    pull: true
-    env:
-      TZ: "Europe/Paris"
-      OTLP_ENDPOINT: "{{ hostvars[inventory_hostname]['OTLP_ENDPOINT'] }}"
-      START_INTERVAL_IN_SECONDS: "0.1"
-      END_INTERVAL_IN_SECONDS: "0.001"
-      METRICS_INTERVAL: "1000"
-      NATS_URL: "{{ hostvars[inventory_hostname]['NATS_URL'] }}"
-  become: true
-  register: simulation_container

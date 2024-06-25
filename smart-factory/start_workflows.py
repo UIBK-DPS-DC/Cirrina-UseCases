@@ -1,4 +1,4 @@
-# Usage: python swf-smart-factory/scripts/start_workflows.py --host "http://localhost:8080" --workflows "job_control,robotic_arm,conveyor_belt,camera_sensor,photoelectric_sensor_start,photoelectric_sensor_end" --key "i1"
+# Usage ALL workflows: python start_workflows.py --host "http://localhost:8080" --workflows "job_control,robotic_arm,conveyor_belt,camera_sensor,photoelectric_sensor_start,photoelectric_sensor_end" --key "i1"
 import requests
 import argparse
 
