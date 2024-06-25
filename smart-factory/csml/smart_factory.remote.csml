@@ -167,16 +167,6 @@
                             "event": "eJobDone",
                             "target": "jobDone"
                         }
-                    ],
-                    "always": [
-                        {
-                            "target": "jobDone",
-                            "guards": [
-                                {
-                                    "expression": "jobDone"
-                                }
-                            ]
-                        }
                     ]
                 },
                 {
@@ -206,16 +196,6 @@
                         {
                             "event": "eJobDone",
                             "target": "jobDone"
-                        }
-                    ],
-                    "always": [
-                        {
-                            "target": "jobDone",
-                            "guards": [
-                                {
-                                    "expression": "jobDone"
-                                }
-                            ]
                         }
                     ]
                 },
@@ -255,16 +235,6 @@
                             "event": "eJobDone",
                             "target": "jobDone"
                         }
-                    ],
-                    "always": [
-                        {
-                            "target": "jobDone",
-                            "guards": [
-                                {
-                                    "expression": "jobDone"
-                                }
-                            ]
-                        }
                     ]
                 },
                 {
@@ -284,7 +254,7 @@
                         {
                             "name": "roboticArmSystem.triggerPickup",
                             "type": "timeout",
-                            "delay": "1000",
+                            "delay": "100",
                             "action": {
                                 "type": "raise",
                                 "event": {
@@ -318,25 +288,6 @@
                                         "name": "isUnloading",
                                         "value": "false"
                                     }
-                                }
-                            ]
-                        }
-                    ],
-                    "always": [
-                        {
-                            "target": "jobDone",
-                            "actions": [
-                                {
-                                    "type": "assign",
-                                    "variable": {
-                                        "name": "isUnloading",
-                                        "value": "false"
-                                    }
-                                }
-                            ],
-                            "guards": [
-                                {
-                                    "expression": "jobDone"
                                 }
                             ]
                         }
@@ -570,7 +521,7 @@
                                 {
                                     "name": "startTriggerBeamDetection",
                                     "type": "timeout",
-                                    "delay": "400",
+                                    "delay": "10",
                                     "action": {
                                         "type": "raise",
                                         "event": {
@@ -633,7 +584,7 @@
                                 {
                                     "name": "endTriggerBeamDetection",
                                     "type": "timeout",
-                                    "delay": "400",
+                                    "delay": "10",
                                     "action": {
                                         "type": "raise",
                                         "event": {
@@ -704,16 +655,6 @@
                         {
                             "event": "eJobDone",
                             "target": "jobDone"
-                        }
-                    ],
-                    "always": [
-                        {
-                            "target": "jobDone",
-                            "guards": [
-                                {
-                                    "expression": "jobDone"
-                                }
-                            ]
                         }
                     ]
                 },
@@ -870,14 +811,6 @@
                             "guards": [
                                 {
                                     "expression": "!pickUpSuccess"
-                                }
-                            ]
-                        },
-                        {
-                            "target": "jobDone",
-                            "guards": [
-                                {
-                                    "expression": "jobDone"
                                 }
                             ]
                         }
@@ -1207,16 +1140,6 @@
                         {
                             "event": "eJobDone",
                             "target": "jobDone"
-                        }
-                    ],
-                    "always": [
-                        {
-                            "target": "jobDone",
-                            "guards": [
-                                {
-                                    "expression": "jobDone"
-                                }
-                            ]
                         }
                     ]
                 },

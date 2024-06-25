@@ -66,8 +66,8 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     final Map<String, Response> paths = new HashMap<>();
 
     final ErrorDeterminer errorDeterminerScan = errorStrategy.getErrorDeterminer();
-    final ErrorDeterminer errorDeterminerPickup = errorStrategy.getErrorDeterminer();
-    final ErrorDeterminer errorDeterminerAssemble = errorStrategy.getErrorDeterminer();
+    final ErrorDeterminer errorDeterminerPickup = ErrorStrategy.NO_ERRORS.getErrorDeterminer();
+    final ErrorDeterminer errorDeterminerAssemble = ErrorStrategy.NO_ERRORS.getErrorDeterminer();
 
     paths.put(
         "beamDetectionStart",
@@ -202,7 +202,7 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
       );
       Files.writeString(tmpFilePath, line, StandardOpenOption.APPEND);
 
-      LOGGER.info("Stored to log: %s".formatted(tmpFilePath.toString()));
+      //LOGGER.info("Stored to log: %s".formatted(tmpFilePath.toString()));
     } catch (IOException e) {
       LOGGER.severe("Failed writing to log: %s".formatted(e.getMessage()));
     }

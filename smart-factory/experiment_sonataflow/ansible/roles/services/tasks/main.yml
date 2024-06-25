@@ -24,7 +24,7 @@
       - "8000:8000"
     env:
       PROTO: "{{ hostvars[inventory_hostname]['PROTO'] }}"
-      DELAYS: false
+      DELAYS: "false"
       ERROR_STRATEGY: "NO_ERRORS"
   become: true
   register: services_container

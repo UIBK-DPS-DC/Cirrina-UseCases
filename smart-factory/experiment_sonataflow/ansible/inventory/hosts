@@ -1,9 +1,7 @@
 [services_servers]
 remoteservices0 ansible_host=node1.site1.grid5000.fr PROTO=false
-localservices0 ansible_host=node2.site1.grid5000.fr PROTO=false
-localservices1 ansible_host=node3.site1.grid5000.fr PROTO=false
 
-[sonataflow]
+[sonataflow_servers]
 runtime0 ansible_host=node2.site1.grid5000.fr
 runtime1 ansible_host=node3.site1.grid5000.fr
 

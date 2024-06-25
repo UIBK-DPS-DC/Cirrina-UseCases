@@ -164,16 +164,6 @@
                                 "event": "eJobDone",
                                 "target": "jobDone"
                             }
-                        ],
-                        "always": [
-                            {
-                                "target": "jobDone",
-                                "guards": [
-                                    {
-                                        "expression": "jobDone"
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -202,16 +192,6 @@
                             {
                                 "event": "eJobDone",
                                 "target": "jobDone"
-                            }
-                        ],
-                        "always": [
-                            {
-                                "target": "jobDone",
-                                "guards": [
-                                    {
-                                        "expression": "jobDone"
-                                    }
-                                ]
                             }
                         ]
                     },
@@ -248,16 +228,6 @@
                                 "event": "eJobDone",
                                 "target": "jobDone"
                             }
-                        ],
-                        "always": [
-                            {
-                                "target": "jobDone",
-                                "guards": [
-                                    {
-                                        "expression": "jobDone"
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -276,7 +246,7 @@
                             {
                                 "name": "roboticArmSystem.triggerPickup",
                                 "type": "timeout",
-                                "delay": "1000",
+                                "delay": "100",
                                 "action": {
                                     "type": "raise",
                                     "event": {
@@ -310,25 +280,6 @@
                                             "name": "isUnloading",
                                             "value": "false"
                                         }
-                                    }
-                                ]
-                            }
-                        ],
-                        "always": [
-                            {
-                                "target": "jobDone",
-                                "actions": [
-                                    {
-                                        "type": "assign",
-                                        "variable": {
-                                            "name": "isUnloading",
-                                            "value": "false"
-                                        }
-                                    }
-                                ],
-                                "guards": [
-                                    {
-                                        "expression": "jobDone"
                                     }
                                 ]
                             }
@@ -550,7 +501,7 @@
                                     {
                                         "name": "startTriggerBeamDetection",
                                         "type": "timeout",
-                                        "delay": "400",
+                                        "delay": "10",
                                         "action": {
                                             "type": "raise",
                                             "event": {
@@ -609,7 +560,7 @@
                                     {
                                         "name": "endTriggerBeamDetection",
                                         "type": "timeout",
-                                        "delay": "400",
+                                        "delay": "10",
                                         "action": {
                                             "type": "raise",
                                             "event": {
@@ -675,16 +626,6 @@
                             {
                                 "event": "eJobDone",
                                 "target": "jobDone"
-                            }
-                        ],
-                        "always": [
-                            {
-                                "target": "jobDone",
-                                "guards": [
-                                    {
-                                        "expression": "jobDone"
-                                    }
-                                ]
                             }
                         ]
                     },
@@ -828,14 +769,6 @@
                                 "guards": [
                                     {
                                         "expression": "!pickUpSuccess"
-                                    }
-                                ]
-                            },
-                            {
-                                "target": "jobDone",
-                                "guards": [
-                                    {
-                                        "expression": "jobDone"
                                     }
                                 ]
                             }
@@ -1153,16 +1086,6 @@
                                 "event": "eJobDone",
                                 "target": "jobDone"
                             }
-                        ],
-                        "always": [
-                            {
-                                "target": "jobDone",
-                                "guards": [
-                                    {
-                                        "expression": "jobDone"
-                                    }
-                                ]
-                            }
                         ]
                     },
                     {
@@ -1183,7 +1106,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node2.site1.grid5000.fr",
+            "host": "node1.site1.grid5000.fr",
             "port": 8000,
             "endPoint": "/stopBelt",
             "method": "POST",
@@ -1194,7 +1117,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node2.site1.grid5000.fr",
+            "host": "node1.site1.grid5000.fr",
             "port": 8000,
             "endPoint": "/moveBelt",
             "method": "POST",
@@ -1205,7 +1128,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node2.site1.grid5000.fr",
+            "host": "node1.site1.grid5000.fr",
             "port": 8000,
             "endPoint": "/sendSms",
             "method": "POST",
@@ -1216,7 +1139,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node2.site1.grid5000.fr",
+            "host": "node1.site1.grid5000.fr",
             "port": 8000,
             "endPoint": "/beamDetectionStart",
             "method": "POST",
@@ -1227,7 +1150,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node2.site1.grid5000.fr",
+            "host": "node1.site1.grid5000.fr",
             "port": 8000,
             "endPoint": "/sendStatistics",
             "method": "POST",
@@ -1238,7 +1161,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node2.site1.grid5000.fr",
+            "host": "node1.site1.grid5000.fr",
             "port": 8000,
             "endPoint": "/sendMail",
             "method": "POST",
@@ -1249,7 +1172,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node2.site1.grid5000.fr",
+            "host": "node1.site1.grid5000.fr",
             "port": 8000,
             "endPoint": "/scanPhoto",
             "method": "POST",
@@ -1260,7 +1183,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node2.site1.grid5000.fr",
+            "host": "node1.site1.grid5000.fr",
             "port": 8000,
             "endPoint": "/pickUp",
             "method": "POST",
@@ -1271,7 +1194,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node2.site1.grid5000.fr",
+            "host": "node1.site1.grid5000.fr",
             "port": 8000,
             "endPoint": "/beamDetectionEnd",
             "method": "POST",
@@ -1282,7 +1205,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node2.site1.grid5000.fr",
+            "host": "node1.site1.grid5000.fr",
             "port": 8000,
             "endPoint": "/takePhoto",
             "method": "POST",
@@ -1293,7 +1216,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node2.site1.grid5000.fr",
+            "host": "node1.site1.grid5000.fr",
             "port": 8000,
             "endPoint": "/assemble",
             "method": "POST",
@@ -1304,7 +1227,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node2.site1.grid5000.fr",
+            "host": "node1.site1.grid5000.fr",
             "port": 8000,
             "endPoint": "/returnToStart",
             "method": "POST",

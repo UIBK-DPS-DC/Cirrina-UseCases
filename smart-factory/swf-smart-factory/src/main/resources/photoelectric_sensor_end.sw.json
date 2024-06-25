@@ -26,7 +26,7 @@
         {
             "name": "service-beam-detection",
             "type": "custom",
-            "operation": "rest:post:http://localhost:8000/beamDetectionEnd"
+            "operation": "rest:post:http://gros-1.nancy.grid5000.fr:8000/beamDetectionEnd"
         }
     ],
     "start": "starting",
@@ -44,7 +44,7 @@
             "name": "timeout-or-job-done",
             "type": "event",
             "timeouts": {
-                "eventTimeout": "PT0.4S"
+                "eventTimeout": "PT0.3S"
             },
             "onEvents": [
                 {

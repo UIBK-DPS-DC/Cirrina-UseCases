@@ -71,10 +71,10 @@ def create_site(nodes: List[str], proto: bool) -> Site:
     site.remote_services = nodes[0]
 
     # Two per site
-    site.local_services.append(nodes[1])
+    #site.local_services.append(nodes[1])
     site.runtimes.append(nodes[1])
 
-    site.local_services.append(nodes[2])
+    #site.local_services.append(nodes[2])
     site.runtimes.append(nodes[2])
 
     return site
@@ -127,7 +127,7 @@ def write_hosts_config(sites: List[Site], cirrina: bool):
     if cirrina:
         config.add_section("runtime_servers")
     else:
-        config.add_section("sonataflow")
+        config.add_section("sonataflow_servers")
 
     i = 0
     for site in sites:
@@ -145,7 +145,7 @@ def write_hosts_config(sites: List[Site], cirrina: bool):
                 runtimes[host] = runtime_name
             else:
                 config.set(
-                    "sonataflow",
+                    "sonataflow_servers",
                     f"{runtime_name} {host_string}"
                 )
 
@@ -173,7 +173,7 @@ def write_hosts_config(sites: List[Site], cirrina: bool):
     return runtimes
 
 
-def write_jobs(sites: List[Site], runtimes: Dict[str, str], is_local: bool):
+def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
     global_job_description = {}
 
     global_job_description["localData"] = {}
@@ -181,7 +181,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str], is_local: bool):
 
     i = 0
 
-    path = "csml/smart_factory.local.csml" if is_local else "csml/smart_factory.remote.csml"
+    path = "csml/smart_factory.remote.csml"
 
     with open(path) as file:
         global_job_description["collaborativeStateMachine"] = json.load(file)
@@ -207,280 +207,143 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str], is_local: bool):
                 if sm_name in LOCAL_DATA:
                     job_description["localData"] = LOCAL_DATA[sm_name]
 
-                if is_local:
-                    job_description["serviceImplementations"].extend(
-                        [
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": host,
-                                "port": 8000,
-                                "endPoint": "/stopBelt",
-                                "method": "POST",
-                                "name": "stopBelt",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": host,
-                                "port": 8000,
-                                "endPoint": "/moveBelt",
-                                "method": "POST",
-                                "name": "moveBelt",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": host,
-                                "port": 8000,
-                                "endPoint": "/sendSms",
-                                "method": "POST",
-                                "name": "sendSms",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": host,
-                                "port": 8000,
-                                "endPoint": "/beamDetectionStart",
-                                "method": "POST",
-                                "name": "beamDetectionStart",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": host,
-                                "port": 8000,
-                                "endPoint": "/sendStatistics",
-                                "method": "POST",
-                                "name": "sendStatistics",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": host,
-                                "port": 8000,
-                                "endPoint": "/sendMail",
-                                "method": "POST",
-                                "name": "sendMail",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": host,
-                                "port": 8000,
-                                "endPoint": "/scanPhoto",
-                                "method": "POST",
-                                "name": "scanPhoto",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": host,
-                                "port": 8000,
-                                "endPoint": "/pickUp",
-                                "method": "POST",
-                                "name": "pickUp",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": host,
-                                "port": 8000,
-                                "endPoint": "/beamDetectionEnd",
-                                "method": "POST",
-                                "name": "beamDetectionEnd",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": host,
-                                "port": 8000,
-                                "endPoint": "/takePhoto",
-                                "method": "POST",
-                                "name": "takePhoto",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": host,
-                                "port": 8000,
-                                "endPoint": "/assemble",
-                                "method": "POST",
-                                "name": "assemble",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": host,
-                                "port": 8000,
-                                "endPoint": "/returnToStart",
-                                "method": "POST",
-                                "name": "returnToStart",
-                                "cost": 1.0,
-                                "local": True
-                            }  
-                        ]
-                    )
-                else:
-                    job_description["serviceImplementations"].extend(
-                        [
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services,
-                                "port": 8000,
-                                "endPoint": "/stopBelt",
-                                "method": "POST",
-                                "name": "stopBelt",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services,
-                                "port": 8000,
-                                "endPoint": "/moveBelt",
-                                "method": "POST",
-                                "name": "moveBelt",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services,
-                                "port": 8000,
-                                "endPoint": "/sendSms",
-                                "method": "POST",
-                                "name": "sendSms",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services,
-                                "port": 8000,
-                                "endPoint": "/beamDetectionStart",
-                                "method": "POST",
-                                "name": "beamDetectionStart",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services,
-                                "port": 8000,
-                                "endPoint": "/sendStatistics",
-                                "method": "POST",
-                                "name": "sendStatistics",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services,
-                                "port": 8000,
-                                "endPoint": "/sendMail",
-                                "method": "POST",
-                                "name": "sendMail",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services,
-                                "port": 8000,
-                                "endPoint": "/scanPhoto",
-                                "method": "POST",
-                                "name": "scanPhoto",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services,
-                                "port": 8000,
-                                "endPoint": "/pickUp",
-                                "method": "POST",
-                                "name": "pickUp",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services,
-                                "port": 8000,
-                                "endPoint": "/beamDetectionEnd",
-                                "method": "POST",
-                                "name": "beamDetectionEnd",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services,
-                                "port": 8000,
-                                "endPoint": "/takePhoto",
-                                "method": "POST",
-                                "name": "takePhoto",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services,
-                                "port": 8000,
-                                "endPoint": "/assemble",
-                                "method": "POST",
-                                "name": "assemble",
-                                "cost": 1.0,
-                                "local": True
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services,
-                                "port": 8000,
-                                "endPoint": "/returnToStart",
-                                "method": "POST",
-                                "name": "returnToStart",
-                                "cost": 1.0,
-                                "local": True
-                            }  
-                        ]
-                    )
+                
+                job_description["serviceImplementations"].extend(
+                    [
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8000,
+                            "endPoint": "/stopBelt",
+                            "method": "POST",
+                            "name": "stopBelt",
+                            "cost": 1.0,
+                            "local": True
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8000,
+                            "endPoint": "/moveBelt",
+                            "method": "POST",
+                            "name": "moveBelt",
+                            "cost": 1.0,
+                            "local": True
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8000,
+                            "endPoint": "/sendSms",
+                            "method": "POST",
+                            "name": "sendSms",
+                            "cost": 1.0,
+                            "local": True
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8000,
+                            "endPoint": "/beamDetectionStart",
+                            "method": "POST",
+                            "name": "beamDetectionStart",
+                            "cost": 1.0,
+                            "local": True
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8000,
+                            "endPoint": "/sendStatistics",
+                            "method": "POST",
+                            "name": "sendStatistics",
+                            "cost": 1.0,
+                            "local": True
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8000,
+                            "endPoint": "/sendMail",
+                            "method": "POST",
+                            "name": "sendMail",
+                            "cost": 1.0,
+                            "local": True
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8000,
+                            "endPoint": "/scanPhoto",
+                            "method": "POST",
+                            "name": "scanPhoto",
+                            "cost": 1.0,
+                            "local": True
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8000,
+                            "endPoint": "/pickUp",
+                            "method": "POST",
+                            "name": "pickUp",
+                            "cost": 1.0,
+                            "local": True
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8000,
+                            "endPoint": "/beamDetectionEnd",
+                            "method": "POST",
+                            "name": "beamDetectionEnd",
+                            "cost": 1.0,
+                            "local": True
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8000,
+                            "endPoint": "/takePhoto",
+                            "method": "POST",
+                            "name": "takePhoto",
+                            "cost": 1.0,
+                            "local": True
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8000,
+                            "endPoint": "/assemble",
+                            "method": "POST",
+                            "name": "assemble",
+                            "cost": 1.0,
+                            "local": True
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services,
+                            "port": 8000,
+                            "endPoint": "/returnToStart",
+                            "method": "POST",
+                            "name": "returnToStart",
+                            "cost": 1.0,
+                            "local": True
+                        }  
+                    ]
+                )
 
                 job_description["runtimeName"] = runtimes[host]
 
@@ -493,7 +356,6 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str], is_local: bool):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--local", action=argparse.BooleanOptionalAction, required=True)
     parser.add_argument("--cirrina", action=argparse.BooleanOptionalAction, required=True)
 
     args = parser.parse_args()
@@ -509,6 +371,6 @@ if __name__ == "__main__":
     runtimes = write_hosts_config(sites, args.cirrina)
 
     if args.cirrina:
-        write_jobs(sites, runtimes, args.local)
+        write_jobs(sites, runtimes)
 
     sys.exit(0)
