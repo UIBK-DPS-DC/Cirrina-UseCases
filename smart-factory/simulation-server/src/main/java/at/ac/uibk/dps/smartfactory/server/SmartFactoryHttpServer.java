@@ -152,7 +152,10 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     paths.put(
         "sendSms",
         new Response.Builder()
-            .emptyResult()
+            .dynamicResult(in -> {
+              SENSORS.setDetectAtStart();
+              return List.of();
+            })
             .delay(() -> 50 + RANDOM.nextInt(50))
             .build()
     );
@@ -160,7 +163,10 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     paths.put(
         "sendMail",
         new Response.Builder()
-            .emptyResult()
+            .dynamicResult(in -> {
+              SENSORS.setDetectAtStart();
+              return List.of();
+            })
             .delay(() -> 50 + RANDOM.nextInt(50))
             .build()
     );
@@ -179,13 +185,14 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
     return paths;
   }
 
-  private static void logData(Map<?,?> in, ErrorDeterminer errorDeterminer) {
+  private static synchronized void logData(Map<?,?> in, ErrorDeterminer errorDeterminer) {
     final var tmpDir = System.getProperty("java.io.tmpdir");
     final var tmpFilePath = Paths.get(tmpDir, "simulation-log.csv");
 
     try {
       if (!Files.exists(tmpFilePath)) {
         Files.createFile(tmpFilePath);
+        LOGGER.info("Created log file: %s".formatted(tmpFilePath.toString()));
 
         String header = listToCsvLine(in.keySet());
         header = "%s,%s,%s\n".formatted("timestamp", header, "errorChance");
@@ -221,15 +228,49 @@ public class SmartFactoryHttpServer extends SimulationHttpServer {
 
   private static class BeltSensors {
 
+    private static final long DETECT_AFTER = 2000;
+
+    private long lastFailTimestampStart = 0;
+    private long lastFailTimestampEnd = 0;
     private boolean objectAtStart = true;
     private boolean objectAtEnd = false;
 
     boolean detectAtStart() {
-      return objectAtStart;
+      if (objectAtStart) {
+        if (lastFailTimestampStart > 0) {
+          lastFailTimestampStart = 0;
+        }
+        return true;
+      }
+
+      if (lastFailTimestampStart == 0) {
+        lastFailTimestampStart = System.currentTimeMillis();
+        return false;
+      }
+      if (System.currentTimeMillis() > lastFailTimestampStart + DETECT_AFTER) {
+        lastFailTimestampStart = 0;
+        return true;
+      }
+      return false;
     }
 
     boolean detectAtEnd() {
-      return objectAtEnd;
+      if (objectAtEnd) {
+        if (lastFailTimestampEnd > 0) {
+          lastFailTimestampEnd = 0;
+        }
+        return true;
+      }
+
+      if (lastFailTimestampEnd == 0) {
+        lastFailTimestampEnd = System.currentTimeMillis();
+        return false;
+      }
+      if (System.currentTimeMillis() > lastFailTimestampEnd + DETECT_AFTER) {
+        lastFailTimestampEnd = 0;
+        return true;
+      }
+      return false;
     }
 
     void setDetectAtStart() {

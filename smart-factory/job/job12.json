@@ -1108,7 +1108,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node1.site1.grid5000.fr",
+            "host": "node16.site5.grid5000.fr",
             "port": 8000,
             "endPoint": "/stopBelt",
             "method": "POST",
@@ -1119,7 +1119,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node1.site1.grid5000.fr",
+            "host": "node16.site5.grid5000.fr",
             "port": 8000,
             "endPoint": "/moveBelt",
             "method": "POST",
@@ -1130,7 +1130,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node1.site1.grid5000.fr",
+            "host": "node16.site5.grid5000.fr",
             "port": 8000,
             "endPoint": "/sendSms",
             "method": "POST",
@@ -1141,7 +1141,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node1.site1.grid5000.fr",
+            "host": "node16.site5.grid5000.fr",
             "port": 8000,
             "endPoint": "/beamDetectionStart",
             "method": "POST",
@@ -1152,7 +1152,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node1.site1.grid5000.fr",
+            "host": "node16.site5.grid5000.fr",
             "port": 8000,
             "endPoint": "/sendStatistics",
             "method": "POST",
@@ -1163,7 +1163,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node1.site1.grid5000.fr",
+            "host": "node16.site5.grid5000.fr",
             "port": 8000,
             "endPoint": "/sendMail",
             "method": "POST",
@@ -1174,7 +1174,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node1.site1.grid5000.fr",
+            "host": "node16.site5.grid5000.fr",
             "port": 8000,
             "endPoint": "/scanPhoto",
             "method": "POST",
@@ -1185,7 +1185,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node1.site1.grid5000.fr",
+            "host": "node16.site5.grid5000.fr",
             "port": 8000,
             "endPoint": "/pickUp",
             "method": "POST",
@@ -1196,7 +1196,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node1.site1.grid5000.fr",
+            "host": "node16.site5.grid5000.fr",
             "port": 8000,
             "endPoint": "/beamDetectionEnd",
             "method": "POST",
@@ -1207,7 +1207,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node1.site1.grid5000.fr",
+            "host": "node16.site5.grid5000.fr",
             "port": 8000,
             "endPoint": "/takePhoto",
             "method": "POST",
@@ -1218,7 +1218,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node1.site1.grid5000.fr",
+            "host": "node16.site5.grid5000.fr",
             "port": 8000,
             "endPoint": "/assemble",
             "method": "POST",
@@ -1229,7 +1229,7 @@
         {
             "type": "HTTP",
             "scheme": "http",
-            "host": "node1.site1.grid5000.fr",
+            "host": "node16.site5.grid5000.fr",
             "port": 8000,
             "endPoint": "/returnToStart",
             "method": "POST",
