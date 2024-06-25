@@ -1112,7 +1112,7 @@
             "method": "POST",
             "name": "stopBelt",
             "cost": 1.0,
-            "local": true
+            "local": false
         },
         {
             "type": "HTTP",
@@ -1123,7 +1123,7 @@
             "method": "POST",
             "name": "moveBelt",
             "cost": 1.0,
-            "local": true
+            "local": false
         },
         {
             "type": "HTTP",
@@ -1134,7 +1134,7 @@
             "method": "POST",
             "name": "sendSms",
             "cost": 1.0,
-            "local": true
+            "local": false
         },
         {
             "type": "HTTP",
@@ -1145,7 +1145,7 @@
             "method": "POST",
             "name": "beamDetectionStart",
             "cost": 1.0,
-            "local": true
+            "local": false
         },
         {
             "type": "HTTP",
@@ -1156,7 +1156,7 @@
             "method": "POST",
             "name": "sendStatistics",
             "cost": 1.0,
-            "local": true
+            "local": false
         },
         {
             "type": "HTTP",
@@ -1167,7 +1167,7 @@
             "method": "POST",
             "name": "sendMail",
             "cost": 1.0,
-            "local": true
+            "local": false
         },
         {
             "type": "HTTP",
@@ -1178,7 +1178,7 @@
             "method": "POST",
             "name": "scanPhoto",
             "cost": 1.0,
-            "local": true
+            "local": false
         },
         {
             "type": "HTTP",
@@ -1189,7 +1189,7 @@
             "method": "POST",
             "name": "pickUp",
             "cost": 1.0,
-            "local": true
+            "local": false
         },
         {
             "type": "HTTP",
@@ -1200,7 +1200,7 @@
             "method": "POST",
             "name": "beamDetectionEnd",
             "cost": 1.0,
-            "local": true
+            "local": false
         },
         {
             "type": "HTTP",
@@ -1211,7 +1211,7 @@
             "method": "POST",
             "name": "takePhoto",
             "cost": 1.0,
-            "local": true
+            "local": false
         },
         {
             "type": "HTTP",
@@ -1222,7 +1222,7 @@
             "method": "POST",
             "name": "assemble",
             "cost": 1.0,
-            "local": true
+            "local": false
         },
         {
             "type": "HTTP",
@@ -1233,7 +1233,7 @@
             "method": "POST",
             "name": "returnToStart",
             "cost": 1.0,
-            "local": true
+            "local": false
         }
     ],
     "stateMachineName": "conveyorBeltSystem",

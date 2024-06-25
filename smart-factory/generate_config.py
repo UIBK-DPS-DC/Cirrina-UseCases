@@ -32,8 +32,8 @@ class Site:
     def get_zookeeper_host_string(self) -> str:
         return f"ansible_host={self.zookeeper}"
 
-    def get_remote_services_host_string(self) -> str:
-        return f"ansible_host={self.remote_services} PROTO={'true' if self.proto else 'false'}"
+    def get_remote_services_host_string(self, global_host: str) -> str:
+        return f"ansible_host={global_host} PROTO={'true' if self.proto else 'false'}"
 
     def get_local_services_host_strings(self) -> List[str]:
         return [
@@ -107,11 +107,10 @@ def write_hosts_config(sites: List[Site], cirrina: bool):
     # Services
     config.add_section("services_servers")
 
-    for i, site in enumerate(sites):
-        config.set(
-            "services_servers",
-            f"remoteservices{i} {site.get_remote_services_host_string()}",
-        )
+    config.set(
+        "services_servers",
+        f"remoteservices0 {site.get_remote_services_host_string(global_host)}",
+    )
 
     i = 0
     for site in sites:
@@ -219,7 +218,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                             "method": "POST",
                             "name": "stopBelt",
                             "cost": 1.0,
-                            "local": True
+                            "local": False
                         },
                         {
                             "type": "HTTP",
@@ -230,7 +229,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                             "method": "POST",
                             "name": "moveBelt",
                             "cost": 1.0,
-                            "local": True
+                            "local": False
                         },
                         {
                             "type": "HTTP",
@@ -241,7 +240,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                             "method": "POST",
                             "name": "sendSms",
                             "cost": 1.0,
-                            "local": True
+                            "local": False
                         },
                         {
                             "type": "HTTP",
@@ -252,7 +251,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                             "method": "POST",
                             "name": "beamDetectionStart",
                             "cost": 1.0,
-                            "local": True
+                            "local": False
                         },
                         {
                             "type": "HTTP",
@@ -263,7 +262,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                             "method": "POST",
                             "name": "sendStatistics",
                             "cost": 1.0,
-                            "local": True
+                            "local": False
                         },
                         {
                             "type": "HTTP",
@@ -274,7 +273,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                             "method": "POST",
                             "name": "sendMail",
                             "cost": 1.0,
-                            "local": True
+                            "local": False
                         },
                         {
                             "type": "HTTP",
@@ -285,7 +284,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                             "method": "POST",
                             "name": "scanPhoto",
                             "cost": 1.0,
-                            "local": True
+                            "local": False
                         },
                         {
                             "type": "HTTP",
@@ -296,7 +295,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                             "method": "POST",
                             "name": "pickUp",
                             "cost": 1.0,
-                            "local": True
+                            "local": False
                         },
                         {
                             "type": "HTTP",
@@ -307,7 +306,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                             "method": "POST",
                             "name": "beamDetectionEnd",
                             "cost": 1.0,
-                            "local": True
+                            "local": False
                         },
                         {
                             "type": "HTTP",
@@ -318,7 +317,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                             "method": "POST",
                             "name": "takePhoto",
                             "cost": 1.0,
-                            "local": True
+                            "local": False
                         },
                         {
                             "type": "HTTP",
@@ -329,7 +328,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                             "method": "POST",
                             "name": "assemble",
                             "cost": 1.0,
-                            "local": True
+                            "local": False
                         },
                         {
                             "type": "HTTP",
@@ -340,7 +339,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                             "method": "POST",
                             "name": "returnToStart",
                             "cost": 1.0,
-                            "local": True
+                            "local": False
                         }  
                     ]
                 )
