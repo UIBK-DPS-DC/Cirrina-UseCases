@@ -212,7 +212,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services,
+                            "host": global_host,
                             "port": 8000,
                             "endPoint": "/stopBelt",
                             "method": "POST",
@@ -223,7 +223,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services,
+                            "host": global_host,
                             "port": 8000,
                             "endPoint": "/moveBelt",
                             "method": "POST",
@@ -234,7 +234,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services,
+                            "host": global_host,
                             "port": 8000,
                             "endPoint": "/sendSms",
                             "method": "POST",
@@ -245,7 +245,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services,
+                            "host": global_host,
                             "port": 8000,
                             "endPoint": "/beamDetectionStart",
                             "method": "POST",
@@ -256,7 +256,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services,
+                            "host": global_host,
                             "port": 8000,
                             "endPoint": "/sendStatistics",
                             "method": "POST",
@@ -267,7 +267,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services,
+                            "host": global_host,
                             "port": 8000,
                             "endPoint": "/sendMail",
                             "method": "POST",
@@ -278,7 +278,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services,
+                            "host": global_host,
                             "port": 8000,
                             "endPoint": "/scanPhoto",
                             "method": "POST",
@@ -289,7 +289,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services,
+                            "host": global_host,
                             "port": 8000,
                             "endPoint": "/pickUp",
                             "method": "POST",
@@ -300,7 +300,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services,
+                            "host": global_host,
                             "port": 8000,
                             "endPoint": "/beamDetectionEnd",
                             "method": "POST",
@@ -311,7 +311,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services,
+                            "host": global_host,
                             "port": 8000,
                             "endPoint": "/takePhoto",
                             "method": "POST",
@@ -322,7 +322,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services,
+                            "host": global_host,
                             "port": 8000,
                             "endPoint": "/assemble",
                             "method": "POST",
@@ -333,7 +333,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services,
+                            "host": global_host,
                             "port": 8000,
                             "endPoint": "/returnToStart",
                             "method": "POST",
