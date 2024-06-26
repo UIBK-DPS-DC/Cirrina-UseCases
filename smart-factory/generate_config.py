@@ -109,7 +109,7 @@ def write_hosts_config(sites: List[Site], cirrina: bool):
 
     config.set(
         "services_servers",
-        f"remoteservices0 {site.get_remote_services_host_string(global_host)}",
+        f"remoteservices0 ansible_host={global_host} PROTO={'true' if cirrina else 'false'}",
     )
 
     i = 0
