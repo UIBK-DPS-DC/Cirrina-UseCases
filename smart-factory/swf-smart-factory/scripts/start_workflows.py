@@ -6,7 +6,7 @@ HEADERS = {
     "Content-Type": "application/json",
     "Accept": "application/json"
 }
-INSTANCES = 1
+INSTANCES = 5
 
 if __name__ == "__main__":
 

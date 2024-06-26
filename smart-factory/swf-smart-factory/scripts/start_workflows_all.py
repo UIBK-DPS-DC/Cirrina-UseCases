@@ -14,7 +14,7 @@ WORKFLOWS = [
     "photoelectric_sensor_end"
 ]
 BUSINESS_KEY = "instance"
-INSTANCES = 1
+INSTANCES = 5
 
 WORKFLOW_INPUT = {
     "job_control": {

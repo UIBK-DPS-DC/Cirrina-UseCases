@@ -5,7 +5,7 @@ HEADERS = {
     "Content-Type": "application/json",
     "Accept": "application/json"
 }
-INSTANCES = 1
+INSTANCES = 5
 
 if __name__ == "__main__":
 
@@ -21,7 +21,7 @@ if __name__ == "__main__":
                         default="instance1")
     
     parser.add_argument("--products", type=int, required=False, 
-                        default=100)
+                        default=1000)
     
     parser.add_argument("--parts", type=int, required=False, 
                         default=10)
