@@ -197,159 +197,163 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
     
     for site in sites:
         for host_index, host in enumerate(site.runtimes):
-            for sm_name in sm_names:
-                job_description = global_job_description.copy()
+            for j in range(5):
+                for sm_name in sm_names:
+                    if sm_name == "jobControlSystem" and j != 0:
+                        continue
 
-                job_description["serviceImplementations"] = []
-                job_description["stateMachineName"] = sm_name
+                    job_description = global_job_description.copy()
 
-                if sm_name in LOCAL_DATA:
-                    job_description["localData"] = LOCAL_DATA[sm_name]
+                    job_description["serviceImplementations"] = []
+                    job_description["stateMachineName"] = sm_name
 
-                
-                job_description["serviceImplementations"].extend(
-                    [
-                        {
-                            "type": "HTTP",
-                            "scheme": "http",
-                            "host": global_host,
-                            "port": 8000,
-                            "endPoint": "/stopBelt",
-                            "method": "POST",
-                            "name": "stopBelt",
-                            "cost": 1.0,
-                            "local": False
-                        },
-                        {
-                            "type": "HTTP",
-                            "scheme": "http",
-                            "host": global_host,
-                            "port": 8000,
-                            "endPoint": "/moveBelt",
-                            "method": "POST",
-                            "name": "moveBelt",
-                            "cost": 1.0,
-                            "local": False
-                        },
-                        {
-                            "type": "HTTP",
-                            "scheme": "http",
-                            "host": global_host,
-                            "port": 8000,
-                            "endPoint": "/sendSms",
-                            "method": "POST",
-                            "name": "sendSms",
-                            "cost": 1.0,
-                            "local": False
-                        },
-                        {
-                            "type": "HTTP",
-                            "scheme": "http",
-                            "host": global_host,
-                            "port": 8000,
-                            "endPoint": "/beamDetectionStart",
-                            "method": "POST",
-                            "name": "beamDetectionStart",
-                            "cost": 1.0,
-                            "local": False
-                        },
-                        {
-                            "type": "HTTP",
-                            "scheme": "http",
-                            "host": global_host,
-                            "port": 8000,
-                            "endPoint": "/sendStatistics",
-                            "method": "POST",
-                            "name": "sendStatistics",
-                            "cost": 1.0,
-                            "local": False
-                        },
-                        {
-                            "type": "HTTP",
-                            "scheme": "http",
-                            "host": global_host,
-                            "port": 8000,
-                            "endPoint": "/sendMail",
-                            "method": "POST",
-                            "name": "sendMail",
-                            "cost": 1.0,
-                            "local": False
-                        },
-                        {
-                            "type": "HTTP",
-                            "scheme": "http",
-                            "host": global_host,
-                            "port": 8000,
-                            "endPoint": "/scanPhoto",
-                            "method": "POST",
-                            "name": "scanPhoto",
-                            "cost": 1.0,
-                            "local": False
-                        },
-                        {
-                            "type": "HTTP",
-                            "scheme": "http",
-                            "host": global_host,
-                            "port": 8000,
-                            "endPoint": "/pickUp",
-                            "method": "POST",
-                            "name": "pickUp",
-                            "cost": 1.0,
-                            "local": False
-                        },
-                        {
-                            "type": "HTTP",
-                            "scheme": "http",
-                            "host": global_host,
-                            "port": 8000,
-                            "endPoint": "/beamDetectionEnd",
-                            "method": "POST",
-                            "name": "beamDetectionEnd",
-                            "cost": 1.0,
-                            "local": False
-                        },
-                        {
-                            "type": "HTTP",
-                            "scheme": "http",
-                            "host": global_host,
-                            "port": 8000,
-                            "endPoint": "/takePhoto",
-                            "method": "POST",
-                            "name": "takePhoto",
-                            "cost": 1.0,
-                            "local": False
-                        },
-                        {
-                            "type": "HTTP",
-                            "scheme": "http",
-                            "host": global_host,
-                            "port": 8000,
-                            "endPoint": "/assemble",
-                            "method": "POST",
-                            "name": "assemble",
-                            "cost": 1.0,
-                            "local": False
-                        },
-                        {
-                            "type": "HTTP",
-                            "scheme": "http",
-                            "host": global_host,
-                            "port": 8000,
-                            "endPoint": "/returnToStart",
-                            "method": "POST",
-                            "name": "returnToStart",
-                            "cost": 1.0,
-                            "local": False
-                        }  
-                    ]
-                )
+                    if sm_name in LOCAL_DATA:
+                        job_description["localData"] = LOCAL_DATA[sm_name]
 
-                job_description["runtimeName"] = runtimes[host]
+                    
+                    job_description["serviceImplementations"].extend(
+                        [
+                            {
+                                "type": "HTTP",
+                                "scheme": "http",
+                                "host": global_host,
+                                "port": 8000,
+                                "endPoint": "/stopBelt",
+                                "method": "POST",
+                                "name": "stopBelt",
+                                "cost": 1.0,
+                                "local": False
+                            },
+                            {
+                                "type": "HTTP",
+                                "scheme": "http",
+                                "host": global_host,
+                                "port": 8000,
+                                "endPoint": "/moveBelt",
+                                "method": "POST",
+                                "name": "moveBelt",
+                                "cost": 1.0,
+                                "local": False
+                            },
+                            {
+                                "type": "HTTP",
+                                "scheme": "http",
+                                "host": global_host,
+                                "port": 8000,
+                                "endPoint": "/sendSms",
+                                "method": "POST",
+                                "name": "sendSms",
+                                "cost": 1.0,
+                                "local": False
+                            },
+                            {
+                                "type": "HTTP",
+                                "scheme": "http",
+                                "host": global_host,
+                                "port": 8000,
+                                "endPoint": "/beamDetectionStart",
+                                "method": "POST",
+                                "name": "beamDetectionStart",
+                                "cost": 1.0,
+                                "local": False
+                            },
+                            {
+                                "type": "HTTP",
+                                "scheme": "http",
+                                "host": global_host,
+                                "port": 8000,
+                                "endPoint": "/sendStatistics",
+                                "method": "POST",
+                                "name": "sendStatistics",
+                                "cost": 1.0,
+                                "local": False
+                            },
+                            {
+                                "type": "HTTP",
+                                "scheme": "http",
+                                "host": global_host,
+                                "port": 8000,
+                                "endPoint": "/sendMail",
+                                "method": "POST",
+                                "name": "sendMail",
+                                "cost": 1.0,
+                                "local": False
+                            },
+                            {
+                                "type": "HTTP",
+                                "scheme": "http",
+                                "host": global_host,
+                                "port": 8000,
+                                "endPoint": "/scanPhoto",
+                                "method": "POST",
+                                "name": "scanPhoto",
+                                "cost": 1.0,
+                                "local": False
+                            },
+                            {
+                                "type": "HTTP",
+                                "scheme": "http",
+                                "host": global_host,
+                                "port": 8000,
+                                "endPoint": "/pickUp",
+                                "method": "POST",
+                                "name": "pickUp",
+                                "cost": 1.0,
+                                "local": False
+                            },
+                            {
+                                "type": "HTTP",
+                                "scheme": "http",
+                                "host": global_host,
+                                "port": 8000,
+                                "endPoint": "/beamDetectionEnd",
+                                "method": "POST",
+                                "name": "beamDetectionEnd",
+                                "cost": 1.0,
+                                "local": False
+                            },
+                            {
+                                "type": "HTTP",
+                                "scheme": "http",
+                                "host": global_host,
+                                "port": 8000,
+                                "endPoint": "/takePhoto",
+                                "method": "POST",
+                                "name": "takePhoto",
+                                "cost": 1.0,
+                                "local": False
+                            },
+                            {
+                                "type": "HTTP",
+                                "scheme": "http",
+                                "host": global_host,
+                                "port": 8000,
+                                "endPoint": "/assemble",
+                                "method": "POST",
+                                "name": "assemble",
+                                "cost": 1.0,
+                                "local": False
+                            },
+                            {
+                                "type": "HTTP",
+                                "scheme": "http",
+                                "host": global_host,
+                                "port": 8000,
+                                "endPoint": "/returnToStart",
+                                "method": "POST",
+                                "name": "returnToStart",
+                                "cost": 1.0,
+                                "local": False
+                            }  
+                        ]
+                    )
 
-                with open(f"job/job{i}.json", "w") as file:
-                    json.dump(job_description, file, indent=4)
+                    job_description["runtimeName"] = runtimes[host]
 
-                i += 1
+                    with open(f"job/job{i}.json", "w") as file:
+                        json.dump(job_description, file, indent=4)
+
+                    i += 1
 
 
 if __name__ == "__main__":
