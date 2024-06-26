@@ -50,7 +50,7 @@
         {
             "name": "service-send-statistics",
             "type": "custom",
-            "operation": "rest:post:http://gros-1.nancy.grid5000.fr:8000/sendStatistics"
+            "operation": "rest:post:http://localhost:8000/sendStatistics"
         }
     ],
     "start": "config",

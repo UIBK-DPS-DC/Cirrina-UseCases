@@ -37,12 +37,12 @@
         {
             "name": "service-take-photo",
             "type": "custom",
-            "operation": "rest:post:http://gros-1.nancy.grid5000.fr:8000/takePhoto"
+            "operation": "rest:post:http://localhost:8000/takePhoto"
         },
         {
             "name": "service-scan-photo",
             "type": "custom",
-            "operation": "rest:post:http://gros-1.nancy.grid5000.fr:8000/scanPhoto"
+            "operation": "rest:post:http://localhost:8000/scanPhoto"
         }
     ],
     "start": "starting",

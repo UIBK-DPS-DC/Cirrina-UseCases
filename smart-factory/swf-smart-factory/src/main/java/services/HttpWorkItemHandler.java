@@ -4,7 +4,6 @@ import lombok.SneakyThrows;
 import org.kie.kogito.internal.process.runtime.KogitoWorkItem;
 import org.kie.kogito.internal.process.runtime.KogitoWorkItemHandler;
 import org.kie.kogito.internal.process.runtime.KogitoWorkItemManager;
-import org.kogito.workitem.rest.RestWorkItemHandler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +40,7 @@ public class HttpWorkItemHandler implements KogitoWorkItemHandler {
 
     final var request = HttpRequest.newBuilder()
         .version(HttpClient.Version.HTTP_1_1)
-        .method("GET", BodyPublishers.ofString(parameters))
+        .method("POST", BodyPublishers.ofString(parameters))
         .uri(uri)
         .build();
 

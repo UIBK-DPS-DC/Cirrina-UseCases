@@ -67,12 +67,12 @@
         {
             "name": "service-move-belt",
             "type": "custom",
-            "operation": "rest:post:http://gros-1.nancy.grid5000.fr:8000/moveBelt"
+            "operation": "rest:post:http://localhost:8000/moveBelt"
         },
         {
             "name": "service-stop-belt",
             "type": "custom",
-            "operation": "rest:post:http://gros-1.nancy.grid5000.fr:8000/stopBelt"
+            "operation": "rest:post:http://localhost:8000/stopBelt"
         }
     ],
     "states": [
