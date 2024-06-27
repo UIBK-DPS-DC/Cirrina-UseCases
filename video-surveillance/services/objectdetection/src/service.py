@@ -16,8 +16,7 @@ import uvicorn
 app = FastAPI()
 
 # Decide whether protobuf should be used (optional environment variable)
-proto = "PROTO" not in os.environ \
-    or os.environ["PROTO"].lower() in ["true", "t", "1"]
+proto = "PROTO" not in os.environ or os.environ["PROTO"].lower() in ["true", "t", "1"]
 
 # Constants and configurations
 INPUT_WIDTH = 640
@@ -40,6 +39,9 @@ CLASSES = [
     "traffic light",
 ]
 
+hog = cv2.HOGDescriptor()
+hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+
 
 class Detection(BaseModel):
     class_name: str
@@ -57,31 +59,6 @@ def generate_random_colors(n: int):
         for _ in range(n)
     ]
 
-
-def mock_detect(image: np.ndarray):
-    height, width, _ = image.shape
-    detections = []
-
-    # Mock detection for demonstration
-    for _ in range(random.randint(1, 5)):
-        x = random.randint(0, width - 50)
-        y = random.randint(0, height - 50)
-        w = random.randint(30, 100)
-        h = random.randint(30, 100)
-        confidence = random.uniform(CONFIDENCE_THRESHOLD, 1.0)
-        class_id = random.randint(0, len(CLASSES) - 1)
-        detections.append(
-            {
-                "class_name": CLASSES[class_id],
-                "confidence": confidence,
-                "x": x,
-                "y": y,
-                "width": w,
-                "height": h,
-            }
-        )
-
-    return detections
 
 def log_data(data: bytes):
     sha256 = hashlib.sha256()
@@ -128,18 +105,23 @@ async def process_image(request: Request):
     if image is None:
         raise HTTPException(status_code=400, detail="Failed to decode the image")
 
-    detections = mock_detect(image)
+    (regions, _) = hog.detectMultiScale(
+        image, winStride=(4, 4), padding=(4, 4), scale=1.05
+    )
 
-    detected_persons = [
-        d for d in detections if d["class_name"] == "person" and d["confidence"] > 0.5
-    ]
+    # For drawing detections:
+    # image_dbg = image.copy()
+    # colors = generate_random_colors(len(regions))
+    # for color, (x, y, w, h) in zip(colors, regions):
+    #    cv2.rectangle(image_dbg, (x, y), (x + w, y + h), color, 2)
+    # cv2.imwrite("image_detected.jpg", image_dbg)
 
     if proto:
         # Create response protobuf message
         response_context_variables = ContextVariable_pb2.ContextVariables()
         detections_context_variable = ContextVariable_pb2.ContextVariable(
             name="personDetection_detected_persons",
-            value=ContextVariable_pb2.Value(bool=len(detected_persons) > 0),
+            value=ContextVariable_pb2.Value(bool=len(regions) > 0),
         )
         response_context_variables.data.append(detections_context_variable)
 
@@ -147,9 +129,7 @@ async def process_image(request: Request):
         response = response_context_variables.SerializeToString()
         media_type = "application/x-protobuf"
     else:
-        response = json.dumps({
-            "personDetection_detected_persons": len(detected_persons) > 0
-        })
+        response = json.dumps({"personDetection_detected_persons": len(regions) > 0})
         media_type = "application/json"
 
     log_data(image_bytes)
