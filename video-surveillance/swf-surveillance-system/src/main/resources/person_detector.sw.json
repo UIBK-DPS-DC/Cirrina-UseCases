@@ -21,7 +21,7 @@
         {
             "name": "service-detect",
             "type": "custom",
-            "operation": "rest:post:http://172.23.240.1:8000/process"
+            "operation": "rest:post:http://localhost:8000/process"
         }
     ],
     "start": "start",

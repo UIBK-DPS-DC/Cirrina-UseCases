@@ -16,7 +16,7 @@
         {
             "name": "service-capture",
             "type": "custom",
-            "operation": "rest:post:http://172.23.240.1:8001/capture"
+            "operation": "rest:post:http://localhost:8001/capture"
         }
     ],
     "start": "start",
@@ -32,7 +32,7 @@
         {
             "name": "capture-wait",
             "type": "sleep",
-            "duration": "PT0.2S",
+            "duration": "PT0.1S",
             "transition": "capture-invoke"
         },
         {

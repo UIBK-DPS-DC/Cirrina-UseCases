@@ -31,13 +31,12 @@ def get_frame_number() -> int:
     return round(int(time.time()) * FPS)
 
 
-def log_hash(data: bytes, a: float, b: float, delay: str):
+def log_hash(data: bytes, a: float, b: float):
     sha256 = hashlib.sha256()
     sha256.update(data)
     hash = sha256.hexdigest()
 
-    timestamp = time.time()
-    log_entry = f"{hash},{a},{b},{delay}\n"
+    log_entry = f"{hash},{a},{b}\n"
 
     with open("/tmp/log.csv", "a") as log_file:
         log_file.write(log_entry)
@@ -84,7 +83,6 @@ async def capture(request: Request):
 
     cap = VIDEOS_CAPTURES[video_number]
     video_path = os.path.join(ROOT_DIR, "resources", f"{video_number + 1}.avi")
-    print(f"Trying to open video: {video_path} with delay: {delay}")
 
     if not cap.isOpened():
         print(f"Failed to open video {video_number}")
@@ -135,7 +133,7 @@ async def capture(request: Request):
 
     b = time.time()
 
-    log_hash(buffer_bytes, a, b, delay)
+    log_hash(buffer_bytes, a, b)
 
     # Return the protobuf response
     return Response(content=response, media_type=media_type)

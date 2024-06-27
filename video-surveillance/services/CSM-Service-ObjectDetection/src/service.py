@@ -2,6 +2,7 @@ import json
 import os
 import random
 import base64
+import time
 
 from fastapi import FastAPI, Request, HTTPException, Response
 from pydantic import BaseModel
@@ -81,9 +82,17 @@ def mock_detect(image: np.ndarray):
 
     return detections
 
+def log_data(data: str, a: float, b: float):
+    log_entry = f"{data},{a},{b}\n"
+
+    with open("/tmp/log.csv", "a") as log_file:
+        log_file.write(log_entry)
+
 
 @app.post("/process")
 async def process_image(request: Request):
+    a = time.time()
+
     if proto:
         # Read the raw request body
         body = await request.body()
@@ -117,39 +126,6 @@ async def process_image(request: Request):
 
     detections = mock_detect(image)
 
-    # Just return the detections JSON for now
-    """    
-    if image is not None:
-        colors = generate_random_colors(len(CLASSES))
-        for detection in detections:
-            color = colors[CLASSES.index(detection["class_name"])]
-            cv2.rectangle(
-                image,
-                (detection["x"], detection["y"]),
-                (
-                    detection["x"] + detection["width"],
-                    detection["y"] + detection["height"],
-                ),
-                color,
-                2,
-            )
-            cv2.putText(
-                image,
-                detection["class_name"],
-                (detection["x"], detection["y"] - 10),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.9,
-                color,
-                2,
-            )
-
-        _, encoded_img = cv2.imencode(".jpg", image)
-        return StreamingResponse(
-            io.BytesIO(encoded_img.tobytes()), media_type="image/jpeg"
-        )
-    
-    """
-
     detected_persons = [
         d for d in detections if d["class_name"] == "person" and d["confidence"] > 0.5
     ]
@@ -172,7 +148,9 @@ async def process_image(request: Request):
         })
         media_type = "application/json"
 
-    print(f"Detected {len(detected_persons)} persons out of {len(detections)} objects.")
+    b = time.time()
+
+    log_data(f"{len(detected_persons)}/{len(detections)}", a, b)
 
     # Return the protobuf response
     return Response(content=response, media_type=media_type)
