@@ -3,6 +3,7 @@ import os
 import random
 import base64
 import time
+import hashlib
 
 from fastapi import FastAPI, Request, HTTPException, Response
 from pydantic import BaseModel
@@ -82,17 +83,20 @@ def mock_detect(image: np.ndarray):
 
     return detections
 
-def log_data(data: str, a: float, b: float):
-    log_entry = f"{data},{a},{b}\n"
+def log_data(data: bytes):
+    sha256 = hashlib.sha256()
+    sha256.update(data)
+    hash = sha256.hexdigest()
 
-    with open("/tmp/log.csv", "a") as log_file:
+    timestamp = time.time()
+    log_entry = f"{hash},{timestamp}\n"
+
+    with open("/tmp/log_detection.csv", "a") as log_file:
         log_file.write(log_entry)
 
 
 @app.post("/process")
 async def process_image(request: Request):
-    a = time.time()
-
     if proto:
         # Read the raw request body
         body = await request.body()
@@ -148,9 +152,7 @@ async def process_image(request: Request):
         })
         media_type = "application/json"
 
-    b = time.time()
-
-    log_data(f"{len(detected_persons)}/{len(detections)}", a, b)
+    log_data(image_bytes)
 
     # Return the protobuf response
     return Response(content=response, media_type=media_type)

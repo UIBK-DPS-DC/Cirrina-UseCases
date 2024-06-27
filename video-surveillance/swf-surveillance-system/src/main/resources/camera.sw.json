@@ -16,7 +16,7 @@
         {
             "name": "service-capture",
             "type": "custom",
-            "operation": "rest:post:http://localhost:8001/capture"
+            "operation": "rest:post:http://dahu-11.grenoble.grid5000.fr:8001/capture"
         }
     ],
     "start": "start",

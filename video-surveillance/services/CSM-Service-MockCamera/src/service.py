@@ -31,20 +31,21 @@ def get_frame_number() -> int:
     return round(int(time.time()) * FPS)
 
 
-def log_hash(data: bytes, a: float, b: float):
+def log_hash(data: bytes):
     sha256 = hashlib.sha256()
     sha256.update(data)
     hash = sha256.hexdigest()
 
-    log_entry = f"{hash},{a},{b}\n"
+    timestamp = time.time()
 
-    with open("/tmp/log.csv", "a") as log_file:
+    log_entry = f"{hash},{timestamp}\n"
+
+    with open("/tmp/log_camera.csv", "a") as log_file:
         log_file.write(log_entry)
 
 
 @app.post("/capture")
 async def capture(request: Request):
-    a = time.time()
 
     video_number = None
     delay = None
@@ -131,9 +132,7 @@ async def capture(request: Request):
         })
         media_type = "application/json"
 
-    b = time.time()
-
-    log_hash(buffer_bytes, a, b)
+    log_hash(buffer_bytes)
 
     # Return the protobuf response
     return Response(content=response, media_type=media_type)
