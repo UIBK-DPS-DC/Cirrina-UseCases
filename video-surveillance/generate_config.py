@@ -120,10 +120,7 @@ def write_hosts_config(sites: List[Site], cirrina: bool):
         config.add_section("sonataflow_servers")
 
     i = 0
-    j = 0
     for site in sites:
-        j += 1
-
         for host, host_string in zip(
             site.runtimes, site.get_runtime_host_strings(global_host)
         ):
@@ -139,7 +136,7 @@ def write_hosts_config(sites: List[Site], cirrina: bool):
             else:
                 config.set(
                     "sonataflow_servers",
-                    f"{runtime_name} {host_string} IMAGE_TAG={'develop' if j == 1 else f'develop{j}'}"
+                    f"{runtime_name} {host_string} IMAGE_TAG={'develop' if i == 0 else f'develop{i+1}'}"
                 )
 
             i += 1
