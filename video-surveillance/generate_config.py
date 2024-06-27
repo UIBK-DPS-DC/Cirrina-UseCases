@@ -96,10 +96,10 @@ def write_hosts_config(sites: List[Site], cirrina: bool):
     # Services
     config.add_section("camera_services_servers")
 
-    for site in sites:
+    for i, site in enumerate(sites):
         config.set(
             "camera_services_servers",
-            f"remoteservices0 ansible_host={site.remote_services_camera} PROTO={'true' if cirrina else 'false'}",
+            f"remoteservices{i} ansible_host={site.remote_services_camera} PROTO={'true' if cirrina else 'false'}",
         )
 
     config.add_section("detection_services_servers")
