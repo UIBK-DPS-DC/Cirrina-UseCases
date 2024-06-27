@@ -76,7 +76,14 @@
             "stateDataFilter": {
                 "output": "{ \"partsPerProduct\": (if .partsPerProduct then .partsPerProduct else .partsPerProductDefault end) }"
             },
-            "transition": "starting"
+            "transition": {
+                "nextState": "starting",
+                "produceEvents": [
+                    {
+                        "eventRef": "product-complete"
+                    }
+                ]
+            }
         },
         {
             "name": "starting",

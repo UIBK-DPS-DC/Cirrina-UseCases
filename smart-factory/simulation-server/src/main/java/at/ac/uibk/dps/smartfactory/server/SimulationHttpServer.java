@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -73,6 +74,8 @@ public class SimulationHttpServer implements Runnable {
     server.start();
   }
 
+  private static long lastStamp = System.currentTimeMillis();
+
   /**
    * HTTP handler for processing requests and generating responses.
    * Deserializes the request as proto and serializes the response as proto.
@@ -92,8 +95,6 @@ public class SimulationHttpServer implements Runnable {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
       try {
-        //LOGGER.info(String.format("Handle request: %s", path));
-
         final var payload = exchange.getRequestBody().readAllBytes();
 
         // Deserialize the payload (must be Map<?, ?>)

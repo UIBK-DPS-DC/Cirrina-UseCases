@@ -10,7 +10,7 @@ MACHINES_JSON = "machines.json"
 
 LOCAL_DATA = {
     "jobControlSystem": {
-        "totalProducts": 100
+        "totalProducts": 0
     },
     "roboticArmSystem": {
         "partsPerProduct": 10
@@ -209,7 +209,6 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
 
                     if sm_name in LOCAL_DATA:
                         job_description["localData"] = LOCAL_DATA[sm_name]
-
                     
                     job_description["serviceImplementations"].extend(
                         [
@@ -360,8 +359,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--cirrina", action=argparse.BooleanOptionalAction, required=True)
+    parser.add_argument("--products", type=int, default=100, required=False)
 
     args = parser.parse_args()
+
+    LOCAL_DATA["jobControlSystem"]["totalProducts"] = args.products
 
     machines = read_machines_json()
     print(f"no. sites={len(machines)}")

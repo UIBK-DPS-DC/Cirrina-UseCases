@@ -1,7 +1,5 @@
 {
-    "localData": {
-        "partsPerProduct": 10
-    },
+    "localData": {},
     "bindEventInstanceIds": [],
     "collaborativeStateMachine": {
         "version": "0.1",
@@ -38,6 +36,22 @@
                         "name": "starting",
                         "initial": true,
                         "entry": [
+                            {
+                                "type": "match",
+                                "value": "productsCompleted >= totalProducts / 2 || jobDone",
+                                "cases": [
+                                    {
+                                        "case": "true",
+                                        "action": {
+                                            "type": "assign",
+                                            "variable": {
+                                                "name": "productsCompleted",
+                                                "value": "0"
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
                             {
                                 "type": "assign",
                                 "variable": {
@@ -166,6 +180,15 @@
                                 "event": "eJobDone",
                                 "target": "jobDone"
                             }
+                        ],
+                        "exit": [
+                            {
+                                "type": "raise",
+                                "event": {
+                                    "name": "eScanned",
+                                    "channel": "global"
+                                }
+                            }
                         ]
                     },
                     {
@@ -248,7 +271,7 @@
                             {
                                 "name": "roboticArmSystem.triggerPickup",
                                 "type": "timeout",
-                                "delay": "100",
+                                "delay": "1000",
                                 "action": {
                                     "type": "raise",
                                     "event": {
@@ -321,6 +344,11 @@
                                                     "name": "isScanning",
                                                     "value": "true"
                                                 }
+                                            }
+                                        ],
+                                        "guards": [
+                                            {
+                                                "expression": "!isScanning"
                                             }
                                         ]
                                     }
@@ -1039,7 +1067,7 @@
                         "initial": true,
                         "on": [
                             {
-                                "event": "eStartScan",
+                                "event": "eScanned",
                                 "actions": [
                                     {
                                         "type": "assign",
@@ -1238,6 +1266,6 @@
             "local": false
         }
     ],
-    "stateMachineName": "roboticArmSystem",
-    "runtimeName": "runtime1"
+    "stateMachineName": "monitoringSystem",
+    "runtimeName": "runtime0"
 }
