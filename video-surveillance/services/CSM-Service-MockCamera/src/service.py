@@ -24,8 +24,8 @@ VIDEOS_CAPTURES = {
 app = FastAPI()
 
 # Decide whether protobuf should be used (optional environment variable)
-proto = "PROTO" not in os.environ or os.environ["PROTO"].lower() in ["true", "t", "1"]
-
+proto = "PROTO" not in os.environ \
+    or os.environ["PROTO"].lower() in ["true", "t", "1"]
 
 def get_frame_number() -> int:
     return round(int(time.time()) * FPS)
@@ -46,7 +46,9 @@ def log_hash(data: bytes):
 
 @app.post("/capture")
 async def capture(request: Request):
+
     video_number = None
+    delay = None
 
     if proto:
         # Read the raw request body
@@ -63,6 +65,8 @@ async def capture(request: Request):
             # Check for video_number and delay
             if context_variable_dict["name"] == "video_number":
                 video_number = context_variable_dict["value"].get("integer")
+            elif context_variable_dict["name"] == "delay":
+                delay = context_variable_dict["value"].get("integer")
     else:
         # Parse the request variables
         context_variables = await request.json()
@@ -70,6 +74,8 @@ async def capture(request: Request):
         # Get context variables from the request json
         if "video_number" in context_variables:
             video_number = int(context_variables["video_number"])
+        if "delay" in context_variables:
+            delay = int(context_variables["delay"])
 
     if video_number not in VIDEOS_CAPTURES:
         raise HTTPException(
@@ -77,6 +83,7 @@ async def capture(request: Request):
         )
 
     cap = VIDEOS_CAPTURES[video_number]
+    video_path = os.path.join(ROOT_DIR, "resources", f"{video_number + 1}.avi")
 
     if not cap.isOpened():
         print(f"Failed to open video {video_number}")
@@ -118,9 +125,11 @@ async def capture(request: Request):
         response = response_context_variables.SerializeToString()
         media_type = "application/x-protobuf"
     else:
-        buffer_base64 = base64.b64encode(buffer_bytes).decode("utf-8")
+        buffer_base64 = base64.b64encode(buffer_bytes).decode('utf-8')
 
-        response = json.dumps({"camera_image": buffer_base64})
+        response = json.dumps({
+            "camera_image": buffer_base64
+        })
         media_type = "application/json"
 
     log_hash(buffer_bytes)
@@ -130,4 +139,5 @@ async def capture(request: Request):
 
 
 if __name__ == "__main__":
+    print(f"Protobuf: {proto}")
     uvicorn.run(app, host="0.0.0.0", port=8001)

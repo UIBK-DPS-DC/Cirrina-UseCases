@@ -21,7 +21,7 @@
         {
             "name": "service-detect",
             "type": "custom",
-            "operation": "rest:post:http://dahu-22.grenoble.grid5000.fr:8000/process"
+            "operation": "rest:post:http://paranoia-5.rennes.grid5000.fr:8000/process"
         }
     ],
     "start": "start",

@@ -15,7 +15,7 @@
 - name: Run Sonataflow
   docker_container:
     name: sonataflow
-    image: "lellson/swf-sonataflow-surveillance-system:develop"
+    image: "lellson/swf-sonataflow-surveillance-system:{{ hostvars[inventory_hostname]['IMAGE_TAG'] }}"
     state: started
     recreate: true
     force_kill: true
