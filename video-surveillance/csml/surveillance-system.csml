@@ -8,7 +8,7 @@
         "variables": [
           {
             "name": "image",
-            "value": "null"
+            "value": "''"
           },
           {
             "name": "hasDetectedPersons",
@@ -24,6 +24,7 @@
             {
               "type": "invoke",
               "serviceType": "cameraCapture",
+              "isLocal": false,
               "input": [
                 {
                   "name": "cameraId",
@@ -89,7 +90,13 @@
                   "type": "raise",
                   "event": {
                     "name": "foundPersons",
-                    "channel": "global"
+                    "channel": "global",
+                    "data": [
+                      {
+                        "name": "image",
+                        "value": "image"
+                      }
+                    ]
                   }
                 }
               ]
@@ -106,7 +113,8 @@
           "after": [
             {
               "type": "timeout",
-              "delay": "100",
+              "name": "captureTimeout",
+              "delay": "500",
               "action": {
                 "type": "raise",
                 "event": {
@@ -123,20 +131,110 @@
             {
               "type": "invoke",
               "serviceType": "alarmOn",
-              "isLocal": true
+              "isLocal": false
             }
           ],
           "exit": [
             {
               "type": "invoke",
               "serviceType": "alarmOff",
-              "isLocal": true
+              "isLocal": false
             }
           ],
           "on": [
             {
               "event": "disarm",
               "target": "capturing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "surveillance",
+      "localContext": {
+        "variables": [
+          {
+            "name": "hasThreat",
+            "value": "false"
+          }
+        ]
+      },
+      "states": [
+        {
+          "name": "processing",
+          "initial": true,
+          "on": [
+            {
+              "event": "foundPersons",
+              "actions": [
+                {
+                  "type": "invoke",
+                  "serviceType": "analyze",
+                  "isLocal": false,
+                  "input": [
+                    {
+                      "name": "image",
+                      "value": "$image"
+                    }
+                  ],
+                  "output": [
+                    {
+                      "reference": "hasThreat"
+                    }
+                  ],
+                  "done": [
+                    {
+                      "name": "analyzed",
+                      "channel": "internal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "event": "analyzed",
+              "guards": [
+                {
+                  "expression": "hasThreat == true"
+                }
+              ],
+              "actions": [
+                {
+                  "type": "raise",
+                  "event": {
+                    "name": "alarm",
+                    "channel": "global"
+                  }
+                }
+              ]
+            },
+            {
+              "event": "alarm",
+              "target": "alarm"
+            }
+          ]
+        },
+        {
+          "name": "alarm",
+          "on": [
+            {
+              "event": "disarm",
+              "target": "processing"
+            }
+          ],
+          "after": [
+            {
+              "type": "timeout",
+              "name": "disarmTimeout",
+              "delay": "10000",
+              "action": {
+                "type": "raise",
+                "event": {
+                  "name": "disarm",
+                  "channel": "global"
+                }
+              }
             }
           ]
         }
