@@ -1,9 +1,9 @@
-[camera_services_servers]
+[iot_services_servers]
 remoteservices0 ansible_host=dahu-5.grenoble.grid5000.fr PROTO=false
 remoteservices1 ansible_host=econome-4.nantes.grid5000.fr PROTO=false
 remoteservices2 ansible_host=paranoia-4.rennes.grid5000.fr PROTO=false
 
-[detection_services_servers]
+[edge_services_servers]
 localservices0 ansible_host=dahu-7.grenoble.grid5000.fr PROTO=false
 localservices1 ansible_host=dahu-9.grenoble.grid5000.fr PROTO=false
 localservices2 ansible_host=econome-5.nantes.grid5000.fr PROTO=false
@@ -11,13 +11,16 @@ localservices3 ansible_host=econome-8.nantes.grid5000.fr PROTO=false
 localservices4 ansible_host=paranoia-5.rennes.grid5000.fr PROTO=false
 localservices5 ansible_host=paranoia-7.rennes.grid5000.fr PROTO=false
 
+[cloud_services_servers]
+global0 ansible_host=paranoia-8.rennes.grid5000.fr PROTO=false
+
 [sonataflow_servers]
 runtime0 ansible_host=dahu-7.grenoble.grid5000.fr IMAGE_TAG=develop
-runtime1 ansible_host=dahu-9.grenoble.grid5000.fr IMAGE_TAG=develop
-runtime2 ansible_host=econome-5.nantes.grid5000.fr IMAGE_TAG=develop2
-runtime3 ansible_host=econome-8.nantes.grid5000.fr IMAGE_TAG=develop2
-runtime4 ansible_host=paranoia-5.rennes.grid5000.fr IMAGE_TAG=develop3
-runtime5 ansible_host=paranoia-7.rennes.grid5000.fr IMAGE_TAG=develop3
+runtime1 ansible_host=dahu-9.grenoble.grid5000.fr IMAGE_TAG=develop2
+runtime2 ansible_host=econome-5.nantes.grid5000.fr IMAGE_TAG=develop3
+runtime3 ansible_host=econome-8.nantes.grid5000.fr IMAGE_TAG=develop4
+runtime4 ansible_host=paranoia-5.rennes.grid5000.fr IMAGE_TAG=develop5
+runtime5 ansible_host=paranoia-7.rennes.grid5000.fr IMAGE_TAG=develop6
 
 [global_servers]
 global0 ansible_host=paranoia-8.rennes.grid5000.fr

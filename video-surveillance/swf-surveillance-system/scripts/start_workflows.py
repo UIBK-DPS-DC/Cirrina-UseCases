@@ -5,20 +5,20 @@ HEADERS = {
     "Content-Type": "application/json",
     "Accept": "application/json"
 }
-INSTANCES = 5
+INSTANCES = 1
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--host", type=str, required=False, 
-                        default="http://localhost:8080/")
+                        default="http://localhost:8080")
     
     parser.add_argument("--workflows", type=str, required=False, 
-                        default="person_detector,camera")
+                        default="detector,surveillance")
     
     parser.add_argument("--key", type=str, required=False, 
-                        default="instance1")
+                        default="instance")
 
     args = parser.parse_args()
 
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     # This allows all workflows to communicate event based    
     for workflow in workflows:
         for i in range(INSTANCES):
-            url = f"{args.host}/{workflow}?businessKey={args.key}{'' if i == 0 else i}"
+            url = f"{args.host}/{workflow}?businessKey={args.key}{i}"
 
             # Start workflow
             response = requests.post(url, headers=HEADERS)

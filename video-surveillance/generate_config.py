@@ -95,24 +95,31 @@ def write_hosts_config(sites: List[Site], cirrina: bool):
             )
 
     # Services
-    config.add_section("camera_services_servers")
+    config.add_section("iot_services_servers")
 
     for i, site in enumerate(sites):
         config.set(
-            "camera_services_servers",
+            "iot_services_servers",
             f"remoteservices{i} ansible_host={site.remote_services_camera} PROTO={'true' if cirrina else 'false'}",
         )
 
-    config.add_section("detection_services_servers")
+    config.add_section("edge_services_servers")
 
     j = 0
     for site in sites:
         for host_string in site.get_local_services_host_strings():
             config.set(
-                "detection_services_servers",
+                "edge_services_servers",
                 f"localservices{j} {host_string}",
             )
             j += 1
+
+    config.add_section("cloud_services_servers")
+
+    config.set(
+        "cloud_services_servers",
+        f"global0 ansible_host={global_host} PROTO={'true' if cirrina else 'false'}",
+    )
 
     # Runtimes
     if cirrina:
@@ -193,27 +200,59 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.remote_services_camera,
+                            "host": "localhost",
                             "port": 8001,
                             "endPoint": "/capture",
                             "method": "POST",
-                            "name": "camera.capture",
+                            "name": "cameraCapture",
                             "cost": 1.0,
-                            "local": False,
+                            "local": False
                         },
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": site.local_services[host_index],
-                            "port": 8000,
-                            "endPoint": "/process",
+                            "host": "localhost",
+                            "port": 8001,
+                            "endPoint": "/alarm/on",
                             "method": "POST",
-                            "name": "personDetection.detect",
+                            "name": "alarmOn",
                             "cost": 1.0,
-                            "local": True,
+                            "local": False
                         },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": "localhost",
+                            "port": 8001,
+                            "endPoint": "/alarm/off",
+                            "method": "POST",
+                            "name": "alarmOff",
+                            "cost": 1.0,
+                            "local": False
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": "localhost",
+                            "port": 8002,
+                            "endPoint": "/detect",
+                            "method": "POST",
+                            "name": "detectPersons",
+                            "cost": 1.0,
+                            "local": True
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": "localhost",
+                            "port": 8003,
+                            "endPoint": "/analyze",
+                            "method": "POST",
+                            "name": "analyze",
+                            "cost": 1.0,
+                            "local": False
+                        }
                     ]
-
                     job_description["runtimeName"] = runtimes[host]
 
                     with open(f"job/job{i}.json", "w") as file:

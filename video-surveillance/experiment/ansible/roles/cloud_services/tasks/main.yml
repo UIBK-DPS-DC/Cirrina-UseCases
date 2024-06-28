@@ -12,17 +12,17 @@
     enabled: true
   become: true
 
-- name: Run Mock-Camera service in Docker
+- name: Run cloud services in Docker
   docker_container:
-    name: service-camera
-    image: "lellson/cirrina-examples-mock-camera:develop"
+    name: service-cloud
+    image: "lellson/surveillance-cloud-service:develop"
     state: started
     recreate: true
     force_kill: true
     pull: true
     ports:
-      - "8001:8001"
+      - "8002:8002"
     env:
       PROTO: "{{ hostvars[inventory_hostname]['PROTO'] }}"
   become: true
-  register: service_camera_container
+  register: service_cloud_container

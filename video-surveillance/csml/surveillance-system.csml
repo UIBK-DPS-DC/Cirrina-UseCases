@@ -28,7 +28,7 @@
               "input": [
                 {
                   "name": "cameraId",
-                  "value": "cameraId"
+                  "value": "0"
                 }
               ],
               "output": [

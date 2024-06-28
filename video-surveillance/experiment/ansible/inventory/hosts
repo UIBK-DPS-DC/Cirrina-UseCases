@@ -1,20 +1,37 @@
 [nats_servers]
-nats0 ansible_host=node1.site1.grid5000.fr
+nats0 ansible_host=dahu-5.grenoble.grid5000.fr
+nats1 ansible_host=econome-4.nantes.grid5000.fr
+nats2 ansible_host=paranoia-4.rennes.grid5000.fr
 
 [zookeeper_servers]
-zookeeper0 ansible_host=node1.site1.grid5000.fr
+zookeeper0 ansible_host=dahu-5.grenoble.grid5000.fr
+zookeeper1 ansible_host=econome-4.nantes.grid5000.fr
+zookeeper2 ansible_host=paranoia-4.rennes.grid5000.fr
 
-[camera_services_servers]
-remoteservices0 ansible_host=node1.site1.grid5000.fr PROTO=true
+[iot_services_servers]
+remoteservices0 ansible_host=dahu-5.grenoble.grid5000.fr PROTO=true
+remoteservices1 ansible_host=econome-4.nantes.grid5000.fr PROTO=true
+remoteservices2 ansible_host=paranoia-4.rennes.grid5000.fr PROTO=true
 
-[detection_services_servers]
-localservices0 ansible_host=node2.site1.grid5000.fr PROTO=true
-localservices1 ansible_host=node3.site1.grid5000.fr PROTO=true
+[edge_services_servers]
+localservices0 ansible_host=dahu-7.grenoble.grid5000.fr PROTO=true
+localservices1 ansible_host=dahu-9.grenoble.grid5000.fr PROTO=true
+localservices2 ansible_host=econome-5.nantes.grid5000.fr PROTO=true
+localservices3 ansible_host=econome-8.nantes.grid5000.fr PROTO=true
+localservices4 ansible_host=paranoia-5.rennes.grid5000.fr PROTO=true
+localservices5 ansible_host=paranoia-7.rennes.grid5000.fr PROTO=true
+
+[cloud_services_servers]
+global0 ansible_host=paranoia-8.rennes.grid5000.fr PROTO=true
 
 [runtime_servers]
-runtime0 ansible_host=node2.site1.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node1.site1.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node1.site1.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node1.site1.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime0
-runtime1 ansible_host=node3.site1.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://node1.site1.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://node1.site1.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=node1.site1.grid5000.fr:2181 OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/ RUNTIME_NAME=runtime1
+runtime0 ansible_host=dahu-7.grenoble.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://dahu-5.grenoble.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://dahu-5.grenoble.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=dahu-5.grenoble.grid5000.fr:2181 OTLP_ENDPOINT=http://paranoia-8.rennes.grid5000.fr:4317/ RUNTIME_NAME=runtime0
+runtime1 ansible_host=dahu-9.grenoble.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://dahu-5.grenoble.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://dahu-5.grenoble.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=dahu-5.grenoble.grid5000.fr:2181 OTLP_ENDPOINT=http://paranoia-8.rennes.grid5000.fr:4317/ RUNTIME_NAME=runtime1
+runtime2 ansible_host=econome-5.nantes.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://econome-4.nantes.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://econome-4.nantes.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=econome-4.nantes.grid5000.fr:2181 OTLP_ENDPOINT=http://paranoia-8.rennes.grid5000.fr:4317/ RUNTIME_NAME=runtime2
+runtime3 ansible_host=econome-8.nantes.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://econome-4.nantes.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://econome-4.nantes.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=econome-4.nantes.grid5000.fr:2181 OTLP_ENDPOINT=http://paranoia-8.rennes.grid5000.fr:4317/ RUNTIME_NAME=runtime3
+runtime4 ansible_host=paranoia-5.rennes.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://paranoia-4.rennes.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://paranoia-4.rennes.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=paranoia-4.rennes.grid5000.fr:2181 OTLP_ENDPOINT=http://paranoia-8.rennes.grid5000.fr:4317/ RUNTIME_NAME=runtime4
+runtime5 ansible_host=paranoia-7.rennes.grid5000.fr NATS_PERSISTENT_CONTEXT_URL=nats://paranoia-4.rennes.grid5000.fr:4222/ NATS_EVENT_HANDLER_URL=nats://paranoia-4.rennes.grid5000.fr:4222/ ZOOKEEPER_CONNECT_STRING=paranoia-4.rennes.grid5000.fr:2181 OTLP_ENDPOINT=http://paranoia-8.rennes.grid5000.fr:4317/ RUNTIME_NAME=runtime5
 
 [global_servers]
-global0 ansible_host=node16.site5.grid5000.fr INFLUXDB_URL=http://node16.site5.grid5000.fr:8086/ NATS_URL=nats://node1.site1.grid5000.fr:4222/ OTLP_ENDPOINT=http://node16.site5.grid5000.fr:4317/
+global0 ansible_host=paranoia-8.rennes.grid5000.fr INFLUXDB_URL=http://paranoia-8.rennes.grid5000.fr:8086/ NATS_URL=nats://paranoia-4.rennes.grid5000.fr:4222/ OTLP_ENDPOINT=http://paranoia-8.rennes.grid5000.fr:4317/
 

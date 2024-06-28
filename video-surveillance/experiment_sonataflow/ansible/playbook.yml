@@ -5,19 +5,26 @@
   roles:
     - global
 
-# Services Camera
-- name: Setup Camera Services
-  hosts: camera_services_servers
+# Services IoT
+- name: Setup IoT Services
+  hosts: iot_services_servers
   become: true
   roles:
-    - camera_services
+    - iot_services
 
-# Services Detection
-- name: Setup Detection Services
-  hosts: detection_services_servers
+# Services Edge
+- name: Setup Edge Services
+  hosts: edge_services_servers
   become: true
   roles:
-    - detection_services
+    - edge_services
+
+# Services Cloud
+- name: Setup Cloud Services
+  hosts: cloud_services_servers
+  become: true
+  roles:
+    - cloud_services
 
 # Sonataflow
 - name: Setup Sonataflow

@@ -12,17 +12,17 @@
     enabled: true
   become: true
 
-- name: Run Object-Detection service in Docker
+- name: Run edge services in Docker
   docker_container:
-    name: service-object-detection
-    image: "lellson/cirrina-examples-object-detection:develop"
+    name: service-edge
+    image: "lellson/surveillance-edge-service:develop"
     state: started
     recreate: true
     force_kill: true
     pull: true
     ports:
-      - "8000:8000"
+      - "8002:8002"
     env:
       PROTO: "{{ hostvars[inventory_hostname]['PROTO'] }}"
   become: true
-  register: service_object_detection_container
+  register: service_edge_container
