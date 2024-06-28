@@ -1,0 +1,47 @@
+{
+    "serviceImplementations": [
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8001,
+            "endPoint": "/capture",
+            "method": "POST",
+            "name": "cameraCapture",
+            "cost": 1.0
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8001,
+            "endPoint": "/alarm/on",
+            "method": "POST",
+            "name": "alarmOn",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8001,
+            "endPoint": "/alarm/off",
+            "method": "POST",
+            "name": "alarmOff",
+            "cost": 1.0,
+            "local": true
+        },
+        {
+            "type": "HTTP",
+            "scheme": "http",
+            "host": "localhost",
+            "port": 8002,
+            "endPoint": "/detect",
+            "method": "POST",
+            "name": "detectPersons",
+            "cost": 1.0,
+            "local": true
+        }
+    ]
+}
