@@ -1,19 +1,24 @@
+import ContextVariable_pb2
+
+import cv2
+import uvicorn
+
+import numpy as np
+
+from fastapi import FastAPI, HTTPException, Request, Response
+from google.protobuf.json_format import MessageToDict
+from starlette.status import HTTP_200_OK
+
 import base64
 import json
 import hashlib
 import os
 import time
 
-import cv2
-import uvicorn
-import numpy as np
-from fastapi import FastAPI, HTTPException, Request, Response
-import ContextVariable_pb2
-from google.protobuf.json_format import MessageToDict
-
 FPS = 30
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 VIDEOS_CAPTURES = {
     0: cv2.VideoCapture(os.path.join(ROOT_DIR, "resources", "1.avi")),
     1: cv2.VideoCapture(os.path.join(ROOT_DIR, "resources", "2.avi")),
@@ -21,35 +26,49 @@ VIDEOS_CAPTURES = {
     3: cv2.VideoCapture(os.path.join(ROOT_DIR, "resources", "4.avi")),
     4: cv2.VideoCapture(os.path.join(ROOT_DIR, "resources", "5.avi")),
 }
+
 app = FastAPI()
 
 # Decide whether protobuf should be used (optional environment variable)
-proto = "PROTO" not in os.environ \
-    or os.environ["PROTO"].lower() in ["true", "t", "1"]
+proto = "PROTO" not in os.environ or os.environ["PROTO"].lower() in ["true", "t", "1"]
 
+
+# Get the current frame number
 def get_frame_number() -> int:
     return round(int(time.time()) * FPS)
 
 
+# For logging detection times
 def log_hash(data: bytes):
+    # Compute a consistent hash
     sha256 = hashlib.sha256()
     sha256.update(data)
     hash = sha256.hexdigest()
 
-    timestamp = time.time()
-
+    # Acquire the current timestamp in milliseconds
+    timestamp = time.time_ns() // 1_000_000
     log_entry = f"{hash},{timestamp}\n"
 
-    with open("/tmp/log_camera.csv", "a") as log_file:
+    # Append to log file
+    with open("/tmp/log_send.csv", "a") as log_file:
         log_file.write(log_entry)
+
+
+@app.post("/alarm/on")
+async def alarm_on():
+    return Response(status_code=HTTP_200_OK)
+
+
+@app.post("/alarm/off")
+async def alarm_on():
+    return Response(status_code=HTTP_200_OK)
 
 
 @app.post("/capture")
 async def capture(request: Request):
-
     video_number = None
-    delay = None
 
+    # Attempt to read the video number
     if proto:
         # Read the raw request body
         body = await request.body()
@@ -62,28 +81,24 @@ async def capture(request: Request):
         for context_variable in context_variables.data:
             context_variable_dict = MessageToDict(context_variable)
 
-            # Check for video_number and delay
-            if context_variable_dict["name"] == "video_number":
+            # Check for cameraId and delay
+            if context_variable_dict["name"] == "cameraId":
                 video_number = context_variable_dict["value"].get("integer")
-            elif context_variable_dict["name"] == "delay":
-                delay = context_variable_dict["value"].get("integer")
     else:
         # Parse the request variables
         context_variables = await request.json()
 
         # Get context variables from the request json
-        if "video_number" in context_variables:
-            video_number = int(context_variables["video_number"])
-        if "delay" in context_variables:
-            delay = int(context_variables["delay"])
+        if "cameraId" in context_variables:
+            video_number = int(context_variables["cameraId"])
 
     if video_number not in VIDEOS_CAPTURES:
         raise HTTPException(
             status_code=400, detail=f"Invalid video_number: {video_number}"
         )
 
+    # Acquire the video frame
     cap = VIDEOS_CAPTURES[video_number]
-    video_path = os.path.join(ROOT_DIR, "resources", f"{video_number + 1}.avi")
 
     if not cap.isOpened():
         print(f"Failed to open video {video_number}")
@@ -101,23 +116,26 @@ async def capture(request: Request):
 
     frame = cv2.resize(frame, (640, 480))
 
+    # Introduce entropy to make every frame unique
     random_values = (np.random.rand(1, frame.shape[1], frame.shape[2]) * 256).astype(
         np.uint8
     )
 
     frame[:1, :, :] = random_values
 
+    # JPEG compression
     jpeg_params = [int(cv2.IMWRITE_JPEG_QUALITY), 80]
 
     _, buffer = cv2.imencode(".jpg", frame, jpeg_params)
 
     buffer_bytes = buffer.tobytes()
 
+    # Prepare output data
     if proto:
         # Create response protobuf message
         response_context_variables = ContextVariable_pb2.ContextVariables()
         image_context_variable = ContextVariable_pb2.ContextVariable(
-            name="camera_image", value=ContextVariable_pb2.Value(bytes=buffer_bytes)
+            name="image", value=ContextVariable_pb2.Value(bytes=buffer_bytes)
         )
         response_context_variables.data.append(image_context_variable)
 
@@ -125,11 +143,9 @@ async def capture(request: Request):
         response = response_context_variables.SerializeToString()
         media_type = "application/x-protobuf"
     else:
-        buffer_base64 = base64.b64encode(buffer_bytes).decode('utf-8')
+        buffer_base64 = base64.b64encode(buffer_bytes).decode("utf-8")
 
-        response = json.dumps({
-            "camera_image": buffer_base64
-        })
+        response = json.dumps({"image": buffer_base64})
         media_type = "application/json"
 
     log_hash(buffer_bytes)
@@ -139,5 +155,4 @@ async def capture(request: Request):
 
 
 if __name__ == "__main__":
-    print(f"Protobuf: {proto}")
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

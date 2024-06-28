@@ -8,6 +8,7 @@ from typing import Any, Dict, List
 
 MACHINES_JSON = "machines.json"
 
+
 class Site:
     def __init__(self, proto: bool):
         self.nats: str = ""
@@ -31,13 +32,13 @@ class Site:
         ]
 
     def get_runtime_host_strings(self, global_host: str) -> List[str]:
-        env = f" NATS_PERSISTENT_CONTEXT_URL=nats://{self.nats}:4222/ NATS_EVENT_HANDLER_URL=nats://{self.nats}:4222/ ZOOKEEPER_CONNECT_STRING={self.zookeeper}:2181 OTLP_ENDPOINT=http://{global_host}:4317/" \
-            if self.proto else ""
+        env = (
+            f" NATS_PERSISTENT_CONTEXT_URL=nats://{self.nats}:4222/ NATS_EVENT_HANDLER_URL=nats://{self.nats}:4222/ ZOOKEEPER_CONNECT_STRING={self.zookeeper}:2181 OTLP_ENDPOINT=http://{global_host}:4317/"
+            if self.proto
+            else ""
+        )
 
-        return [
-            f"ansible_host={runtime}{env}"
-            for runtime in self.runtimes
-        ]
+        return [f"ansible_host={runtime}{env}" for runtime in self.runtimes]
 
 
 def read_machines_json() -> Any:
@@ -136,17 +137,19 @@ def write_hosts_config(sites: List[Site], cirrina: bool):
             else:
                 config.set(
                     "sonataflow_servers",
-                    f"{runtime_name} {host_string} IMAGE_TAG={'develop' if i == 0 else f'develop{i+1}'}"
+                    f"{runtime_name} {host_string} IMAGE_TAG={'develop' if i == 0 else f'develop{i+1}'}",
                 )
 
             i += 1
-    
 
     # InfluxDB
     config.add_section("global_servers")
 
-    env = f" INFLUXDB_URL=http://{global_host}:8086/ NATS_URL=nats://{sites[-1].nats}:4222/ OTLP_ENDPOINT=http://{global_host}:4317/" \
-        if cirrina else ""
+    env = (
+        f" INFLUXDB_URL=http://{global_host}:8086/ NATS_URL=nats://{sites[-1].nats}:4222/ OTLP_ENDPOINT=http://{global_host}:4317/"
+        if cirrina
+        else ""
+    )
     config.set(
         "global_servers",
         f"global0 ansible_host={global_host}{env}",
@@ -171,13 +174,13 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
 
     i = 0
 
-    path = "csml/surveillance-system.remote.csml"
+    path = "csml/surveillance-system.csml"
 
     with open(path) as file:
         global_job_description["collaborativeStateMachine"] = json.load(file)
 
     sm_names = ["camera", "personDetector"]
-    
+
     for site in sites:
         for host_index, host in enumerate(site.runtimes):
             for j in range(5):
@@ -185,32 +188,31 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                     job_description = global_job_description.copy()
 
                     job_description["stateMachineName"] = sm_name
-                    
-                    job_description["serviceImplementations"] = \
-                        [
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.remote_services_camera,
-                                "port": 8001,
-                                "endPoint": "/capture",
-                                "method": "POST",
-                                "name": "camera.capture",
-                                "cost": 1.0,
-                                "local": False
-                            },
-                            {
-                                "type": "HTTP",
-                                "scheme": "http",
-                                "host": site.local_services[host_index],
-                                "port": 8000,
-                                "endPoint": "/process",
-                                "method": "POST",
-                                "name": "personDetection.detect",
-                                "cost": 1.0,
-                                "local": True
-                            }
-                        ]
+
+                    job_description["serviceImplementations"] = [
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.remote_services_camera,
+                            "port": 8001,
+                            "endPoint": "/capture",
+                            "method": "POST",
+                            "name": "camera.capture",
+                            "cost": 1.0,
+                            "local": False,
+                        },
+                        {
+                            "type": "HTTP",
+                            "scheme": "http",
+                            "host": site.local_services[host_index],
+                            "port": 8000,
+                            "endPoint": "/process",
+                            "method": "POST",
+                            "name": "personDetection.detect",
+                            "cost": 1.0,
+                            "local": True,
+                        },
+                    ]
 
                     job_description["runtimeName"] = runtimes[host]
 
@@ -223,7 +225,9 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--cirrina", action=argparse.BooleanOptionalAction, required=True)
+    parser.add_argument(
+        "--cirrina", action=argparse.BooleanOptionalAction, required=True
+    )
 
     args = parser.parse_args()
 

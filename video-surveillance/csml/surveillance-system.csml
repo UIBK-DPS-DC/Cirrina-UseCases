@@ -1,121 +1,142 @@
 {
-  version: '0.1',
-  name: 'Surveillance System',
-  stateMachines: [
+  "version": "0.1",
+  "name": "Surveillance System",
+  "stateMachines": [
     {
-      name: 'camera',
-      localContext: {
-        variables: [
+      "name": "detector",
+      "localContext": {
+        "variables": [
           {
-            name: '$out',
-            value: '""'
+            "name": "image",
+            "value": "null"
+          },
+          {
+            "name": "hasDetectedPersons",
+            "value": "false"
           }
         ]
       },
-      states: [
+      "states": [
         {
-          name: 'idle',
-          initial: true,
-          on: [
+          "name": "capturing",
+          "initial": true,
+          "entry": [
             {
-              target: 'idle',
-              event: 'capture',
-              actions: [
+              "type": "invoke",
+              "serviceType": "cameraCapture",
+              "input": [
                 {
-                  type: 'invoke',
-                  serviceType: 'camera.capture',
-                  isLocal: true,
-                  input: [
-                    {
-                      name: 'video_number',
-                      value: '0'
-                    },
-                    {
-                      name: 'start_time',
-                      value: '0'
-                    }
-                  ],
-                  output: {
-                    reference: '$out'
-                  },
-                  done: [
-                    {
-                      name: 'newImage',
-                      data: [
-                        {
-                          name: 'image',
-                          value: '$out'
-                        }
-                      ],
-                      channel: 'external'
-                    }
-                  ]
+                  "name": "cameraId",
+                  "value": "cameraId"
+                }
+              ],
+              "output": [
+                {
+                  "reference": "image"
+                }
+              ],
+              "done": [
+                {
+                  "name": "captured",
+                  "channel": "internal"
                 }
               ]
             }
           ],
-          after: [
+          "on": [
             {
-              type: 'timeout',
-              delay: '1000',
-              actions: [
+              "event": "captured",
+              "target": "processing"
+            }
+          ]
+        },
+        {
+          "name": "processing",
+          "entry": [
+            {
+              "type": "invoke",
+              "serviceType": "detectPersons",
+              "isLocal": true,
+              "input": [
                 {
-                  type: 'raise',
-                  event: {
-                    name: 'capture',
-                    channel: 'internal'
-                  }
+                  "name": "image",
+                  "value": "image"
+                }
+              ],
+              "output": [
+                {
+                  "reference": "hasDetectedPersons"
+                }
+              ],
+              "done": [
+                {
+                  "name": "detectedPersons",
+                  "channel": "internal"
                 }
               ]
             }
-          ]
-        }
-      ]
-    },
-    {
-      name: 'threatDetector',
-      localContext: {
-        variables: [
-          {
-            name: '$recent_image_capture',
-            value: '""'
-          }
-        ]
-      },
-      states: [
-        {
-          name: 'idle',
-          initial: true,
-          on: [
+          ],
+          "on": [
             {
-              target: 'idle',
-              event: 'newImage',
-              actions: [
+              "event": "detectedPersons",
+              "guards": [
                 {
-                  type: 'assign',
-                  variable: {
-                    name: '$recent_image_capture',
-                    value: 'event_data.image'
+                  "expression": "hasDetectedPersons == true"
+                }
+              ],
+              "actions": [
+                {
+                  "type": "raise",
+                  "event": {
+                    "name": "foundPersons",
+                    "channel": "global"
                   }
                 }
               ]
             },
             {
-              target: 'idle',
-              event: 'processedImage',
-              actions: [
-                {
-                  type: 'invoke',
-                  serviceType: 'faceanalyzer.process',
-                  input: [
-                    {
-                      name: 'body',
-                      value: '$recent_image_capture'
-                    }
-                  ],
-                  isLocal: false
+              "event": "timeout",
+              "target": "capturing"
+            },
+            {
+              "event": "alarm",
+              "target": "alarm"
+            }
+          ],
+          "after": [
+            {
+              "type": "timeout",
+              "delay": "100",
+              "action": {
+                "type": "raise",
+                "event": {
+                  "name": "timeout",
+                  "channel": "internal"
                 }
-              ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "alarm",
+          "entry": [
+            {
+              "type": "invoke",
+              "serviceType": "alarmOn",
+              "isLocal": true
+            }
+          ],
+          "exit": [
+            {
+              "type": "invoke",
+              "serviceType": "alarmOff",
+              "isLocal": true
+            }
+          ],
+          "on": [
+            {
+              "event": "disarm",
+              "target": "capturing"
             }
           ]
         }

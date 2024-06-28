@@ -1,0 +1,19 @@
+services:
+  iotservices:
+    build:
+      context: ./services/iotservices
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+  edgeservices:
+    build:
+      context: ./services/edgeservices
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8000"
+  cloudservices:
+    build:
+      context: ./services/cloudservices
+      dockerfile: Dockerfile
+    ports:
+      - "8003:8000"
