@@ -14,8 +14,6 @@ import base64
 import time
 import hashlib
 
-random.seed(0)
-
 app = FastAPI()
 
 # Decide whether protobuf should be used (optional environment variable)
