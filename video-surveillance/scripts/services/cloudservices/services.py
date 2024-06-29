@@ -14,6 +14,8 @@ import base64
 import time
 import hashlib
 
+random.seed(0)
+
 app = FastAPI()
 
 # Decide whether protobuf should be used (optional environment variable)
@@ -28,7 +30,7 @@ def log_hash(data: bytes):
     hash = sha256.hexdigest()
 
     # Acquire the current timestamp in milliseconds
-    timestamp = time.time_ns() // 1_000_000
+    timestamp = time.time_ns() / 1_000_000.0
     log_entry = f"{hash},{timestamp}\n"
 
     # Append to log file
@@ -38,6 +40,8 @@ def log_hash(data: bytes):
 
 @app.post("/analyze")
 async def detect(request: Request):
+    time_start = time.time_ns() / 1_000_000.0
+
     if proto:
         # Read the raw request body
         body = await request.body()
@@ -70,7 +74,7 @@ async def detect(request: Request):
     if image is None:
         raise HTTPException(status_code=400, detail="Failed to decode the image")
 
-    is_threat = random.random() < (1.0 / 20.0)
+    is_threat = random.random() < (1.0 / 10.0)
 
     # Prepare output data
     if proto:
@@ -88,6 +92,11 @@ async def detect(request: Request):
     else:
         response = json.dumps({"hasThreat": is_threat})
         media_type = "application/json"
+
+    time_end = time.time_ns() / 1_000_000.0
+
+    with open("/tmp/time_analysis.csv", "a") as log_file:
+        log_file.write(f"{time_end - time_start}")
 
     # Log data
     log_hash(image_bytes)

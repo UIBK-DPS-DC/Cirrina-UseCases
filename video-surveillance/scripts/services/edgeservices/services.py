@@ -11,6 +11,7 @@ import json
 import os
 import random
 import base64
+import time
 
 app = FastAPI()
 
@@ -23,17 +24,19 @@ hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
 
 
 # Utility function for debugging
-def generate_random_colors(n: int):
-    random.seed(0)
-
-    return [
-        (random.randint(128, 255), random.randint(128, 255), random.randint(128, 255))
-        for _ in range(n)
-    ]
+# def generate_random_colors(n: int):
+#    random.seed(0)
+#
+#    return [
+#        (random.randint(128, 255), random.randint(128, 255), random.randint(128, 255))
+#        for _ in range(n)
+#    ]
 
 
 @app.post("/detect")
 async def detect(request: Request):
+    time_start = time.time_ns() / 1_000_000.0
+
     if proto:
         # Read the raw request body
         body = await request.body()
@@ -94,6 +97,11 @@ async def detect(request: Request):
     else:
         response = json.dumps({"hasDetectedPersons": len(regions) > 0})
         media_type = "application/json"
+
+    time_end = time.time_ns() / 1_000_000.0
+
+    with open("/tmp/time_detection.csv", "a") as log_file:
+        log_file.write(f"{time_end - time_start}")
 
     # Return the protobuf response
     return Response(content=response, media_type=media_type)

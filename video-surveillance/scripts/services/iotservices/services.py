@@ -46,7 +46,7 @@ def log_hash(data: bytes):
     hash = sha256.hexdigest()
 
     # Acquire the current timestamp in milliseconds
-    timestamp = time.time_ns() // 1_000_000
+    timestamp = time.time_ns() / 1_000_000.0
     log_entry = f"{hash},{timestamp}\n"
 
     # Append to log file
