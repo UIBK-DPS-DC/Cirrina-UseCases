@@ -21,7 +21,7 @@
     force_kill: true
     pull: true
     ports:
-      - "8002:8002"
+      - "8002:8000"
     env:
       PROTO: "{{ hostvars[inventory_hostname]['PROTO'] }}"
   become: true

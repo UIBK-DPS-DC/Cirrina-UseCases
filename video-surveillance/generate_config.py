@@ -186,7 +186,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
     with open(path) as file:
         global_job_description["collaborativeStateMachine"] = json.load(file)
 
-    sm_names = ["camera", "personDetector"]
+    sm_names = ["detector", "surveillance"]
 
     for site in sites:
         for host_index, host in enumerate(site.runtimes):
@@ -200,7 +200,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": "localhost",
+                            "host": site.remote_services_camera,
                             "port": 8001,
                             "endPoint": "/capture",
                             "method": "POST",
@@ -211,7 +211,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": "localhost",
+                            "host": site.remote_services_camera,
                             "port": 8001,
                             "endPoint": "/alarm/on",
                             "method": "POST",
@@ -222,7 +222,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": "localhost",
+                            "host": site.remote_services_camera,
                             "port": 8001,
                             "endPoint": "/alarm/off",
                             "method": "POST",
@@ -233,7 +233,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": "localhost",
+                            "host": host,
                             "port": 8002,
                             "endPoint": "/detect",
                             "method": "POST",
@@ -244,7 +244,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
                         {
                             "type": "HTTP",
                             "scheme": "http",
-                            "host": "localhost",
+                            "host": global_host,
                             "port": 8003,
                             "endPoint": "/analyze",
                             "method": "POST",
