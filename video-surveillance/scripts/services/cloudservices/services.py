@@ -14,6 +14,8 @@ import base64
 import time
 import hashlib
 
+local_random = random.Random(os.getpid())
+
 app = FastAPI()
 
 # Decide whether protobuf should be used (optional environment variable)
@@ -72,7 +74,7 @@ async def detect(request: Request):
     if image is None:
         raise HTTPException(status_code=400, detail="Failed to decode the image")
 
-    is_threat = random.random() < (1.0 / 10.0)
+    is_threat = local_random.random() < (1.0 / 5.0)
 
     # Prepare output data
     if proto:
