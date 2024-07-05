@@ -1,5 +1,7 @@
 # Smart Factory Serverless Workflow
 
+Contains the Sonataflow version of the smart factory use case.
+
 ## Contents
 
 - Usage

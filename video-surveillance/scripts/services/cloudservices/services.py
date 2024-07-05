@@ -96,7 +96,7 @@ async def detect(request: Request):
     time_end = time.time_ns() / 1_000_000.0
 
     with open("/tmp/time_analysis.csv", "a") as log_file:
-        log_file.write(f"{time_end - time_start}")
+        log_file.write(f"{time_end - time_start}\n")
 
     # Log data
     log_hash(image_bytes)

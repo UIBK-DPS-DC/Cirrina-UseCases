@@ -37,6 +37,22 @@
                     "initial": true,
                     "entry": [
                         {
+                            "type": "match",
+                            "value": "productsCompleted >= totalProducts || jobDone",
+                            "cases": [
+                                {
+                                    "case": "true",
+                                    "action": {
+                                        "type": "assign",
+                                        "variable": {
+                                            "name": "productsCompleted",
+                                            "value": "0"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
                             "type": "assign",
                             "variable": {
                                 "name": "jobDone",

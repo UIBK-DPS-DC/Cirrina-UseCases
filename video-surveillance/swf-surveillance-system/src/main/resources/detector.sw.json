@@ -16,12 +16,12 @@
         {
             "name": "service-capture",
             "type": "custom",
-            "operation": "rest:post:http://localhost:8001/capture"
+            "operation": "rest:post:http://paranoia-1.rennes.grid5000.fr:8001/capture"
         },
         {
             "name": "service-detect",
             "type": "custom",
-            "operation": "rest:post:http://localhost:8002/detect"
+            "operation": "rest:post:http://paranoia-5.rennes.grid5000.fr:8002/detect"
         }
     ],
     "start": "start",

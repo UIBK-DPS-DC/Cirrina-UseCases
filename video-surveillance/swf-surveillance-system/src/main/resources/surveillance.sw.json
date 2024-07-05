@@ -21,7 +21,7 @@
         {
             "name": "service-analyze",
             "type": "custom",
-            "operation": "rest:post:http://localhost:8003/analyze"
+            "operation": "rest:post:http://paravance-46.rennes.grid5000.fr:8003/analyze"
         }
     ],
     "start": "start",

@@ -15,12 +15,12 @@
         {
             "name": "service-alarm-on",
             "type": "custom",
-            "operation": "rest:post:http://localhost:8001/alarm/on"
+            "operation": "rest:post:http://paranoia-1.rennes.grid5000.fr:8001/alarm/on"
         },
         {
             "name": "service-alarm-off",
             "type": "custom",
-            "operation": "rest:post:http://localhost:8001/alarm/off"
+            "operation": "rest:post:http://paranoia-1.rennes.grid5000.fr:8001/alarm/off"
         }
     ],
     "start": "start",

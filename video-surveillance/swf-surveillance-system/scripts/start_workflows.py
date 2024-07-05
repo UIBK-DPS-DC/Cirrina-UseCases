@@ -15,7 +15,7 @@ if __name__ == "__main__":
                         default="http://localhost:8080")
     
     parser.add_argument("--workflows", type=str, required=False, 
-                        default="detector,surveillance")
+                        default="detector,surveillance,alarm")
     
     parser.add_argument("--key", type=str, required=False, 
                         default="instance")

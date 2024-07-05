@@ -24,8 +24,8 @@ def calculate_time_deltas(log1, log2):
 
 
 # Paths to the log files
-log_file_1 = "/tmp/log_send.csv"
-log_file_2 = "/tmp/log_analysis.csv"
+log_file_1 = "./send.csv"
+log_file_2 = "./analysis.csv"
 
 # Read the log files
 log1_data = read_log_file(log_file_1)

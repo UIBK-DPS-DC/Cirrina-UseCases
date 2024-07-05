@@ -74,8 +74,6 @@ public class SimulationHttpServer implements Runnable {
     server.start();
   }
 
-  private static long lastStamp = System.currentTimeMillis();
-
   /**
    * HTTP handler for processing requests and generating responses.
    * Deserializes the request as proto and serializes the response as proto.
