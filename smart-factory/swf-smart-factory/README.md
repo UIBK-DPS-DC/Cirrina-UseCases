@@ -9,7 +9,7 @@ Contains the Sonataflow version of the smart factory use case.
 - Feature comparison SWF/Sonataflow and Cirrina
 - Deployment
 
-# Usage
+## Usage
 
 ## Requirements
 

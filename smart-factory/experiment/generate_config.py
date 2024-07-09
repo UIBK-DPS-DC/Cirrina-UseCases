@@ -155,7 +155,7 @@ def write_jobs(sites: List[Site], runtimes: Dict[str, str]):
 
     i = 0
 
-    path = "../csml/smart_factory.csml"
+    path = "../csml/smart_factory_experiment.csml"
 
     with open(path) as file:
         global_job_description["collaborativeStateMachine"] = json.load(file)

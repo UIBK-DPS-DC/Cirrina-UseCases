@@ -7,7 +7,8 @@ The use case is implemented twice based on two different ecosystems:
 
 ## Contents
 
-- `csml`: Contains the CSM description files, describing the Cirrina video surveillance use case.
+- `csml`: Contains the CSM description files, describing the Cirrina video surveillance use case. Also contains a basic
+  service implementations JSON file and instructions on how to run the Cirrina version of the use case.
 - `experiment`: Contains [Ansible](https://www.ansible.com/) playbooks used to configure nodes for the video surveillance 
   use case on the [Grid`5000](https://www.grid5000.fr/w/Grid5000:Home) testbed. Contains different playbooks for both
   the Cirrina and Sonataflow versions of the video surveillance use case. Also contains python scripts to conveniently
@@ -18,7 +19,8 @@ The use case is implemented twice based on two different ecosystems:
   contains a Python script which can be used to compare log files produced by the services to calculate the processing
   time per processed image.
 - `swf-surveillance-system`: Contains the Sonataflow version of the video surveillance use case, a 
-  [Quarkus](https://quarkus.io/)-based Java application.
+  [Quarkus](https://quarkus.io/)-based Java application. Also contains instructions on how to run the Sonataflow version of the use 
+  case.
 
 ## Use Case Description
 

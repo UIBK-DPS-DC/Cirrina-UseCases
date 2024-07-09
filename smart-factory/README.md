@@ -7,7 +7,8 @@ The use case is implemented twice based on two different ecosystems:
 
 ## Contents
 
-- `csml`: Contains the CSM description files, describing the Cirrina smart factory use case.
+- `csml`: Contains the CSM description files, describing the Cirrina smart factory use case. Also contains a basic 
+  service implementations JSON file and instructions on how to run the Cirrina version of the use case.
 - `experiment`: Contains [Ansible](https://www.ansible.com/) playbooks used to configure nodes for the smart factory 
   use case on the [Grid`5000](https://www.grid5000.fr/w/Grid5000:Home) testbed. Contains different playbooks for both
   the Cirrina and Sonataflow versions of the smart factory use case. Also contains Python scripts to conveniently
@@ -17,13 +18,14 @@ The use case is implemented twice based on two different ecosystems:
 - `simulation-server`: Contains the HTTP server application used by both the Cirrina and Sonataflow
   versions of the smart factory use case. Has endpoints for all required service types (IoT, Edge and Cloud) which
   simulate appropriate responses.
-- `swf-smart-factory`: Contains the Sonataflow version of the smart factory use case, a [Quarkus](https://quarkus.io/)-based
-  Java application.
+- `swf-smart-factory`: Contains the Sonataflow version of the smart factory use case, a 
+  [Quarkus](https://quarkus.io/)-based Java application. Also contains instructions on how to run the Sonataflow version 
+  of the use case.
 
 ## Use Case Description
 
 The smart factory use case includes conveyor belts, robotic arms, and camera systems within the Edge-IoT domain, and 
-monitoring and assembly management in the Cloud domain to fully model a production line.
+monitoring and assembly management in the Cloud domain to fully model a simulated production line.
 
 One of the main components of the use case is a conveyor belt which includes the nested state machines camera system
 and two photoelectric sensors (One at the start of the belt and one at the end of the belt). The photoelectric sensors
@@ -67,4 +69,3 @@ The Serverless Workflow version of the use case follows a similar approach, wher
 a respective workflow. We skipped the monitoring system and message processors and replaced corresponding events with 
 async service invocations if possible. This was necessary in order to take into account the lower event rate that is 
 possible with Sonataflow and to ensure that all required logs are correctly produced.
-
