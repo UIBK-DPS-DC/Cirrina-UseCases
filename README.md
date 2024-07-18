@@ -1,5 +1,7 @@
 # Cirrina Use Cases
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE.md)
+
 Repository containing [Cirrina](https://git.uibk.ac.at/informatik/dps/dps-dc-software/cirrina-project/cirrina) use
 cases. Cirrina, a distributed Collaborative State Machines (CSM) runtime for the Cloud-Edge-IoT continuum.
 
@@ -17,7 +19,3 @@ This repository contains the following use case implementations:
   arms, and camera systems within the Edge-IoT domain, and monitoring and assembly management in the Cloud domain.
 
 Individual use case descriptions and usage instructions can be found in the corresponding README files.
-
-## License
-
-GPLv3 licensed, see [LICENSE](LICENSE).
