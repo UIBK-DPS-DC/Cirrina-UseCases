@@ -1,0 +1,1060 @@
+import "CollaborativeStateMachineDescription.pkl" as CSM
+
+// Only render the CSM Object
+output {
+    value = csm
+}
+
+// ------------------------ Service Types -------------------------------
+const hidden stMoveBelt = "moveBelt"
+const hidden stStopBelt = "stopBelt"
+const hidden stTakePhoto = "takePhoto"
+const hidden stScanPhoto = "scanPhoto"
+const hidden stBeamDetectionStart = "beamDetectionStart"
+const hidden stBeamDetectionEnd = "beamDetectionEnd"
+const hidden stPickup = "pickUp"
+const hidden stAssemble = "assemble"
+const hidden stReturnToStart = "returnToStart"
+const hidden stSendEmail = "sendMail"
+const hidden stSendSms = "sendSms"
+const hidden stSendStatistics = "sendStatistics"
+
+// ------------------------ Events (Global) -------------------------------
+const hidden eObjectValid = "eObjectValid"
+const hidden eObjectInvalid = "eObjectInvalid"
+const hidden eStartScan = "eStartScan"
+const hidden eProductComplete = "eProductComplete"
+const hidden eProcessMessage = "eProcessMessage"
+const hidden eJobDone = "eJobDone"
+const hidden eScanned = "eScanned"
+const hidden eArmPickup = "eArmPickup"
+const hidden ePickedUp = "ePickedUp"
+const hidden eAssembleComplete = "eAssembleComplete"
+
+// ------------------------ Variables (Persistent) -------------------------------
+const hidden vProductsCompleted = "productsCompleted"
+const hidden vJobDone = "jobDone"
+const hidden vLog = "log"
+
+// ------------------------ Timeouts -------------------------------
+const hidden tBeamDetection = "100"
+const hidden tPickUp = "1000"
+const hidden tRetry = "10000"
+
+// ------------------------ CSM -------------------------------
+csm: CSM = new {
+    name = "Smart Factory"
+    version = "0.1"
+    stateMachines {
+        jobControlSystem
+        conveyorBeltSystem
+        roboticArmSystem
+        eMailProcessor
+        smsProcessor
+        logProcessor
+        monitoringSystem
+    }
+    persistentContext {
+        variables {
+            new {
+                name = vProductsCompleted
+                value = "0"
+            }
+            new {
+                name = vJobDone
+                value = "false"
+            }
+            new {
+                name = vLog
+                value = "[...]"
+            }
+        }
+    }
+}
+
+// ------------------------ Job Control System -------------------------------
+const hidden jobControlSystem: CSM.StateMachineDescription = new {
+    name = "jobControlSystem"
+    localContext {
+        variables {
+            new {
+                name = "totalProducts"
+                value = "1"
+            }
+        }
+    }
+    states {
+        jobControlSystem_starting
+        jobControlSystem_running
+        jobControlSystem_jobDone
+    }
+}
+
+const hidden jobControlSystem_starting: CSM.StateDescription = new {
+    name = "starting"
+    initial = true
+    entry {
+        new CSM.MatchActionDescription {
+            value = vProductsCompleted + " >= totalProducts || " + vJobDone
+            cases {
+                new {
+                    `case` = "true"
+                    action = new CSM.AssignActionDescription {
+                        variable {
+                            name = "productsCompleted"
+                            value = "0"
+                        }
+                    }
+                }
+            }
+        }
+        new CSM.AssignActionDescription {
+            variable {
+                name = vJobDone
+                value = "false"
+            }
+        }
+        new CSM.RaiseActionDescription {
+            event {
+                name = eProcessMessage
+                data {
+                    new {
+                        name = "msg"
+                        value = "'Job started. Producing ' + totalProducts + ' products.'"
+                    }
+                }
+                channel = "global"
+            }
+        }
+    }
+    always {
+        new {
+            target = jobControlSystem_running.name
+        }
+    }
+}
+
+const hidden jobControlSystem_running: CSM.StateDescription = new {
+    name = "running"
+    on {
+        new {
+            event = eProductComplete
+            actions {
+                new CSM.AssignActionDescription {
+                    variable {
+                        name = vProductsCompleted
+                        value = vProductsCompleted + " + 1"
+                    }
+                }
+                new CSM.RaiseActionDescription {
+                    event {
+                        name = "eCheckJobDone"
+                        channel = "internal"
+                    }
+                }
+            }
+        }
+        new {
+            event = "eCheckJobDone"
+            target = jobControlSystem_jobDone.name
+            guards {
+                new CSM.GuardDescription {
+                    expression = vProductsCompleted + " >= totalProducts"
+                }
+            }
+        }
+    }
+}
+
+const hidden jobControlSystem_jobDone: CSM.StateDescription = new {
+    name = "jobDone"
+    terminal = true
+    entry {
+        new CSM.AssignActionDescription {
+            variable {
+                name = vJobDone
+                value = "true"
+            }
+        }
+        new CSM.RaiseActionDescription {
+            event {
+                name = eProcessMessage
+                data {
+                    new {
+                        name = "msg"
+                        value = "'Job done! Produced ' + productsCompleted + ' products.'"
+                    }
+                }
+                channel = "global"
+            }
+        }
+        new CSM.RaiseActionDescription {
+            event {
+                name = eJobDone
+                channel = "global"
+            }
+        }
+    }
+}
+
+// ------------------------ Conveyor Belt System -------------------------------
+const hidden conveyorBeltSystem: CSM.StateMachineDescription = new {
+    name = "jobControlSystem"
+    localContext {
+        variables {
+            new {
+                name = "isScanning"
+                value = "false"
+            }
+            new {
+                name = "isUnloading"
+                value = "false"
+            }
+        }
+    }
+    states {
+        conveyorBeltSystem_loading
+        conveyorBeltSystem_error
+        conveyorBeltSystem_transporting
+        conveyorBeltSystem_unloading
+        conveyorBeltSystem_jobDone
+        cameraSensorSystem
+        photoelectricSensorStart
+        photoelectricSensorEnd
+    }
+}
+
+const hidden conveyorBeltSystem_loading: CSM.StateDescription = new {
+    name = "loading"
+    initial = true
+    on {
+        new {
+            event = eObjectInvalid
+            target = conveyorBeltSystem_error.name
+        }
+        new {
+            event = eObjectValid
+            target = conveyorBeltSystem_transporting.name
+        }
+        new {
+            event = eJobDone
+            target = conveyorBeltSystem_jobDone.name
+        }
+    }
+    exit {
+        new CSM.RaiseActionDescription {
+            event {
+                name = eScanned
+                channel = "global"
+            }
+        }
+    }
+}
+
+const hidden conveyorBeltSystem_error: CSM.StateDescription = new {
+    name = "error"
+    entry {
+        new CSM.RaiseActionDescription {
+            event {
+                name = eProcessMessage
+                data {
+                    new {
+                        name = "msg"
+                        value = "'Invalid object detected'"
+                    }
+                }
+                channel = "global"
+            }
+        }
+    }
+    on {
+        new {
+            event = eObjectValid
+            target = conveyorBeltSystem_transporting.name
+        }
+        new {
+            event = eJobDone
+            target = conveyorBeltSystem_jobDone.name
+        }
+    }
+}
+
+const hidden conveyorBeltSystem_transporting: CSM.StateDescription = new {
+    name = "transporting"
+    entry {
+        new CSM.InvokeActionDescription {
+            serviceType = stMoveBelt
+        }
+    }
+    exit {
+        new CSM.InvokeActionDescription {
+            serviceType = stStopBelt
+        }
+    }
+    on {
+        new {
+            event = "eStartUnload"
+            target = conveyorBeltSystem_unloading.name
+            actions {
+                new CSM.AssignActionDescription {
+                    variable {
+                        name = "isUnloading"
+                        value = "true"
+                    }
+                }
+            }
+        }
+        new {
+            event = eJobDone
+            target = conveyorBeltSystem_jobDone.name
+        }
+    }
+}
+
+const hidden conveyorBeltSystem_unloading: CSM.StateDescription = new {
+    name = "unloading"
+    entry {
+        new CSM.RaiseActionDescription {
+            event {
+                name = eArmPickup
+                channel = "global"
+            }
+        }
+    }
+    after {
+        new CSM.TimeoutActionDescription {
+            name = "conveyorBeltSystem.triggerPickup"
+            delay = tPickUp
+            action = new CSM.RaiseActionDescription {
+                event {
+                    name = eArmPickup
+                    channel = "global"
+                }
+            }
+        }
+    }
+    on {
+        new {
+            event = ePickedUp
+            target = conveyorBeltSystem_loading.name
+            actions {
+                new CSM.AssignActionDescription {
+                    variable {
+                        name = "isUnloading"
+                        value = "false"
+                    }
+                }
+            }
+        }
+        new {
+            event = eJobDone
+            target = conveyorBeltSystem_jobDone.name
+            actions {
+                new CSM.AssignActionDescription {
+                    variable {
+                        name = "isUnloading"
+                        value = "false"
+                    }
+                }
+            }
+        }
+    }
+}
+
+const hidden conveyorBeltSystem_jobDone: CSM.StateDescription = new {
+    name = "jobDone"
+    terminal = true
+}
+
+// ------------------------ Camera Sensor System -------------------------------
+const hidden cameraSensorSystem: CSM.StateMachineDescription = new {
+    name = "cameraSensorSystem"
+    localContext {
+        variables {
+            new {
+                name = "validObject"
+                value = "false"
+            }
+            new {
+                name = "photoPath"
+                value = "''"
+            }
+        }
+    }
+    states {
+        cameraSensorSystem_idle
+        cameraSensorSystem_scanning
+    }
+}
+
+const hidden cameraSensorSystem_idle: CSM.StateDescription = new {
+    name = "idle"
+    initial = true
+    on {
+        new {
+            event = eStartScan
+            target = cameraSensorSystem_scanning.name
+            actions {
+                new CSM.AssignActionDescription {
+                    variable {
+                        name = "isScanning"
+                        value = "true"
+                    }
+                }
+            }
+            guards {
+                new CSM.GuardDescription {
+                    expression = "!isScanning"
+                }
+            }
+        }
+    }
+}
+
+const hidden cameraSensorSystem_scanning: CSM.StateDescription = new {
+    name = "scanning"
+    entry {
+        new CSM.InvokeActionDescription {
+            serviceType = stTakePhoto
+            output {
+                new {
+                    reference = "photoPath"
+                }
+            }
+        }
+        new CSM.InvokeActionDescription {
+            serviceType = stScanPhoto
+            input {
+                new {
+                    name = "photoPath"
+                    value = "photoPath"
+                }
+            }
+            output {
+                new {
+                    reference = "validObject"
+                }
+            }
+            done {
+                new {
+                    name = "eCheckValidObject"
+                    channel = "internal"
+                }
+            }
+        }
+    }
+    exit {
+        new CSM.AssignActionDescription {
+            variable {
+                name = "isScanning"
+                value = "false"
+            }
+        }
+    }
+    on {
+        new {
+            event = "eCheckValidObject"
+            target = cameraSensorSystem_idle.name
+            actions {
+                new CSM.MatchActionDescription {
+                    value = "validObject"
+                    cases {
+                        new {
+                            `case` = "false"
+                            action = new CSM.RaiseActionDescription {
+                                event {
+                                    name = eObjectInvalid
+                                    channel = "global"
+                                }
+                            }
+                        }
+                        new {
+                            `case` = "true"
+                            action = new CSM.RaiseActionDescription {
+                                event {
+                                    name = eObjectValid
+                                    channel = "global"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ------------------------ Photoelectric Sensor (Base State Machine) -------------------------------
+class PhotoelectricSensorDescription extends CSM.StateMachineDescription {
+    name = "photoelectricSensor"
+    hidden abstract detectingTimeoutName: String
+    hidden abstract detectingServiceType: String // Must output isBeamInterrupted
+    hidden detectingGuard: CSM.GuardDescription = new CSM.GuardDescription {
+        expression = "!isUnloading"
+    }
+    hidden abstract detectedAction: CSM.ActionDescription
+    states {
+        new CSM.StateDescription {
+            name = "idle"
+            initial = true
+            after {
+                new CSM.TimeoutActionDescription {
+                    name = detectingTimeoutName
+                    delay = tBeamDetection
+                    action = new CSM.RaiseActionDescription {
+                        event {
+                            name = "eBeamDetection"
+                            channel = "internal"
+                        }
+                    }
+                }
+            }
+            on {
+                new {
+                    event = "eBeamDetection"
+                    target = "detecting"
+                    guards {
+                        detectingGuard
+                    }
+                }
+            }
+        }
+        new CSM.StateDescription {
+            name = "detecting"
+            entry {
+                new CSM.InvokeActionDescription {
+                    serviceType = detectingServiceType
+                    output {
+                        new {
+                            reference = "isBeamInterrupted"
+                        }
+                    }
+                    done {
+                        new {
+                            name = "eCheckBeamDetection"
+                            channel = "internal"
+                        }
+                    }
+                }
+            }
+            on {
+                new {
+                    event = "eCheckBeamDetection"
+                    target = "detected"
+                    guards {
+                        new CSM.GuardDescription {
+                            expression = "isBeamInterrupted"
+                        }
+                    }
+                    `else` = "idle"
+                }
+            }
+        }
+        new CSM.StateDescription {
+            name = "detected"
+            entry {
+                detectedAction
+            }
+            always {
+                new {
+                    target = "idle"
+                    actions {
+                        new CSM.AssignActionDescription {
+                            variable {
+                                name = "isBeamInterrupted"
+                                value = "false"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ------------------------ Photoelectric Sensor (Start of Belt) -------------------------------
+const hidden photoelectricSensorStart: PhotoelectricSensorDescription= new {
+    name = "photoelectricSensorStart"
+    detectingTimeoutName = "photoelectricSensorStart.triggerBeamDetection"
+    detectingServiceType = stBeamDetectionStart
+    detectingGuard {
+        expression = "!isUnloading && !isScanning"
+    }
+    detectedAction = new CSM.RaiseActionDescription {
+        event {
+            name = eStartScan
+            channel = "global"
+        }
+    }
+}
+
+// ------------------------ Photoelectric Sensor (End of Belt) -------------------------------
+const hidden photoelectricSensorEnd: PhotoelectricSensorDescription= new {
+    name = "photoelectricSensorEnd"
+    detectingTimeoutName = "photoelectricSensorEnd.triggerBeamDetection"
+    detectingServiceType = stBeamDetectionEnd
+    detectedAction = new CSM.RaiseActionDescription {
+        event {
+            name = "eStartUnload"
+            channel = "global"
+        }
+    }
+}
+
+// ------------------------ Robotic Arm System -------------------------------
+const hidden roboticArmSystem: CSM.StateMachineDescription = new {
+    name = "roboticArmSystem"
+    localContext {
+        variables {
+            new {
+                name = "pickUpSuccess"
+                value = "true"
+            }
+            new {
+                name = "assembleSuccess"
+                value = "true"
+            }
+            new {
+                name = "partsAssembled"
+                value = "0"
+            }
+            new {
+                name = "partsPerProduct"
+                value = "1"
+            }
+            new {
+                name = "errorMsg"
+                value = "''"
+            }
+        }
+    }
+    states {
+        roboticArmSystem_idle
+        roboticArmSystem_error
+        roboticArmSystem_pickup
+        roboticArmSystem_assemble
+        roboticArmSystem_return
+        roboticArmSystem_jobDone
+    }
+}
+
+const hidden roboticArmSystem_idle: CSM.StateDescription = new {
+    name = "idle"
+    initial = true
+    on {
+        new {
+            event = eArmPickup
+            target = roboticArmSystem_pickup.name
+            guards {
+                new CSM.GuardDescription {
+                    expression = "!" + vJobDone
+                }
+            }
+        }
+        new {
+            event = eJobDone
+            target = roboticArmSystem_jobDone.name
+        }
+    }
+    always {
+        new {
+            target = roboticArmSystem_pickup.name
+            guards {
+                new CSM.GuardDescription {
+                    expression = "!pickUpSuccess"
+                }
+            }
+        }
+    }
+}
+
+const hidden roboticArmSystem_error: CSM.StateDescription = new {
+    name = "error"
+    entry {
+        new CSM.RaiseActionDescription {
+            event {
+                name = "eProcessMessage"
+                data {
+                    new {
+                        name = "msg"
+                        value = "'Fatal robotic arm failure: ' + errorMsg"
+                    }
+                }
+                channel = "global"
+            }
+        }
+    }
+    after {
+        new CSM.TimeoutActionDescription {
+            name = "roboticArmSystem.retry"
+            delay = tRetry
+            action = new CSM.RaiseActionDescription {
+                event {
+                    name = "eRetry"
+                    channel = "internal"
+                }
+            }
+        }
+    }
+    on {
+        new {
+            event = "eRetry"
+            target = roboticArmSystem_assemble.name
+            guards {
+                new CSM.GuardDescription {
+                    expression = "pickUpSuccess"
+                }
+            }
+            `else` = roboticArmSystem_return.name
+        }
+        new {
+            event = eJobDone
+            target = roboticArmSystem_jobDone.name
+        }
+    }
+}
+
+const hidden roboticArmSystem_pickup: CSM.StateDescription = new {
+    name = "pickup"
+    entry {
+        new CSM.InvokeActionDescription {
+            serviceType = stPickup
+            output {
+                new {
+                    reference = "pickUpSuccess"
+                }
+            }
+        }
+        new CSM.MatchActionDescription {
+            value = "pickUpSuccess"
+            cases {
+                new {
+                    `case` = "false"
+                    action = new CSM.AssignActionDescription {
+                        variable {
+                            name = "errorMsg"
+                            value = "'Pickup failed'"
+                        }
+                    }
+                }
+            }
+        }
+        new CSM.RaiseActionDescription {
+            event {
+                name = "eCheckPickUpSuccess"
+                channel = "internal"
+            }
+        }
+    }
+    on {
+        new {
+            event = "eCheckPickUpSuccess"
+            target = roboticArmSystem_assemble.name
+            guards {
+                new CSM.GuardDescription {
+                    expression = "pickUpSuccess"
+                }
+            }
+            actions {
+                new CSM.RaiseActionDescription {
+                    event {
+                        name = ePickedUp
+                        channel = "global"
+                    }
+                }
+            }
+            `else` = roboticArmSystem_error.name
+        }
+    }
+}
+
+const hidden roboticArmSystem_assemble: CSM.StateDescription = new {
+    name = "assemble"
+    entry {
+        new CSM.InvokeActionDescription {
+            serviceType = stAssemble
+            output {
+                new {
+                    reference = "assembleSuccess"
+                }
+            }
+        }
+        new CSM.MatchActionDescription {
+            value = "assembleSuccess"
+            cases {
+                new {
+                    `case` = "false"
+                    action = new CSM.AssignActionDescription {
+                        variable {
+                            name = "errorMsg"
+                            value = "'Assemble failed'"
+                        }
+                    }
+                }
+            }
+        }
+        new CSM.RaiseActionDescription {
+            event {
+                name = "eCheckAssembleSuccess"
+                channel = "internal"
+            }
+        }
+    }
+    on {
+        new {
+            event = "eCheckAssembleSuccess"
+            target = roboticArmSystem_return.name
+            guards {
+                new CSM.GuardDescription {
+                    expression = "assembleSuccess"
+                }
+            }
+            actions {
+                new CSM.AssignActionDescription {
+                    variable {
+                        name = "partsAssembled"
+                        value = "partsAssembled + 1"
+                    }
+                }
+                new CSM.RaiseActionDescription {
+                    event {
+                        name = eAssembleComplete
+                        channel = "global"
+                    }
+                }
+            }
+            `else` = roboticArmSystem_error.name
+        }
+    }
+}
+
+const hidden roboticArmSystem_return: CSM.StateDescription = new {
+    name = "return"
+    entry {
+        new CSM.InvokeActionDescription {
+            serviceType = stReturnToStart
+        }
+    }
+    always {
+        new {
+            target = roboticArmSystem_idle.name
+            guards {
+                new CSM.GuardDescription {
+                    expression = "partsAssembled >= partsPerProduct"
+                }
+            }
+            actions {
+                new CSM.AssignActionDescription {
+                    variable {
+                        name = "partsAssembled"
+                        value = "0"
+                    }
+                }
+                new CSM.RaiseActionDescription {
+                    event {
+                        name = eProductComplete
+                        channel = "global"
+                    }
+                }
+            }
+            `else` = roboticArmSystem_idle.name
+        }
+    }
+}
+
+const hidden roboticArmSystem_jobDone: CSM.StateDescription = new {
+    name = "jobDone"
+    terminal = true
+}
+
+// ------------------------ Message Processor (Base State Machine) -------------------------------
+class MessageProcessorDescription extends CSM.StateMachineDescription {
+    name = "messageProcessor"
+    hidden abstract processState: ProcessStateDescription
+    states {
+        messageProcessor_idle
+        processState
+        messageProcessor_jobDone
+    }
+}
+
+class ProcessStateDescription extends CSM.StateDescription {
+    name = "process"
+    always {
+        new {
+            target = messageProcessor_idle.name
+        }
+    }
+}
+
+const hidden messageProcessor_idle: CSM.StateDescription = new {
+    name = "idle"
+    initial = true
+    on {
+        new {
+            event = eProcessMessage
+            target = "process"
+        }
+        new {
+            event = eJobDone
+            target = "jobDone"
+        }
+    }
+}
+
+const hidden messageProcessor_jobDone: CSM.StateDescription = new {
+    name = "jobDone"
+    terminal = true
+}
+
+// ------------------------ E-Mail Processor -------------------------------
+const hidden eMailProcessor: MessageProcessorDescription = new {
+    name = "eMailProcessor"
+    processState = processMail
+}
+
+const hidden processMail: ProcessStateDescription = new {
+    entry {
+        new CSM.InvokeActionDescription {
+            serviceType = stSendEmail
+            input {
+                new {
+                    name = "mailBody"
+                    value = "$msg"
+                }
+            }
+        }
+    }
+}
+
+// ------------------------ SMS Processor -------------------------------
+const hidden smsProcessor: MessageProcessorDescription = new {
+    name = "smsProcessor"
+    processState = processSms
+}
+
+const hidden processSms: ProcessStateDescription = new {
+    entry {
+        new CSM.InvokeActionDescription {
+            serviceType = stSendSms
+            input {
+                new {
+                    name = "smsText"
+                    value = "$msg"
+                }
+            }
+        }
+    }
+}
+
+// ------------------------ Log Processor -------------------------------
+const hidden logProcessor: MessageProcessorDescription = new {
+    name = "logProcessor"
+    processState = processLog
+}
+
+const hidden processLog: ProcessStateDescription = new {
+    entry {
+        new CSM.AssignActionDescription {
+            variable {
+                name = vLog
+                value = "var newLog = log; newLog.add($msg); newLog"
+            }
+        }
+    }
+}
+
+// ------------------------ Monitoring System -------------------------------
+const hidden monitoringSystem: CSM.StateMachineDescription = new {
+    name = "monitoringSystem"
+    localContext {
+        variables {
+            new {
+                name = "nScans"
+                value = "0"
+            }
+            new {
+                name = "nAssemblies"
+                value = "0"
+            }
+        }
+    }
+    states {
+        monitoringSystem_monitoring
+    }
+}
+
+const hidden aSendStatistics: CSM.InvokeActionDescription = new {
+    serviceType = stSendStatistics
+    input {
+        new {
+            name = "nScans"
+            value = "nScans"
+        }
+        new {
+            name = "nAssemblies"
+            value = "nAssemblies"
+        }
+        new {
+            name = "nProductsCompleted"
+            value = "productsCompleted"
+        }
+        new {
+            name = "jobDone"
+            value = "jobDone"
+        }
+    }
+}
+
+const hidden monitoringSystem_monitoring: CSM.StateDescription = new {
+    name = "monitoring"
+    initial = true
+    on {
+        new {
+            event = eStartScan
+            actions {
+                new CSM.AssignActionDescription {
+                    variable {
+                        name = "nScans"
+                        value = "nScans + 1"
+                    }
+                }
+                aSendStatistics
+            }
+        }
+        new {
+            event = eAssembleComplete
+            actions {
+                new CSM.AssignActionDescription {
+                    variable {
+                        name = "nAssemblies"
+                        value = "nAssemblies + 1"
+                    }
+                }
+                aSendStatistics
+            }
+        }
+        new {
+            event = eJobDone
+            target = monitoringSystem_jobDone.name
+        }
+    }
+    always {
+        new {
+            target = monitoringSystem_jobDone.name
+            guards {
+                new CSM.GuardDescription {
+                    expression = "jobDone"
+                }
+            }
+        }
+    }
+}
+
+const hidden monitoringSystem_jobDone: CSM.StateDescription = new {
+    name = "jobDone"
+    terminal = true
+    entry {
+        aSendStatistics
+    }
+}
