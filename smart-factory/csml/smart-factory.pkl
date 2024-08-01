@@ -1,79 +1,73 @@
-import "CollaborativeStateMachineDescription.pkl" as CSM
-
-// Only render the CSM Object
-output {
-    value = csm
-}
-
-// ------------------------ Service Types -------------------------------
-const hidden stMoveBelt = "moveBelt"
-const hidden stStopBelt = "stopBelt"
-const hidden stTakePhoto = "takePhoto"
-const hidden stScanPhoto = "scanPhoto"
-const hidden stBeamDetectionStart = "beamDetectionStart"
-const hidden stBeamDetectionEnd = "beamDetectionEnd"
-const hidden stPickup = "pickUp"
-const hidden stAssemble = "assemble"
-const hidden stReturnToStart = "returnToStart"
-const hidden stSendEmail = "sendMail"
-const hidden stSendSms = "sendSms"
-const hidden stSendStatistics = "sendStatistics"
-
-// ------------------------ Events (Global) -------------------------------
-const hidden eObjectValid = "eObjectValid"
-const hidden eObjectInvalid = "eObjectInvalid"
-const hidden eStartScan = "eStartScan"
-const hidden eProductComplete = "eProductComplete"
-const hidden eProcessMessage = "eProcessMessage"
-const hidden eJobDone = "eJobDone"
-const hidden eScanned = "eScanned"
-const hidden eArmPickup = "eArmPickup"
-const hidden ePickedUp = "ePickedUp"
-const hidden eAssembleComplete = "eAssembleComplete"
-
-// ------------------------ Variables (Persistent) -------------------------------
-const hidden vProductsCompleted = "productsCompleted"
-const hidden vJobDone = "jobDone"
-const hidden vLog = "log"
-
-// ------------------------ Timeouts -------------------------------
-const hidden tBeamDetection = "100"
-const hidden tPickUp = "1000"
-const hidden tRetry = "10000"
+amends "https://raw.githubusercontent.com/Lellson/Cirrina/feat-pkl/src/main/pkl/CollaborativeStateMachineDescription.pkl"
+import "https://raw.githubusercontent.com/Lellson/Cirrina/feat-pkl/src/main/pkl/CollaborativeStateMachineDescription.pkl" as CSM
 
 // ------------------------ CSM -------------------------------
-csm: CSM = new {
-    name = "Smart Factory"
-    version = "0.1"
-    stateMachines {
-        jobControlSystem
-        conveyorBeltSystem
-        roboticArmSystem
-        eMailProcessor
-        smsProcessor
-        logProcessor
-        monitoringSystem
-    }
-    persistentContext {
-        variables {
-            new {
-                name = vProductsCompleted
-                value = "0"
-            }
-            new {
-                name = vJobDone
-                value = "false"
-            }
-            new {
-                name = vLog
-                value = "[...]"
-            }
+name = "Smart Factory"
+version = "0.1"
+stateMachines {
+    jobControlSystem
+    conveyorBeltSystem
+    roboticArmSystem
+    eMailProcessor
+    smsProcessor
+    logProcessor
+    monitoringSystem
+}
+persistentContext {
+    variables {
+        new {
+            name = vProductsCompleted
+            value = "0"
+        }
+        new {
+            name = vJobDone
+            value = "false"
+        }
+        new {
+            name = vLog
+            value = "[...]"
         }
     }
 }
 
+// ------------------------ Service Types -------------------------------
+const local stMoveBelt = "moveBelt"
+const local stStopBelt = "stopBelt"
+const local stTakePhoto = "takePhoto"
+const local stScanPhoto = "scanPhoto"
+const local stBeamDetectionStart = "beamDetectionStart"
+const local stBeamDetectionEnd = "beamDetectionEnd"
+const local stPickup = "pickUp"
+const local stAssemble = "assemble"
+const local stReturnToStart = "returnToStart"
+const local stSendEmail = "sendMail"
+const local stSendSms = "sendSms"
+const local stSendStatistics = "sendStatistics"
+
+// ------------------------ Events (Global) -------------------------------
+const local eObjectValid = "eObjectValid"
+const local eObjectInvalid = "eObjectInvalid"
+const local eStartScan = "eStartScan"
+const local eProductComplete = "eProductComplete"
+const local eProcessMessage = "eProcessMessage"
+const local eJobDone = "eJobDone"
+const local eScanned = "eScanned"
+const local eArmPickup = "eArmPickup"
+const local ePickedUp = "ePickedUp"
+const local eAssembleComplete = "eAssembleComplete"
+
+// ------------------------ Variables (Persistent) -------------------------------
+const local vProductsCompleted = "productsCompleted"
+const local vJobDone = "jobDone"
+const local vLog = "log"
+
+// ------------------------ Timeouts -------------------------------
+const local tBeamDetection = "100"
+const local tPickUp = "1000"
+const local tRetry = "10000"
+
 // ------------------------ Job Control System -------------------------------
-const hidden jobControlSystem: CSM.StateMachineDescription = new {
+const local jobControlSystem: CSM.StateMachineDescription = new {
     name = "jobControlSystem"
     localContext {
         variables {
@@ -90,7 +84,7 @@ const hidden jobControlSystem: CSM.StateMachineDescription = new {
     }
 }
 
-const hidden jobControlSystem_starting: CSM.StateDescription = new {
+const local jobControlSystem_starting: CSM.StateDescription = new {
     name = "starting"
     initial = true
     entry {
@@ -134,7 +128,7 @@ const hidden jobControlSystem_starting: CSM.StateDescription = new {
     }
 }
 
-const hidden jobControlSystem_running: CSM.StateDescription = new {
+const local jobControlSystem_running: CSM.StateDescription = new {
     name = "running"
     on {
         new {
@@ -166,7 +160,7 @@ const hidden jobControlSystem_running: CSM.StateDescription = new {
     }
 }
 
-const hidden jobControlSystem_jobDone: CSM.StateDescription = new {
+const local jobControlSystem_jobDone: CSM.StateDescription = new {
     name = "jobDone"
     terminal = true
     entry {
@@ -198,7 +192,7 @@ const hidden jobControlSystem_jobDone: CSM.StateDescription = new {
 }
 
 // ------------------------ Conveyor Belt System -------------------------------
-const hidden conveyorBeltSystem: CSM.StateMachineDescription = new {
+const local conveyorBeltSystem: CSM.StateMachineDescription = new {
     name = "jobControlSystem"
     localContext {
         variables {
@@ -224,7 +218,7 @@ const hidden conveyorBeltSystem: CSM.StateMachineDescription = new {
     }
 }
 
-const hidden conveyorBeltSystem_loading: CSM.StateDescription = new {
+const local conveyorBeltSystem_loading: CSM.StateDescription = new {
     name = "loading"
     initial = true
     on {
@@ -251,7 +245,7 @@ const hidden conveyorBeltSystem_loading: CSM.StateDescription = new {
     }
 }
 
-const hidden conveyorBeltSystem_error: CSM.StateDescription = new {
+const local conveyorBeltSystem_error: CSM.StateDescription = new {
     name = "error"
     entry {
         new CSM.RaiseActionDescription {
@@ -279,7 +273,7 @@ const hidden conveyorBeltSystem_error: CSM.StateDescription = new {
     }
 }
 
-const hidden conveyorBeltSystem_transporting: CSM.StateDescription = new {
+const local conveyorBeltSystem_transporting: CSM.StateDescription = new {
     name = "transporting"
     entry {
         new CSM.InvokeActionDescription {
@@ -311,7 +305,7 @@ const hidden conveyorBeltSystem_transporting: CSM.StateDescription = new {
     }
 }
 
-const hidden conveyorBeltSystem_unloading: CSM.StateDescription = new {
+const local conveyorBeltSystem_unloading: CSM.StateDescription = new {
     name = "unloading"
     entry {
         new CSM.RaiseActionDescription {
@@ -361,13 +355,13 @@ const hidden conveyorBeltSystem_unloading: CSM.StateDescription = new {
     }
 }
 
-const hidden conveyorBeltSystem_jobDone: CSM.StateDescription = new {
+const local conveyorBeltSystem_jobDone: CSM.StateDescription = new {
     name = "jobDone"
     terminal = true
 }
 
 // ------------------------ Camera Sensor System -------------------------------
-const hidden cameraSensorSystem: CSM.StateMachineDescription = new {
+const local cameraSensorSystem: CSM.StateMachineDescription = new {
     name = "cameraSensorSystem"
     localContext {
         variables {
@@ -387,7 +381,7 @@ const hidden cameraSensorSystem: CSM.StateMachineDescription = new {
     }
 }
 
-const hidden cameraSensorSystem_idle: CSM.StateDescription = new {
+const local cameraSensorSystem_idle: CSM.StateDescription = new {
     name = "idle"
     initial = true
     on {
@@ -411,7 +405,7 @@ const hidden cameraSensorSystem_idle: CSM.StateDescription = new {
     }
 }
 
-const hidden cameraSensorSystem_scanning: CSM.StateDescription = new {
+const local cameraSensorSystem_scanning: CSM.StateDescription = new {
     name = "scanning"
     entry {
         new CSM.InvokeActionDescription {
@@ -573,7 +567,7 @@ class PhotoelectricSensorDescription extends CSM.StateMachineDescription {
 }
 
 // ------------------------ Photoelectric Sensor (Start of Belt) -------------------------------
-const hidden photoelectricSensorStart: PhotoelectricSensorDescription= new {
+const local photoelectricSensorStart: PhotoelectricSensorDescription= new {
     name = "photoelectricSensorStart"
     detectingTimeoutName = "photoelectricSensorStart.triggerBeamDetection"
     detectingServiceType = stBeamDetectionStart
@@ -589,7 +583,7 @@ const hidden photoelectricSensorStart: PhotoelectricSensorDescription= new {
 }
 
 // ------------------------ Photoelectric Sensor (End of Belt) -------------------------------
-const hidden photoelectricSensorEnd: PhotoelectricSensorDescription= new {
+const local photoelectricSensorEnd: PhotoelectricSensorDescription= new {
     name = "photoelectricSensorEnd"
     detectingTimeoutName = "photoelectricSensorEnd.triggerBeamDetection"
     detectingServiceType = stBeamDetectionEnd
@@ -602,7 +596,7 @@ const hidden photoelectricSensorEnd: PhotoelectricSensorDescription= new {
 }
 
 // ------------------------ Robotic Arm System -------------------------------
-const hidden roboticArmSystem: CSM.StateMachineDescription = new {
+const local roboticArmSystem: CSM.StateMachineDescription = new {
     name = "roboticArmSystem"
     localContext {
         variables {
@@ -638,7 +632,7 @@ const hidden roboticArmSystem: CSM.StateMachineDescription = new {
     }
 }
 
-const hidden roboticArmSystem_idle: CSM.StateDescription = new {
+const local roboticArmSystem_idle: CSM.StateDescription = new {
     name = "idle"
     initial = true
     on {
@@ -668,7 +662,7 @@ const hidden roboticArmSystem_idle: CSM.StateDescription = new {
     }
 }
 
-const hidden roboticArmSystem_error: CSM.StateDescription = new {
+const local roboticArmSystem_error: CSM.StateDescription = new {
     name = "error"
     entry {
         new CSM.RaiseActionDescription {
@@ -714,7 +708,7 @@ const hidden roboticArmSystem_error: CSM.StateDescription = new {
     }
 }
 
-const hidden roboticArmSystem_pickup: CSM.StateDescription = new {
+const local roboticArmSystem_pickup: CSM.StateDescription = new {
     name = "pickup"
     entry {
         new CSM.InvokeActionDescription {
@@ -768,7 +762,7 @@ const hidden roboticArmSystem_pickup: CSM.StateDescription = new {
     }
 }
 
-const hidden roboticArmSystem_assemble: CSM.StateDescription = new {
+const local roboticArmSystem_assemble: CSM.StateDescription = new {
     name = "assemble"
     entry {
         new CSM.InvokeActionDescription {
@@ -828,7 +822,7 @@ const hidden roboticArmSystem_assemble: CSM.StateDescription = new {
     }
 }
 
-const hidden roboticArmSystem_return: CSM.StateDescription = new {
+const local roboticArmSystem_return: CSM.StateDescription = new {
     name = "return"
     entry {
         new CSM.InvokeActionDescription {
@@ -862,7 +856,7 @@ const hidden roboticArmSystem_return: CSM.StateDescription = new {
     }
 }
 
-const hidden roboticArmSystem_jobDone: CSM.StateDescription = new {
+const local roboticArmSystem_jobDone: CSM.StateDescription = new {
     name = "jobDone"
     terminal = true
 }
@@ -887,7 +881,7 @@ class ProcessStateDescription extends CSM.StateDescription {
     }
 }
 
-const hidden messageProcessor_idle: CSM.StateDescription = new {
+const local messageProcessor_idle: CSM.StateDescription = new {
     name = "idle"
     initial = true
     on {
@@ -902,18 +896,18 @@ const hidden messageProcessor_idle: CSM.StateDescription = new {
     }
 }
 
-const hidden messageProcessor_jobDone: CSM.StateDescription = new {
+const local messageProcessor_jobDone: CSM.StateDescription = new {
     name = "jobDone"
     terminal = true
 }
 
 // ------------------------ E-Mail Processor -------------------------------
-const hidden eMailProcessor: MessageProcessorDescription = new {
+const local eMailProcessor: MessageProcessorDescription = new {
     name = "eMailProcessor"
     processState = processMail
 }
 
-const hidden processMail: ProcessStateDescription = new {
+const local processMail: ProcessStateDescription = new {
     entry {
         new CSM.InvokeActionDescription {
             serviceType = stSendEmail
@@ -928,12 +922,12 @@ const hidden processMail: ProcessStateDescription = new {
 }
 
 // ------------------------ SMS Processor -------------------------------
-const hidden smsProcessor: MessageProcessorDescription = new {
+const local smsProcessor: MessageProcessorDescription = new {
     name = "smsProcessor"
     processState = processSms
 }
 
-const hidden processSms: ProcessStateDescription = new {
+const local processSms: ProcessStateDescription = new {
     entry {
         new CSM.InvokeActionDescription {
             serviceType = stSendSms
@@ -948,12 +942,12 @@ const hidden processSms: ProcessStateDescription = new {
 }
 
 // ------------------------ Log Processor -------------------------------
-const hidden logProcessor: MessageProcessorDescription = new {
+const local logProcessor: MessageProcessorDescription = new {
     name = "logProcessor"
     processState = processLog
 }
 
-const hidden processLog: ProcessStateDescription = new {
+const local processLog: ProcessStateDescription = new {
     entry {
         new CSM.AssignActionDescription {
             variable {
@@ -965,7 +959,7 @@ const hidden processLog: ProcessStateDescription = new {
 }
 
 // ------------------------ Monitoring System -------------------------------
-const hidden monitoringSystem: CSM.StateMachineDescription = new {
+const local monitoringSystem: CSM.StateMachineDescription = new {
     name = "monitoringSystem"
     localContext {
         variables {
@@ -984,7 +978,7 @@ const hidden monitoringSystem: CSM.StateMachineDescription = new {
     }
 }
 
-const hidden aSendStatistics: CSM.InvokeActionDescription = new {
+const local aSendStatistics: CSM.InvokeActionDescription = new {
     serviceType = stSendStatistics
     input {
         new {
@@ -1006,7 +1000,7 @@ const hidden aSendStatistics: CSM.InvokeActionDescription = new {
     }
 }
 
-const hidden monitoringSystem_monitoring: CSM.StateDescription = new {
+const local monitoringSystem_monitoring: CSM.StateDescription = new {
     name = "monitoring"
     initial = true
     on {
@@ -1051,7 +1045,7 @@ const hidden monitoringSystem_monitoring: CSM.StateDescription = new {
     }
 }
 
-const hidden monitoringSystem_jobDone: CSM.StateDescription = new {
+const local monitoringSystem_jobDone: CSM.StateDescription = new {
     name = "jobDone"
     terminal = true
     entry {
