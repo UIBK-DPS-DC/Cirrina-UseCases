@@ -1,7 +1,7 @@
-amends "https://raw.githubusercontent.com/Lellson/Cirrina/feat-pkl/src/main/pkl/JobDescription.pkl"
+amends "https://raw.githubusercontent.com/Lellson/Cirrina-Specifications/develop/pkl/JobDescription.pkl"
 
-import "https://raw.githubusercontent.com/Lellson/Cirrina/feat-pkl/src/main/pkl/HttpServiceImplementationDescription.pkl"
-import "smart-factory.pkl" as smartFactoryCSM
+import "https://raw.githubusercontent.com/Lellson/Cirrina-Specifications/develop/pkl/HttpServiceImplementationDescription.pkl"
+import "https://raw.githubusercontent.com/Lellson/Cirrina-UseCases/main/smart-factory/csml/smart-factory.pkl" as smartFactoryCSM
 
 collaborativeStateMachine = smartFactoryCSM
 stateMachineName = "<NAME>" // Change: Replace with state machine name
