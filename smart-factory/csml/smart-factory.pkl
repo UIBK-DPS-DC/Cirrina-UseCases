@@ -206,15 +206,17 @@ local conveyorBeltSystem: CSM.StateMachineDescription = new {
             }
         }
     }
+    stateMachines {
+        cameraSensorSystem
+        photoelectricSensorStart
+        photoelectricSensorEnd
+    }
     states {
         conveyorBeltSystem_loading
         conveyorBeltSystem_error
         conveyorBeltSystem_transporting
         conveyorBeltSystem_unloading
         conveyorBeltSystem_jobDone
-        cameraSensorSystem
-        photoelectricSensorStart
-        photoelectricSensorEnd
     }
 }
 
@@ -862,9 +864,9 @@ local roboticArmSystem_jobDone: CSM.StateDescription = new {
 }
 
 // ------------------------ Message Processor (Base State Machine) -------------------------------
-open local class MessageProcessorDescription extends CSM.StateMachineDescription {
+local class MessageProcessorDescription extends CSM.StateMachineDescription {
     name = "messageProcessor"
-    abstract processState: ProcessStateDescription
+    hidden processAction: CSM.ActionDescription
     states {
         new CSM.StateDescription {
             name = "idle"
@@ -880,7 +882,17 @@ open local class MessageProcessorDescription extends CSM.StateMachineDescription
                 }
             }
         }
-        processState
+        new CSM.StateDescription {
+            name = "process"
+            always {
+                new {
+                    target = "idle"
+                }
+            }
+            entry {
+                processAction
+            }
+        }
         new CSM.StateDescription {
             name = "jobDone"
             terminal = true
@@ -888,68 +900,41 @@ open local class MessageProcessorDescription extends CSM.StateMachineDescription
     }
 }
 
-open local class ProcessStateDescription extends CSM.StateDescription {
-    name = "process"
-    always {
-        new {
-            target = "idle"
-        }
-    }
-}
-
 // ------------------------ E-Mail Processor -------------------------------
-local eMailProcessor: MessageProcessorDescription = new {
+local eMailProcessor: CSM.StateMachineDescription = new MessageProcessorDescription {
     name = "eMailProcessor"
-    processState = processMail
-}
-
-local processMail: ProcessStateDescription = new {
-    entry {
-        new CSM.InvokeActionDescription {
-            serviceType = stSendEmail
-            input {
-                new {
-                    name = "mailBody"
-                    value = "$msg"
-                }
+    processAction = new CSM.InvokeActionDescription {
+        serviceType = stSendEmail
+        input {
+            new {
+                name = "mailBody"
+                value = "$msg"
             }
         }
     }
 }
 
 // ------------------------ SMS Processor -------------------------------
-local smsProcessor: MessageProcessorDescription = new {
+local smsProcessor: CSM.StateMachineDescription = new MessageProcessorDescription {
     name = "smsProcessor"
-    processState = processSms
-}
-
-local processSms: ProcessStateDescription = new {
-    entry {
-        new CSM.InvokeActionDescription {
-            serviceType = stSendSms
-            input {
-                new {
-                    name = "smsText"
-                    value = "$msg"
-                }
+    processAction = new CSM.InvokeActionDescription {
+        serviceType = stSendSms
+        input {
+            new {
+                name = "smsText"
+                value = "$msg"
             }
         }
     }
 }
 
 // ------------------------ Log Processor -------------------------------
-local logProcessor: MessageProcessorDescription = new {
+local logProcessor: CSM.StateMachineDescription = new MessageProcessorDescription {
     name = "logProcessor"
-    processState = processLog
-}
-
-local processLog: ProcessStateDescription = new {
-    entry {
-        new CSM.AssignActionDescription {
-            variable {
-                name = vLog
-                value = "var newLog = log; newLog.add($msg); newLog"
-            }
+    processAction = new CSM.AssignActionDescription {
+        variable {
+            name = vLog
+            value = "var newLog = log; newLog.add($msg); newLog"
         }
     }
 }
@@ -971,6 +956,7 @@ local monitoringSystem: CSM.StateMachineDescription = new {
     }
     states {
         monitoringSystem_monitoring
+        monitoringSystem_jobDone
     }
 }
 
