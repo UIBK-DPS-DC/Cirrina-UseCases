@@ -888,7 +888,7 @@ open local class MessageProcessorDescription extends CSM.StateMachineDescription
     }
 }
 
-local class ProcessStateDescription extends CSM.StateDescription {
+open local class ProcessStateDescription extends CSM.StateDescription {
     name = "process"
     always {
         new {
