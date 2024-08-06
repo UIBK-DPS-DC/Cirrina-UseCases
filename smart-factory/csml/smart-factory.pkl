@@ -192,7 +192,7 @@ local jobControlSystem_jobDone: CSM.StateDescription = new {
 
 // ------------------------ Conveyor Belt System -------------------------------
 local conveyorBeltSystem: CSM.StateMachineDescription = new {
-    name = "jobControlSystem"
+    name = "conveyorBeltSystem"
     localContext {
         variables {
             new {
