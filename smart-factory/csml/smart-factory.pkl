@@ -48,6 +48,7 @@ local stSendStatistics = "sendStatistics"
 local eObjectValid = "eObjectValid"
 local eObjectInvalid = "eObjectInvalid"
 local eStartScan = "eStartScan"
+local eStartUnload = "eStartUnload"
 local eProductComplete = "eProductComplete"
 local eProcessMessage = "eProcessMessage"
 local eJobDone = "eJobDone"
@@ -286,7 +287,7 @@ local conveyorBeltSystem_transporting: CSM.StateDescription = new {
     }
     on {
         new {
-            event = "eStartUnload"
+            event = eStartUnload
             target = conveyorBeltSystem_unloading.name
             actions {
                 new CSM.AssignActionDescription {
@@ -478,7 +479,7 @@ local cameraSensorSystem_scanning: CSM.StateDescription = new {
 }
 
 // ------------------------ Photoelectric Sensor (Base State Machine) -------------------------------
-local class PhotoelectricSensorDescription extends CSM.StateMachineDescription {
+open local class PhotoelectricSensorDescription extends CSM.StateMachineDescription {
     name = "photoelectricSensor"
     hidden abstract detectingTimeoutName: String
     hidden abstract detectingServiceType: String // Must output isBeamInterrupted
@@ -588,7 +589,7 @@ local photoelectricSensorEnd: PhotoelectricSensorDescription= new {
     detectingServiceType = stBeamDetectionEnd
     detectedAction = new CSM.RaiseActionDescription {
         event {
-            name = "eStartUnload"
+            name = eStartUnload
             channel = "global"
         }
     }
@@ -861,9 +862,9 @@ local roboticArmSystem_jobDone: CSM.StateDescription = new {
 }
 
 // ------------------------ Message Processor (Base State Machine) -------------------------------
-local class MessageProcessorDescription extends CSM.StateMachineDescription {
+open local class MessageProcessorDescription extends CSM.StateMachineDescription {
     name = "messageProcessor"
-    hidden abstract processState: ProcessStateDescription
+    abstract processState: ProcessStateDescription
     states {
         new CSM.StateDescription {
             name = "idle"
