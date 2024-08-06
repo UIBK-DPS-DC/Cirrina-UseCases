@@ -479,7 +479,7 @@ const local cameraSensorSystem_scanning: CSM.StateDescription = new {
 }
 
 // ------------------------ Photoelectric Sensor (Base State Machine) -------------------------------
-class PhotoelectricSensorDescription extends CSM.StateMachineDescription {
+local class PhotoelectricSensorDescription extends CSM.StateMachineDescription {
     name = "photoelectricSensor"
     hidden abstract detectingTimeoutName: String
     hidden abstract detectingServiceType: String // Must output isBeamInterrupted
@@ -862,7 +862,7 @@ const local roboticArmSystem_jobDone: CSM.StateDescription = new {
 }
 
 // ------------------------ Message Processor (Base State Machine) -------------------------------
-class MessageProcessorDescription extends CSM.StateMachineDescription {
+local class MessageProcessorDescription extends CSM.StateMachineDescription {
     name = "messageProcessor"
     hidden abstract processState: ProcessStateDescription
     states {
@@ -872,7 +872,7 @@ class MessageProcessorDescription extends CSM.StateMachineDescription {
     }
 }
 
-class ProcessStateDescription extends CSM.StateDescription {
+local class ProcessStateDescription extends CSM.StateDescription {
     name = "process"
     always {
         new {
