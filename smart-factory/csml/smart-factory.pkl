@@ -3,7 +3,7 @@ import "https://raw.githubusercontent.com/Lellson/Cirrina-Specifications/develop
 
 // ------------------------ CSM -------------------------------
 name = "Smart Factory"
-version = "0.1"
+version = "2.0"
 stateMachines {
     jobControlSystem
     conveyorBeltSystem
