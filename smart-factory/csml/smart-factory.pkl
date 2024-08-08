@@ -669,7 +669,7 @@ local roboticArmSystem_error: CSM.StateDescription = new {
     entry {
         new CSM.RaiseActionDescription {
             event {
-                name = "eProcessMessage"
+                name = eProcessMessage
                 data {
                     new {
                         name = "msg"
