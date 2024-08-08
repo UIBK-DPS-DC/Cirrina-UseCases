@@ -1,3 +1,13 @@
+# PKL File
+
+Contains the smart factory PKL file which can be used to generate a corresponding CSML file.
+
+## Generate CSML
+
+```
+pkl eval -f json smart-factory.pkl > smart-factory.csml
+```
+
 # CSML Files
 
 Contains the smart factory CSML files:

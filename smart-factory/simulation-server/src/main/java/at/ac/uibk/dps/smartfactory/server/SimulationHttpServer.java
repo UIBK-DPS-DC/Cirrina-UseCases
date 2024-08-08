@@ -103,12 +103,10 @@ public class SimulationHttpServer implements Runnable {
           in = new HashMap<>();
         }
 
-        /*
         if (!in.isEmpty()) {
           final String inString = mapToString(in);
-          //LOGGER.info("Input: " + inString);
+          LOGGER.info("Input: " + inString);
         }
-        */
 
         // Call handler and convert response context variables into a map
         final var responseBody = new ArrayList<>(responseData.handler().onHandle(in));
@@ -124,12 +122,11 @@ public class SimulationHttpServer implements Runnable {
         final var responseMap = responseBody.stream()
             .collect(Collectors.toMap(ContextVariable::name, ContextVariable::value));
 
-        /*
+
         if (!responseBody.isEmpty()) {
           final String outString = mapToString(responseMap);
           LOGGER.info("Output: " + outString);
         }
-        */
 
         final byte[] out = variableHandler.toBytes(responseMap);
 
