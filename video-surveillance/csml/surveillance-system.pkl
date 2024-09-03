@@ -19,7 +19,6 @@ local stAnalyze = "analyze"
 // ------------------------ Events -------------------------------
 local eCaptured = "captured"
 local eDetectedPersons = "detectedPersons"
-local eHasDetectedPersons = "hasDetectedPersons"
 local eFoundPersons = "foundPersons"
 local eTimeout = "timeout"
 local eDisarm = "disarm"
@@ -27,6 +26,7 @@ local eAnalyzed = "analyzed"
 local eAlarm = "alarm"
 
 // ------------------------ Variables -------------------------------
+local vHasDetectedPersons = "hasDetectedPersons"
 local vHasThreat = "hasThreat"
 
 // ------------------------ ContextVariableDescriptions -------------------------------
@@ -45,7 +45,7 @@ local detectorSM: CSM.StateMachineDescription = new {
                 value = "''"
             }
             new {
-                name = "hasDetectedPersons"
+                name = vHasDetectedPersons
                 value = "false"
             }
         }
@@ -85,7 +85,7 @@ local sCapturing: CSM.StateDescription = new {
     on {
         new {
             event = eCaptured
-            target = "processing"
+            target = sCapturingProcessing.name
         }
     }
 }
@@ -117,7 +117,7 @@ local sCapturingProcessing: CSM.StateDescription = new {
             event = eDetectedPersons
             guards {
                 new CSM.GuardDescription {
-                    expression = "\(eHasDetectedPersons) == true"
+                    expression = "\(vHasDetectedPersons) == true"
                 }
             }
             actions {
@@ -134,7 +134,7 @@ local sCapturingProcessing: CSM.StateDescription = new {
         }
         new {
             event = eTimeout
-            target = "alarm"
+            target = sAlarm.name
         }
     }
     after {
@@ -166,7 +166,7 @@ local sAlarm: CSM.StateDescription = new {
     on {
         new {
             event = eDisarm
-            target = "capturing"
+            target = sCapturing.name
         }
     }
 }
@@ -232,6 +232,10 @@ local sSurveillanceProcessing: CSM.StateDescription = new {
                     }
                 }
             }
+        }
+        new {
+            event = eAlarm
+            target = sAlarmDisarm.name
         }
     }
 }
