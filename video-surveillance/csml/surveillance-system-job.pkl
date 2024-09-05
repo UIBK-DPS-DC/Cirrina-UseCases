@@ -57,8 +57,6 @@ serviceImplementations {
 }
 collaborativeStateMachine = surveillanceCSM
 stateMachineName = "detectorSM"
-localData = new Mapping {
-    ["foo"] = "bar"
-}
+localData = new Mapping {}
 bindEventInstanceIds = new Listing {}
 runtimeName = "runtime"
